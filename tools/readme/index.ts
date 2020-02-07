@@ -1,22 +1,14 @@
 import { promisify } from 'util';
 import { readFile, writeFile } from 'fs';
 import { isAbsolute, join } from 'path';
-
-export type Query = string | RegExp;
-export type BlockContent = string[];
-
-export interface Content {
-  type: 'content';
-  header: string;
-  content: BlockContent;
-};
-export interface Code {
-  type: 'code';
-  content: BlockContent;
-};
-export type Block = Code | Content;
-
-export type IndexedBlocks = Map<string, Content[]>;
+import { 
+  Block,
+  BlockContent,
+  Code,
+  Content,
+  IndexedBlocks,
+  Query
+} from './types'; 
 
 export default class Readme {
 
@@ -25,8 +17,7 @@ export default class Readme {
   private static isCodeEndTag = (line: string) => /^ *``` *$/.test(line);
 
   path: string;
-  blocks: Block[] = [
-  ];
+  blocks: Block[] = [];
   indexedBlocks: IndexedBlocks = new Map([]);
 
   constructor(path: string) {
@@ -34,6 +25,7 @@ export default class Readme {
     if (path.trim().length === 0) {
       throw new Error(`invalid path: ${path}`);
     }
+
     this.path = isAbsolute(path) ? path : join(__dirname, path);
 
   }
@@ -43,12 +35,16 @@ export default class Readme {
     let content: string = '';
 
     try {
+
       content = await promisify(readFile)(this.path, { encoding: 'utf8' });
+
     } catch(e) {
+
       if (e.code === 'ENOENT') {
         console.log(`The file ${this.path} could not be read.`);
         process.exit(1);
       }
+
     }
 
     return content;
@@ -69,6 +65,8 @@ export default class Readme {
     let currentHeaderKey = rootBlock.header;
     let inCodeBlock = false;
 
+    // rudimentary state machine to detect which part of the readme
+    // we're in, on a line-by-line basis.
     for (const line of lines) {
 
       // transition into code section
@@ -82,16 +80,19 @@ export default class Readme {
         };
         this.blocks.push(newBlock)
 
+        // transition out of code section
       } else if (inCodeBlock && Readme.isCodeEndTag(line)) {
 
         inCodeBlock = false;
 
         this.blocks[this.blocks.length - 1].content.push(line);
 
+        // still inside code section
       } else if (inCodeBlock && !Readme.isCodeEndTag(line)) {
 
         this.blocks[this.blocks.length - 1].content.push(line);
 
+        // entered new content block
       } else if (Readme.isHeader(line)) {
 
         currentHeaderKey = line;
@@ -101,6 +102,7 @@ export default class Readme {
           content: []
         });
 
+        // still inside of a content block
       } else {
 
         const latestBlock = this.blocks[this.blocks.length - 1]; 
@@ -109,12 +111,14 @@ export default class Readme {
       }
     }
 
+    // index blocks by header to allow for efficient querying
     this.index();
 
     return this;
 
   }
 
+  // index blocks by header to allow for efficient querying
   private index() {
 
     const indexed: IndexedBlocks = new Map([]);
@@ -137,6 +141,7 @@ export default class Readme {
 
   }
 
+  // render readme back out to a string
   export():string {
 
     let output = '';
@@ -154,12 +159,14 @@ export default class Readme {
 
   }
 
+  // find a non-code block by header
   getSection(target: Query, strict=false): Content | null {
 
     return this.getSections(target)[0] || null;
 
   }
 
+  // find non-code blocks by header
   getSections(target: Query, strict=false): Content[] {
 
     const blocks:Content[] = [];
@@ -189,28 +196,15 @@ export default class Readme {
 
   }
 
+  // set first found section (targeted by string/regex) to supplied content
   setSection(target: Query, content: string = '') {
 
     const sections: Block[] = this.getSections(target);
+
     if (sections.length > 0) {
       sections[0].content = content.split('\n');
     }
 
   }
 
-}
-
-const main = async() => {
-
-  const filename = process.argv.slice(2)[0];
-  if (!filename) {
-    throw new Error('Missing Filename parameter. readme <filename>');
-    process.exit(1);
-  }
-  const readme = await new Readme(filename).parse();
-
-}
-
-if (__filename === process?.mainModule?.filename) {
-  main()
 }
