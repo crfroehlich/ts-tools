@@ -13,9 +13,9 @@ export type IndexedBlocks = Map<string, Block[]>;
 
 export default class Readme {
 
-  static isHeader = (line: string) => /^ *#+ /.test(line);
-  static isCodeStartTag = (line: string) => /^ *```[^`]*$/.test(line);
-  static isCodeEndTag = (line: string) => /^ *``` *$/.test(line);
+  private static isHeader = (line: string) => /^ *#+ /.test(line);
+  private static isCodeStartTag = (line: string) => /^ *```[^`]*$/.test(line);
+  private static isCodeEndTag = (line: string) => /^ *``` *$/.test(line);
 
   path: string;
   blocks: Block[] = [{
@@ -100,7 +100,7 @@ export default class Readme {
 
   }
 
-  index() {
+  private index() {
 
     const indexed: IndexedBlocks = new Map([]);
 
