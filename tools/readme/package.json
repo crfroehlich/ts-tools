@@ -1,5 +1,28 @@
 {
+  "name": "readme",
+  "version": "1.0.0",
+  "description": "The `readme` tool allows you programmatically manipulate sections in a readme.",
+  "main": "index.js",
+  "directories": {
+    "build": "tsc -p .",
+    "test": "build && test"
+  },
+  "scripts": {
+    "test": "mocha -r ts-node/register test/**/*.test.ts"
+  },
+  "keywords": [
+    "readme",
+    "dev-tools"
+  ],
+  "author": "Alex Ramsdell",
+  "license": "NS8 Proprietary 1.0",
   "devDependencies": {
-    "@types/node": "^13.7.0"
+    "@types/chai": "^4.2.8",
+    "@types/mocha": "^7.0.1",
+    "@types/node": "^13.7.0",
+    "chai": "^4.2.0",
+    "mocha": "^7.0.1",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
   }
 }
