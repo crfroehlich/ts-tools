@@ -25,11 +25,8 @@ export default class Readme {
   private static isCodeEndTag = (line: string) => /^ *``` *$/.test(line);
 
   path: string;
-  blocks: Block[] = [{
-    type: 'content',
-    header: '_root',
-    content: []
-  }];
+  blocks: Block[] = [
+  ];
   indexedBlocks: IndexedBlocks = new Map([]);
 
   constructor(path: string) {
@@ -63,7 +60,13 @@ export default class Readme {
     const content = await this.getReadme();
     const lines = content.split('\n');
 
-    let currentHeaderKey = (this.blocks[0] as Content).header;
+    const rootBlock: Content = {
+      type: 'content',
+      header: '_root',
+      content: []
+    };
+    this.blocks.push(rootBlock);
+    let currentHeaderKey = rootBlock.header;
     let inCodeBlock = false;
 
     for (const line of lines) {
@@ -137,9 +140,12 @@ export default class Readme {
   export():string {
 
     let output = '';
+
     for (const block of this.blocks) {
-      if ((block as Content).header && (block as Content).header !== '_root') {
-        output += (block as Content).header + '\n';
+      if (block.type === 'content') {
+        if (block.header !== '_root') {
+          output += block.header + '\n';
+        }
       }
       output += block.content.join('\n') + '\n'; 
     }

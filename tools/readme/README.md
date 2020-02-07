@@ -12,20 +12,7 @@ const newReadme = readme.export();
 
 ## API
 
-## Types
-
-`BlockContent`: a type alias for `string[]`
-
-## Interfaces
-
-`Block`
-  + header: `string`
-  + content: `BlockContent`
-
-# The `Readme` class
-
-## Instance Methods
-
+### Instance Methods
 
 ### `readme.getSection(target: string | regex, strict:Boolean = false): Block`
 
@@ -37,7 +24,6 @@ Queries the readme for a section by a `string` comparison or `RegExp` test.
 
 #### returns
   + an array of `Block` objects
-
 
 ### `readme.getSections(target: string | regex): Block[] `
 

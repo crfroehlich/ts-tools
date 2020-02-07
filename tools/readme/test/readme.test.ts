@@ -58,6 +58,15 @@ describe('Readme.parse', () => {
 
 describe('Readme.getSection', async () => {
 
+  it('should return null when a query doesnt match any heading', async () => {
+
+    const readme = await new Readme(testFiles.standard).parse();
+    readme.setSection('Table of Contents', 'REPLACED CONTENT');
+    const section = readme.getSection('Non-existent Heading');
+    expect(section).to.be.null;
+
+  });
+
   it('should return null for any getSection call with an emtpy file', async () => {
 
     const readme = await new Readme(testFiles.empty).parse();
@@ -130,12 +139,13 @@ describe('Readme.export', async () => {
 
   });
 
-  it('should return null when a query doesnt match any heading', async () => {
 
-    const readme = await new Readme(testFiles.standard).parse();
-    readme.setSection('Table of Contents', 'REPLACED CONTENT');
-    const section = readme.getSection('Non-existent Heading');
-    expect(section).to.be.null;
+  it('should export file correctly if it contains code blocks', async () => {
+
+    const readme = await new Readme(testFiles.codeBlocksContainingHeaders).parse();
+    const codeBlockFile = await promisify(readFile)(testFiles.codeBlocksContainingHeaders, 'utf8');
+    // ignoring differing white-space for now. should be fixed
+    expect(readme.export().split('\n').filter(Boolean).join('')).to.equal(codeBlockFile.split('\n').filter(Boolean).join(''))
 
   });
 
