@@ -2,14 +2,21 @@ import { promisify } from 'util';
 import { readFile, writeFile } from 'fs';
 import { isAbsolute, join } from 'path';
 
-export type SectionTarget = string | RegExp;
+export type Query = string | RegExp;
 export type BlockContent = string[];
-export interface Block {
+
+export interface Content {
+  type: 'content';
   header: string;
   content: BlockContent;
 };
-export type IndexedBlocks = Map<string, Block[]>;
+export interface Code {
+  type: 'code';
+  content: BlockContent;
+};
+export type Block = Code | Content;
 
+export type IndexedBlocks = Map<string, Content[]>;
 
 export default class Readme {
 
@@ -19,6 +26,7 @@ export default class Readme {
 
   path: string;
   blocks: Block[] = [{
+    type: 'content',
     header: '_root',
     content: []
   }];
@@ -55,33 +63,37 @@ export default class Readme {
     const content = await this.getReadme();
     const lines = content.split('\n');
 
-    let currentHeaderKey = this.blocks[0].header;
+    let currentHeaderKey = (this.blocks[0] as Content).header;
     let inCodeBlock = false;
 
     for (const line of lines) {
 
       // transition into code section
       if (!inCodeBlock && Readme.isCodeStartTag(line)) {
+
         inCodeBlock = true;
-        continue;
-      }
 
-      // transition out of code section
-      if (inCodeBlock && Readme.isCodeEndTag(line)) {
+        const newBlock: Code = {
+          type: 'code',
+          content: [line]
+        };
+        this.blocks.push(newBlock)
+
+      } else if (inCodeBlock && Readme.isCodeEndTag(line)) {
+
         inCodeBlock = false;
-        continue;
-      }
 
-      // inside of code section, no transition
-      if (inCodeBlock && !Readme.isCodeEndTag(line)) {
-        continue;
-      }
+        this.blocks[this.blocks.length - 1].content.push(line);
 
-      // new block
-      if (Readme.isHeader(line)) {
+      } else if (inCodeBlock && !Readme.isCodeEndTag(line)) {
+
+        this.blocks[this.blocks.length - 1].content.push(line);
+
+      } else if (Readme.isHeader(line)) {
 
         currentHeaderKey = line;
         this.blocks.push({
+          type: 'content',
           header: currentHeaderKey,
           content: []
         });
@@ -106,6 +118,8 @@ export default class Readme {
 
     for (const block of this.blocks) {
 
+      if (block.type !== 'content') continue;
+
       const existingIndex = indexed.get(block.header);
 
       if (existingIndex) {
@@ -119,53 +133,57 @@ export default class Readme {
     this.indexedBlocks = indexed;
 
   }
+
   export():string {
 
     let output = '';
     for (const block of this.blocks) {
-      if (block.header !== '_root') {
-        output += block.header + '\n';
+      if ((block as Content).header && (block as Content).header !== '_root') {
+        output += (block as Content).header + '\n';
       }
       output += block.content.join('\n') + '\n'; 
     }
 
     return output;
+
   }
 
-  getSection(target: SectionTarget, strict=false): Block | null {
+  getSection(target: Query, strict=false): Content | null {
 
     return this.getSections(target)[0] || null;
 
   }
 
-  getSections(target: SectionTarget, strict=false): Block[] {
+  getSections(target: Query, strict=false): Content[] {
+
+    const blocks:Content[] = [];
 
     if (typeof target === 'string') {
-      for (const [key, blocks] of this.indexedBlocks.entries()) { 
+      for (const [key, contentBlocks] of this.indexedBlocks.entries()) { 
         if (strict) {
           if (key === target) {
-            return blocks;
+            blocks.push(...contentBlocks);
           }
         } else {
           if (key.includes(target)) {
-            return blocks;
+            blocks.push(...contentBlocks);
           }
         }
       }
     } else if (target instanceof RegExp) {
 
-      for (const [key, blocks] of this.indexedBlocks.entries()) { 
+      for (const [key, contentBlocks] of this.indexedBlocks.entries()) { 
         if (target.test(key)) {
-          return blocks;
+          blocks.push(...contentBlocks);
         }
       }
     }
 
-    return [];
+    return blocks;
 
   }
 
-  setSection(target: SectionTarget, content: string = '') {
+  setSection(target: Query, content: string = '') {
 
     const sections: Block[] = this.getSections(target);
     if (sections.length > 0) {
@@ -184,9 +202,6 @@ const main = async() => {
     process.exit(1);
   }
   const readme = await new Readme(filename).parse();
-  readme.setSection('Table of Contents', 'FAKE TABLE OF CONTENTS'); 
-  console.log(readme.export());
-  console.log(readme.blocks);
 
 }
 

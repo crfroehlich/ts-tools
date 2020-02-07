@@ -5,22 +5,15 @@
 + Contributing
 + License
 
-## Purpose
-duplicate section
-
-## Authors
-This was authored by Alex.
-
-## Contributing
-Make a PR using our PR template.
 
 ```bash
-
-## This Header should not be parsed
+# Code Header
 
 ```
-
+# header
+later
 
 ## License
 This project is licensed with an NS8 1.0 proprietary license.
 
+# Table Of Contents

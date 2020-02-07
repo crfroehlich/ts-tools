@@ -14,14 +14,11 @@ const newReadme = readme.export();
 
 ## Types
 
-`BlockContent`
-
-+ `string[]`
+`BlockContent`: a type alias for `string[]`
 
 ## Interfaces
 
 `Block`
-properties:
   + header: `string`
   + content: `BlockContent`
 

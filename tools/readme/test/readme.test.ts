@@ -8,7 +8,7 @@ import Readme from '../index';
 const testFiles = {
   empty: './test/test-data/TEST1.md',
   duplicateHeaders: './test/test-data/TEST2.md',
-  noContents: './test/test-data/TEST3.md',
+  headersOnly: './test/test-data/TEST3.md',
   codeBlocksContainingHeaders: './test/test-data/TEST4.md',
   standard: './test/test-data/TEST5.md',
 };
@@ -45,12 +45,12 @@ describe('Readme.parse', () => {
   });
 
   it('triplicate headers and no contents should result in 4 blocks (1 for root, 3 for each toc).', async() => {
-    const readme = await new Readme(testFiles.noContents).parse();
+    const readme = await new Readme(testFiles.headersOnly).parse();
     expect(readme.blocks.length).to.equal(4);
   });
 
   it('triplicate headers and no contents should result in 2 indexedBlocks (1 for root + 1 for toc).', async() => {
-    const readme = await new Readme(testFiles.noContents).parse();
+    const readme = await new Readme(testFiles.headersOnly).parse();
     expect(readme.indexedBlocks.size).to.equal(2);
   });
 
@@ -81,15 +81,31 @@ describe('Readme.getSections', async () => {
 
   it('should return any emtpy array for any getSections call where there are no matches.', async () => {
 
-    const readme = await new Readme(testFiles.noContents).parse();
-    const sections = readme.getSections('TOC');
-    expect(sections).to.deep.equal([]);
+    const readme = await new Readme(testFiles.headersOnly).parse();
+    const sections = readme.getSections('Table of Contents');
+    expect(sections.length).to.equal(3);
+
+  });
+
+  it('should two entries for a duplicate header.', async () => {
+
+    const readme = await new Readme(testFiles.duplicateHeaders).parse();
+    const sections = readme.getSections('Purpose');
+    expect(sections.length).to.equal(2);
+
+  });
+
+  it('should ignore content inside of code blocks', async() => {
+
+    const readme = await new Readme(testFiles.codeBlocksContainingHeaders).parse();
+    const section = readme.getSection('Code Header');
+    expect(section).to.be.null;
 
   });
 
   it('should return value for an existing section using a RegExp', async () => {
 
-    const readme = await new Readme(testFiles.noContents).parse();
+    const readme = await new Readme(testFiles.headersOnly).parse();
     const sections = readme.getSections('Table of Contents');
     expect(sections.length).to.equal(3);
     expect(sections.every(({ header }) => header.includes('Table of Contents')));
@@ -111,6 +127,7 @@ describe('Readme.export', async () => {
     const modificationExport = readme.export();
     expect(noModificationExport).not.to.equal(modificationExport);
 
+
   });
 
   it('should return null when a query doesnt match any heading', async () => {
@@ -121,7 +138,5 @@ describe('Readme.export', async () => {
     expect(section).to.be.null;
 
   });
-
-
 
 });
