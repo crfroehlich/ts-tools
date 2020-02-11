@@ -10,21 +10,51 @@ import {
   Query
 } from './types'; 
 
+/**
+ * Responsible for parsing and manipulating a Readme markdown.
+ */
+
 export default class Readme {
 
-  private static isHeader = (line: string) => /^ *#+ /.test(line);
-  private static isCodeStartTag = (line: string) => /^ *```[^`]*$/.test(line);
-  private static isCodeEndTag = (line: string) => /^ *``` *$/.test(line);
-  private static isRootNode = (block: Block) => block.type === 'content' && block.header === '_root'; 
-  private static isContentBlock = (block: Block) => block.type === 'content'; 
-  private static sanitize = (line:string): string => line.replace(/ /g,'-').replace(/[^a-zA-Z0-9-]/g,''); // asci-centric
-  private static repeat = (s: string, count: number): string => [...Array(count).keys()].map(_ => s).join('');
-  private static makeLink = (text: string) => `[${Readme.sanitize(text)}](#${Readme.sanitize(text).toLowerCase()})`;
+  public static isHeader = (line: string) => /^ *#+ /.test(line);
+  public static isCodeStartTag = (line: string) => /^ *```[^`]*$/.test(line);
+  public static isCodeEndTag = (line: string) => /^ *``` *$/.test(line);
+  public static isRootNode = (block: Block) => block.type === 'content' && block.header === '_root'; 
+  public static isContentBlock = (block: Block): block is Content => block.type === 'content'; 
+  public static sanitize = (line:string): string => line.replace(/ /g,'-').replace(/[^a-zA-Z0-9-]/g,''); // ascii-centric
+  public static repeat = (s: string, count: number): string => [...Array(count).keys()].map(_ => s).join('');
+  public static makeLink = (text: string) => `[${Readme.sanitize(text)}](#${Readme.sanitize(text).toLowerCase()})`;
+  public static headerFound(header: string, query: Query, strict: boolean = false):Boolean {
 
+    if (typeof query === 'string') {
+
+      if (strict && header === query) {
+        return true;
+      } else if (header.includes(query)) {
+        // doesnt match case insensitive. should it?
+        return true;
+      }
+
+    } else if (query instanceof RegExp && query.test(header)) {
+      return true;
+    }
+
+    return false;
+
+  }
+
+  /*
+   * path is either absolute or relative to the calling code.
+   * Resolved via 'path.resolve'.
+   */
   path: string;
   blocks: Block[] = [];
   indexedBlocks: IndexedBlocks = new Map([]);
 
+  /*
+   * @param path - path to the readme file to be parsed.
+   *
+   */
   constructor(path: string) {
 
     if (path.trim().length === 0) {
@@ -35,7 +65,11 @@ export default class Readme {
 
   }
 
-  async getReadme() {
+
+  /*
+   * Reads the readme file supplied in the constructor and returns a Promise containing a string. 
+   */
+  async getReadme():Promise<string> {
 
     let content: string = '';
 
@@ -56,6 +90,9 @@ export default class Readme {
 
   }
 
+  /*
+   * Parses the readme file and returns a Promise containing the Readme instance (for chaining). 
+   */
   async parse():Promise<Readme> {
 
     const content = await this.getReadme();
@@ -122,8 +159,11 @@ export default class Readme {
 
   }
 
-  // index blocks by header to allow for efficient querying
-  private index() {
+  /*
+   * Indexes blocks by header to allow for efficient querying.
+   */
+
+  public index() {
 
     const indexed: IndexedBlocks = new Map([]);
 
@@ -145,6 +185,12 @@ export default class Readme {
 
   }
 
+  /* 
+   * Generates a linked table of contents from the headers.
+   *
+   * @param indent - a string used to pad indentations for the list indentations. 
+   *
+   */
   toc(indent:string = '  '):string {
 
     return this.blocks
@@ -160,7 +206,11 @@ export default class Readme {
 
   }
 
-  // render readme back out to a string
+  /*
+   *
+   * Renders the readme out as a string.
+   *
+   */
   export():string {
 
     let output = '';
@@ -178,15 +228,26 @@ export default class Readme {
 
   }
 
-  // find a non-code block by header
+
+  /* 
+   * Find a single content (non-code) block by header.
+   *
+   * @param content - a {@link Block} object to insert before a matched content header. 
+   * @param strict - whether to perform a strict match or not against a content header.
+   */
   getSection(target: Query, strict=false): Content | null {
 
     return this.getSections(target)[0] || null;
 
   }
 
-  // find non-code blocks by header
-  getSections(target: Query, strict=false): Content[] {
+  /* 
+   * Find content (non-code) blocks by header.
+   *
+   * @param content - a {@link Block} object to insert before a matched content header. 
+   * @param strict - whether to perform a strict match or not against a content header.
+   */
+  getSections(target: Query, strict:boolean = false): Content[] {
 
     const blocks:Content[] = [];
 
@@ -215,10 +276,87 @@ export default class Readme {
 
   }
 
-  // todo: prependContent(target: Query | null) to insert new sections
-  // todo: appendContent(target: Query | null) to insert new sections
 
-  // set first found section (targeted by string/regex) to supplied content
+  /*
+   * Prepends content to the beginning of the readme content list.
+   *
+   * @param content - a {@link Block} object to insert before a matched content header. 
+   * @param strict - whether to perform a strict match or not against a content header.
+   *
+   */
+  prepend(content: Block, strict: boolean = false) {
+    this.blocks.unshift(content);
+  }
+
+
+  /*
+   * Appends content at end of the readme content list.
+   *
+   * @param content - a {@link Block} object to insert before a matched content header. 
+   * @param strict - whether to perform a strict match or not against a content header.
+   *
+   */
+
+  append(content: Block, strict: boolean = false) {
+    this.blocks.push(content);
+  }
+
+
+  /*
+   * Inserts the content after a matching content block. 
+   *
+   * @param target - a {@link Query} object to match a content section. 
+   * @param content - a {@link Block} object to insert before a matched content header. 
+   * @param strict - whether to perform a strict match or not against a content header.
+   *
+   */
+  insertBefore(target: Query, content: Block, strict: boolean = false) {
+
+    let index = 0;
+    for (let i = 0; i < this.blocks.length; ++i) {
+
+      const block = this.blocks[i];
+
+      if (Readme.isContentBlock(block) && Readme.headerFound(block.header, target, strict)) {
+        this.blocks.splice(i, 0, content);
+        return
+      }
+
+    }
+
+  }
+
+  /*
+   * Inserts the content after a matching content block. 
+   *
+   * @param target - a {@link Query} object to match a content section. 
+   * @param content - a {@link Block} object to insert after a matched content header. 
+   * @param strict - whether to perform a strict match or not against a content header.
+   *
+   */
+  insertAfter(target: Query, content: Block, strict: boolean = false) {
+
+    let index = 0;
+    for (let i = 0; i < this.blocks.length; ++i) {
+
+      const block = this.blocks[i];
+
+      if (Readme.isContentBlock(block) && Readme.headerFound(block.header, target, strict)) {
+        this.blocks.splice(i + 1, 0, content);
+        return
+      }
+
+    }
+
+  }
+
+  /*
+   * Set the first found section (targeted by string/regex) to the supplied content
+   *
+   * @param target - a {@link Query} object to match a content section for replacement. 
+   * @param content - a {@link Block} object to insert after a matched content header. 
+   *
+   */
   setSection(target: Query, content: string = '') {
 
     const sections: Block[] = this.getSections(target);
