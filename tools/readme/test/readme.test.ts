@@ -1,28 +1,41 @@
 import { expect, use } from 'chai';
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { promisify } from 'util';
 import { readFile } from 'fs';
 import 'mocha';
-import Readme from '../index';
+import Readme from '../src/readme';
 
+console.log(__dirname);
+console.log(resolve('.'));
+console.log(resolve('./'));
 const TEST_FILES = {
-  EMPTY: './test/test-data/empty.md',
-  DUPLICATE_HEADERS: './test/test-data/duplicateHeaders.md',
-  HEADERS_ONLY: './test/test-data/headersOnly.md',
-  CODE_BLOCKS_CONTAINING_HEADERS: './test/test-data/codeBlocksWithHeaders.md',
-  STANDARD: './test/test-data/standard.md',
+  EMPTY: join(__dirname, 'test-data/empty.md'),
+  DUPLICATE_HEADERS: join(__dirname, 'test-data/duplicateHeaders.md'),
+  HEADERS_ONLY: join(__dirname, 'test-data/headersOnly.md'),
+  CODE_BLOCKS_CONTAINING_HEADERS: join(__dirname, 'test-data/codeBlocksWithHeaders.md'),
+  STANDARD: join(__dirname, 'test-data/standard.md'),
 };
 
 describe('Readme constructor', () => {
 
-  it('should have an absolute path property if a path string is passed in.', () => {
-    const readme = new Readme('test-path');
-    expect(readme.path).to.equal(join(__dirname,'..', 'test-path'));
+  it('should throw if an invalid path is passed in', () => {
+
+    expect(function() { new Readme('') }).to.throw();
+
   });
 
-  it('should throw if no path is passed in', () => {
-    expect(function() { new Readme('') }).to.throw();
-  });
+  it('should resolve and store a path parameter relative to the caller\'s cwd.', () => {
+
+    const dotSlash = './';
+    const dot = '.';
+    const cwd = process.cwd();
+
+    expect(new Readme(dot).path).to.equal(cwd);
+    expect(new Readme(dotSlash).path).to.equal(cwd);
+    expect(new Readme('test-path').path).to.equal(join(cwd, 'test-path'));
+
+  })
+
 
 });
 

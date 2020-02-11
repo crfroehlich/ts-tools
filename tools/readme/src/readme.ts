@@ -1,6 +1,6 @@
 import { promisify } from 'util';
 import { readFile, writeFile } from 'fs';
-import { isAbsolute, join } from 'path';
+import { isAbsolute, join, resolve } from 'path';
 import { 
   Block,
   BlockContent,
@@ -26,7 +26,7 @@ export default class Readme {
       throw new Error(`invalid path: ${path}`);
     }
 
-    this.path = isAbsolute(path) ? path : join(__dirname, path);
+    this.path = resolve(path);
 
   }
 
@@ -111,7 +111,7 @@ export default class Readme {
       }
     }
 
-    // index blocks by header to allow for efficient querying
+    // index blocks by header for querying
     this.index();
 
     return this;
