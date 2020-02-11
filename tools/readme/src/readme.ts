@@ -11,7 +11,7 @@ import {
 } from './types'; 
 
 /**
- * Responsible for parsing and manipulating a Readme markdown.
+ * Responsible for parsing, manipulating, or generating a Table of Contents for a Readme markdown file.
  */
 
 export default class Readme {
