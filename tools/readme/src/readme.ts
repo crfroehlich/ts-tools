@@ -15,6 +15,11 @@ export default class Readme {
   private static isHeader = (line: string) => /^ *#+ /.test(line);
   private static isCodeStartTag = (line: string) => /^ *```[^`]*$/.test(line);
   private static isCodeEndTag = (line: string) => /^ *``` *$/.test(line);
+  private static isRootNode = (block: Block) => block.type === 'content' && block.header === '_root'; 
+  private static isContentBlock = (block: Block) => block.type === 'content'; 
+  private static sanitize = (line:string): string => line.replace(/ /g,'-').replace(/[^a-zA-Z0-9-]/g,''); // asci-centric
+  private static repeat = (s: string, count: number): string => [...Array(count).keys()].map(_ => s).join('');
+  private static makeLink = (text: string) => `[${Readme.sanitize(text)}](#${Readme.sanitize(text).toLowerCase()})`;
 
   path: string;
   blocks: Block[] = [];
@@ -65,8 +70,7 @@ export default class Readme {
     let currentHeaderKey = rootBlock.header;
     let inCodeBlock = false;
 
-    // rudimentary state machine to detect which part of the readme
-    // we're in, on a line-by-line basis.
+    // basic state machine to detect, line-by-line, which part of the readme
     for (const line of lines) {
 
       // transition into code section
@@ -141,6 +145,21 @@ export default class Readme {
 
   }
 
+  toc(indent:string = '  '):string {
+
+    return this.blocks
+      .filter((block): block is Content => Readme.isContentBlock(block) && !Readme.isRootNode(block))
+      .map(block => block.header)
+      .map(header => {
+        const [ marker, ...text ] = header.trim().split(' ');
+        const indentCount = marker.length - 1;
+        const linkedHeader = Readme.makeLink(text.join('-'));
+        return `${Readme.repeat(indent, indentCount)}+ ${linkedHeader}`;
+      })
+      .join('\n');
+
+  }
+
   // render readme back out to a string
   export():string {
 
@@ -148,7 +167,7 @@ export default class Readme {
 
     for (const block of this.blocks) {
       if (block.type === 'content') {
-        if (block.header !== '_root') {
+        if (!Readme.isRootNode(block)) {
           output += block.header + '\n';
         }
       }
@@ -195,6 +214,9 @@ export default class Readme {
     return blocks;
 
   }
+
+  // todo: prependContent(target: Query | null) to insert new sections
+  // todo: appendContent(target: Query | null) to insert new sections
 
   // set first found section (targeted by string/regex) to supplied content
   setSection(target: Query, content: string = '') {

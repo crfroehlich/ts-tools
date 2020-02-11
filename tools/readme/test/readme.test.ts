@@ -14,6 +14,7 @@ const TEST_FILES = {
   HEADERS_ONLY: join(__dirname, 'test-data/headersOnly.md'),
   CODE_BLOCKS_CONTAINING_HEADERS: join(__dirname, 'test-data/codeBlocksWithHeaders.md'),
   STANDARD: join(__dirname, 'test-data/standard.md'),
+  MISSING_TOC: join(__dirname, 'test-data/missingToc.md'),
 };
 
 describe('Readme constructor', () => {
@@ -169,3 +170,15 @@ describe('Readme.export', async () => {
   });
 
 });
+
+describe('table of contents', async() => {
+
+  it('should generate a toc', async () => {
+
+    const readme = await new Readme(TEST_FILES.MISSING_TOC).parse();
+    const toc = readme.toc();
+    expect(toc).to.equal('');
+
+  });
+
+})
