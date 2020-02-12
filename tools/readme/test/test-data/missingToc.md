@@ -1,6 +1,6 @@
-Demo Repo
+# Demo Repo
 
-# Purpose with a `tag in it`
+## Header with a `tag in it`
 Purpose statement.
 
 ## Sub-purpose section

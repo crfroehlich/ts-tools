@@ -23,7 +23,7 @@ export default class Readme {
   public static isContentBlock = (block: Block): block is Content => block.type === 'content'; 
   public static sanitize = (line:string): string => line.replace(/ /g,'-').replace(/[^a-zA-Z0-9-]/g,''); // ascii-centric
   public static repeat = (s: string, count: number): string => [...Array(count).keys()].map(_ => s).join('');
-  public static makeLink = (text: string) => `[${Readme.sanitize(text)}](#${Readme.sanitize(text).toLowerCase()})`;
+  public static makeLink = (...textParts: string[]) => `[${textParts.join(' ')}](#${Readme.sanitize(textParts.join('-')).toLowerCase()})`;
 
   public static headerFound(header: string, query: Query, strict: boolean = false):Boolean {
 
@@ -207,7 +207,7 @@ export default class Readme {
       .map(header => {
         const [ marker, ...text ] = header.trim().split(' ');
         const indentCount = marker.length - 1;
-        const linkedHeader = Readme.makeLink(text.join('-'));
+        const linkedHeader = Readme.makeLink(...text);
         return `${Readme.repeat(indent, indentCount)}+ ${linkedHeader}`;
       })
       .join('\n');

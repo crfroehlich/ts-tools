@@ -175,9 +175,19 @@ describe('table of contents', async() => {
 
   it('should generate a toc', async () => {
 
+
+    const expectedToc = `+ [Demo Repo](#demo-repo)
+  + [Header with a \`tag in it\`](#header-with-a-tag-in-it)
+  + [Sub-purpose section](#sub-purpose-section)
+    + [Sub-sub purpose section](#sub-sub-purpose-section)
+      + [\`yarn\` scripts](#yarn-scripts)
++ [Authors](#authors)
++ [Contributing](#contributing)
++ [License](#license)`;
+
     const readme = await new Readme(TEST_FILES.MISSING_TOC).parse();
     const toc = readme.toc();
-    expect(toc).to.equal('');
+    expect(toc).to.equal(expectedToc);
 
   });
 
