@@ -4,12 +4,12 @@
 export type Query = string | RegExp;
 
 /*
- * An array of strings parsed by splitting the content section on newlines.
+ * An array of strings representing the content section (no header) of a markdown section.
  */
 export type BlockContent = string[];
 
 /*
- * A representation of a {@link Content} block.
+ * A content block represents a markdown section, a header and {@link BlockContent}.
  */
 export interface Content {
   type: 'content';
@@ -18,9 +18,9 @@ export interface Content {
 };
 
 /*
- * A representation of a {@link Code} block.
+ * A representation of a markdown code section, containing just {@link BlockContent}. 
+ * Code is parsed to avoid picking up headers inside of code blocks. 
  */
-
 export interface Code {
   /*
    * type is the discriminant
@@ -35,7 +35,7 @@ export interface Code {
 export type Block = Code | Content;
 
 /*
- * A map of block header strings to {@link Content} arrays. The content arrays have been indexed 
+ * A map of header strings to {@link Content} arrays. The {@link Content} arrays have been indexed 
  * by header to support efficient querying.
  */
 export type IndexedBlocks = Map<string, Content[]>;

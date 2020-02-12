@@ -11,7 +11,7 @@ import {
 } from './types'; 
 
 /**
- * Responsible for parsing, manipulating, or generating a Table of Contents for a Readme markdown file.
+ * The Readme class is responsible for representing a readme file plus programmatic manipulations and transformations of it.
  */
 
 export default class Readme {
@@ -24,14 +24,16 @@ export default class Readme {
   public static sanitize = (line:string): string => line.replace(/ /g,'-').replace(/[^a-zA-Z0-9-]/g,''); // ascii-centric
   public static repeat = (s: string, count: number): string => [...Array(count).keys()].map(_ => s).join('');
   public static makeLink = (text: string) => `[${Readme.sanitize(text)}](#${Readme.sanitize(text).toLowerCase()})`;
+
   public static headerFound(header: string, query: Query, strict: boolean = false):Boolean {
+
+    // doesnt match case insensitive. should it?
 
     if (typeof query === 'string') {
 
       if (strict && header === query) {
         return true;
       } else if (header.includes(query)) {
-        // doesnt match case insensitive. should it?
         return true;
       }
 
@@ -44,11 +46,18 @@ export default class Readme {
   }
 
   /*
-   * path is either absolute or relative to the calling code.
-   * Resolved via 'path.resolve'.
+   * path resolved relative to the calling code's cwd, resolved with 'path.resolve'.
    */
   path: string;
+
+  /*
+   * A list of {@link Content} or {@link Code} blocks.
+   */
   blocks: Block[] = [];
+
+  /*
+   * A map of {@link Content} blocks.
+   */
   indexedBlocks: IndexedBlocks = new Map([]);
 
   /*
@@ -67,7 +76,7 @@ export default class Readme {
 
 
   /*
-   * Reads the readme file supplied in the constructor and returns a Promise containing a string. 
+   * Reads the readme at {@link path} and returns it as a Promise-wrapped string. 
    */
   async getReadme():Promise<string> {
 
@@ -91,7 +100,7 @@ export default class Readme {
   }
 
   /*
-   * Parses the readme file and returns a Promise containing the Readme instance (for chaining). 
+   * Parses the readme file at {@link path} and returns it as Promise-wrapped Readme instance for chaining.
    */
   async parse():Promise<Readme> {
 
@@ -152,7 +161,6 @@ export default class Readme {
       }
     }
 
-    // index blocks by header for querying
     this.index();
 
     return this;
@@ -160,7 +168,7 @@ export default class Readme {
   }
 
   /*
-   * Indexes blocks by header to allow for efficient querying.
+   * Indexes {@link blocks} by header to support efficient querying.
    */
 
   public index() {
@@ -186,7 +194,7 @@ export default class Readme {
   }
 
   /* 
-   * Generates a linked table of contents from the headers.
+   * Generates a table of contents with links to respective sections.
    *
    * @param indent - a string used to pad indentations for the list indentations. 
    *
@@ -208,7 +216,7 @@ export default class Readme {
 
   /*
    *
-   * Renders the readme out as a string.
+   * Renders the parsed readme {@link Block} list as a string.
    *
    */
   export():string {
@@ -233,7 +241,7 @@ export default class Readme {
    * Find a single content (non-code) block by header.
    *
    * @param content - a {@link Block} object to insert before a matched content header. 
-   * @param strict - whether to perform a strict match or not against a content header.
+   * @param strict - whether to perform a strict string match or not against a content header.
    */
   getSection(target: Query, strict=false): Content | null {
 
@@ -245,7 +253,7 @@ export default class Readme {
    * Find content (non-code) blocks by header.
    *
    * @param content - a {@link Block} object to insert before a matched content header. 
-   * @param strict - whether to perform a strict match or not against a content header.
+   * @param strict - whether to perform a strict string match or not against a content header.
    */
   getSections(target: Query, strict:boolean = false): Content[] {
 
@@ -281,7 +289,7 @@ export default class Readme {
    * Prepends content to the beginning of the readme content list.
    *
    * @param content - a {@link Block} object to insert before a matched content header. 
-   * @param strict - whether to perform a strict match or not against a content header.
+   * @param strict - whether to perform a strict string match or not against a content header.
    *
    */
   prepend(content: Block, strict: boolean = false) {
@@ -293,7 +301,7 @@ export default class Readme {
    * Appends content at end of the readme content list.
    *
    * @param content - a {@link Block} object to insert before a matched content header. 
-   * @param strict - whether to perform a strict match or not against a content header.
+   * @param strict - whether to perform a strict string match or not against a content header.
    *
    */
 
@@ -307,17 +315,17 @@ export default class Readme {
    *
    * @param target - a {@link Query} object to match a content section. 
    * @param content - a {@link Block} object to insert before a matched content header. 
-   * @param strict - whether to perform a strict match or not against a content header.
+   * @param strict - whether to perform a strict string match or not against a content header.
    *
    */
-  insertBefore(target: Query, content: Block, strict: boolean = false) {
+  insertBefore(query: Query, content: Block, strict: boolean = false) {
 
     let index = 0;
     for (let i = 0; i < this.blocks.length; ++i) {
 
       const block = this.blocks[i];
 
-      if (Readme.isContentBlock(block) && Readme.headerFound(block.header, target, strict)) {
+      if (Readme.isContentBlock(block) && Readme.headerFound(block.header, query, strict)) {
         this.blocks.splice(i, 0, content);
         return
       }
