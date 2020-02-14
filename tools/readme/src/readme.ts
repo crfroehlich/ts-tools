@@ -145,7 +145,7 @@ export default class Readme {
         // entered new content block
       } else if (Readme.isHeader(line)) {
 
-        currentHeaderKey = line;
+        currentHeaderKey = line.trim();
         this.blocks.push({
           type: 'content',
           header: currentHeaderKey,
