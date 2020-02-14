@@ -1,7 +1,7 @@
 {
   "name": "readme",
   "version": "1.0.0",
-  "description": "The `readme` tool allows you programmatically manipulate sections in a readme.",
+  "description": "Programmatically manipulate sections in a readme.",
   "main": "index.js",
   "directories": {
     "build": "tsc -p .",

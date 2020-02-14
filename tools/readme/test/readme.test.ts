@@ -5,9 +5,6 @@ import { readFile } from 'fs';
 import 'mocha';
 import Readme from '../src/readme';
 
-console.log(__dirname);
-console.log(resolve('.'));
-console.log(resolve('./'));
 const TEST_FILES = {
   EMPTY: join(__dirname, 'test-data/empty.md'),
   DUPLICATE_HEADERS: join(__dirname, 'test-data/duplicateHeaders.md'),
@@ -162,10 +159,15 @@ describe('Readme.export', async () => {
     // TODO: ignores differing white-space for now. fix.
     expect(
       readme.export()
-            .split('\n')
-            .filter(Boolean)
-            .join('')
-    ).to.equal(codeBlockFile.split('\n').filter(Boolean).join(''))
+        .split('\n')
+        .filter(Boolean)
+        .join('')
+    ).to.equal(
+      codeBlockFile
+        .split('\n')
+        .filter(Boolean)
+        .join('')
+    )
 
   });
 

@@ -201,7 +201,7 @@ export default class Readme {
    */
   toc(indent:string = '  '):string {
 
-    return this.blocks
+    return '\n## Table of Contents' + '\n' + this.blocks
       .filter((block): block is Content => Readme.isContentBlock(block) && !Readme.isRootNode(block))
       .map(block => block.header)
       .map(header => {
@@ -210,7 +210,8 @@ export default class Readme {
         const linkedHeader = Readme.makeLink(...text);
         return `${Readme.repeat(indent, indentCount)}+ ${linkedHeader}`;
       })
-      .join('\n');
+      .slice(1) // ignore title block
+      .join('\n') + '\n';
 
   }
 
@@ -309,6 +310,30 @@ export default class Readme {
     this.blocks.push(content);
   }
 
+  /*
+   * Inserts the content after a matching content block. 
+   *
+   * @param target - a {@link Query} object to match a content section. 
+   * @param content - a {@link Block} object to insert after a matched content header. 
+   * @param strict - whether to perform a strict match or not against a content header.
+   *
+   */
+  insertAfter(target: Query, content: Block, strict: boolean = false) {
+
+    let index = 0;
+    for (let i = 0; i < this.blocks.length; ++i) {
+
+      const block = this.blocks[i];
+
+      if (Readme.isContentBlock(block) && Readme.headerFound(block.header, target, strict)) {
+        this.blocks.splice(i + 1, 0, content);
+        return
+      }
+
+    }
+
+  }
+
 
   /*
    * Inserts the content after a matching content block. 
@@ -327,30 +352,6 @@ export default class Readme {
 
       if (Readme.isContentBlock(block) && Readme.headerFound(block.header, query, strict)) {
         this.blocks.splice(i, 0, content);
-        return
-      }
-
-    }
-
-  }
-
-  /*
-   * Inserts the content after a matching content block. 
-   *
-   * @param target - a {@link Query} object to match a content section. 
-   * @param content - a {@link Block} object to insert after a matched content header. 
-   * @param strict - whether to perform a strict match or not against a content header.
-   *
-   */
-  insertAfter(target: Query, content: Block, strict: boolean = false) {
-
-    let index = 0;
-    for (let i = 0; i < this.blocks.length; ++i) {
-
-      const block = this.blocks[i];
-
-      if (Readme.isContentBlock(block) && Readme.headerFound(block.header, target, strict)) {
-        this.blocks.splice(i + 1, 0, content);
         return
       }
 

@@ -4,17 +4,20 @@
 
 Programmatically manipulate and transform sections in a readme.
 
-## Usage
-
-### Generate a table of contents
+## Generate a table of contents
 
 ```javascript
 const readme = await new Readme('./Readme.md').parse();
 readme.setSection(/^# `readme`/, readme.toc());
-await promisify(fs.writeFile('./Readme.md', 'utf8'), readme.export());
+console.log(readme.export());
 ```
 
-### Replace a section
+##  Example markdown
+The markdown file used in these examples is [here](example.md).
+
+## Replace a section
+
+`.setSection()` lets you replace the content of the first matching section.
 
 ```javascript
 const readme = await new Readme('./Readme.md').parse();
@@ -22,3 +25,12 @@ const updatedDescription = 'Readme is a library for programmatically manipulatin
 readme.setSection(/^# readme/, updatedDescription);
 await promisify(fs.writeFile('./Readme.md', 'utf8'), readme.export());
 ```
+
+## Query Section(s) by string or `RegExp`
+
+```javascript
+const readme = await new Readme('./Readme.md').parse();
+const toc = readme.getSection('Table of Contents');
+const toc2 readme.getSection(/^ *#+ *Table of Contents/);
+```
+
