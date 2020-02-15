@@ -1,17 +1,10 @@
 import { promisify } from 'util';
 import { readFile, writeFile } from 'fs';
 import { isAbsolute, join, resolve } from 'path';
-import { 
-  Block,
-  BlockContent,
-  Code,
-  Content,
-  IndexedBlocks,
-  Query
-} from './types'; 
+import { Block, IndexedBlocks, Query } from './types'; 
 
 /**
- * The Readme class is responsible for representing a readme file plus programmatic manipulations and transformations of it.
+ * The Readme class represents a markdown README file and provides an API for programmatic transformations of it.
  */
 
 export default class Readme {
@@ -19,11 +12,12 @@ export default class Readme {
   public static isHeader = (line: string) => /^ *#+ /.test(line);
   public static isCodeStartTag = (line: string) => /^ *```[^`]*$/.test(line);
   public static isCodeEndTag = (line: string) => /^ *``` *$/.test(line);
-  public static isRootNode = (block: Block) => block.type === 'content' && block.header === '_root'; 
-  public static isContentBlock = (block: Block): block is Content => block.type === 'content'; 
+  public static isRootNode = (block: Block) => block.header === '_root'; 
   public static sanitize = (line:string): string => line.replace(/ /g,'-').replace(/[^a-zA-Z0-9-]/g,''); // ascii-centric
   public static repeat = (s: string, count: number): string => [...Array(count).keys()].map(_ => s).join('');
-  public static makeLink = (...textParts: string[]) => `[${textParts.join(' ')}](#${Readme.sanitize(textParts.join('-')).toLowerCase()})`;
+  public static makeLink = (...textParts: string[]) => {
+    return `[${textParts.join(' ')}](#${Readme.sanitize(textParts.join('-')).toLowerCase()})`;
+  }
 
   public static headerFound(header: string, query: Query, strict: boolean = false):Boolean {
 
@@ -58,7 +52,7 @@ export default class Readme {
   /*
    * A map of {@link Content} blocks.
    */
-  indexedBlocks: IndexedBlocks = new Map([]);
+  indexedBlocks: IndexedBlocks = new Map();
 
   /*
    * @param path - path to the readme file to be parsed.
@@ -107,11 +101,11 @@ export default class Readme {
     const content = await this.getReadme();
     const lines = content.split('\n');
 
-    const rootBlock: Content = {
-      type: 'content',
+    const rootBlock: Block = {
       header: '_root',
-      content: []
+      content: [] 
     };
+
     this.blocks.push(rootBlock);
     let currentHeaderKey = rootBlock.header;
     let inCodeBlock = false;
@@ -119,48 +113,37 @@ export default class Readme {
     // basic state machine to detect, line-by-line, which part of the readme
     for (const line of lines) {
 
-      // transition into code section
-      if (!inCodeBlock && Readme.isCodeStartTag(line)) {
+      // in code block, don't parse header tags as new content blocks
+      if (inCodeBlock) {
 
-        inCodeBlock = true;
-
-        const newBlock: Code = {
-          type: 'code',
-          content: [line]
-        };
-        this.blocks.push(newBlock)
-
-        // transition out of code section
-      } else if (inCodeBlock && Readme.isCodeEndTag(line)) {
-
-        inCodeBlock = false;
+        if (Readme.isCodeEndTag(line)) {
+          inCodeBlock = false;
+        }
 
         this.blocks[this.blocks.length - 1].content.push(line);
 
-        // still inside code section
-      } else if (inCodeBlock && !Readme.isCodeEndTag(line)) {
-
-        this.blocks[this.blocks.length - 1].content.push(line);
-
-        // entered new content block
-      } else if (Readme.isHeader(line)) {
-
-        currentHeaderKey = line.trim();
-        this.blocks.push({
-          type: 'content',
-          header: currentHeaderKey,
-          content: []
-        });
-
-        // still inside of a content block
       } else {
+        // in regular content block
 
-        const latestBlock = this.blocks[this.blocks.length - 1]; 
-        latestBlock.content.push(line)
+        if (Readme.isHeader(line)) {
+          const newBlock = {
+            header: line,
+            content: []
+          };
+          this.blocks.push(newBlock);
+          // maybe index previous block here?
+        } else {
 
+          if (Readme.isCodeStartTag(line)) {
+            inCodeBlock = true;
+          }
+          // regular content line
+          this.blocks[this.blocks.length - 1].content.push(line);
+        }
       }
-    }
 
+    }
+        
     this.index();
 
     return this;
@@ -173,11 +156,9 @@ export default class Readme {
 
   public index() {
 
-    const indexed: IndexedBlocks = new Map([]);
+    const indexed: IndexedBlocks = new Map();
 
     for (const block of this.blocks) {
-
-      if (block.type !== 'content') continue;
 
       const existingIndex = indexed.get(block.header);
 
@@ -199,19 +180,20 @@ export default class Readme {
    * @param indent - a string used to pad indentations for the list indentations. 
    *
    */
-  toc(indent:string = '  '):string {
+  toc(target: Query | number = 1 , indent:string = '  '):string {
 
-    return '\n## Table of Contents' + '\n' + this.blocks
-      .filter((block): block is Content => Readme.isContentBlock(block) && !Readme.isRootNode(block))
-      .map(block => block.header)
-      .map(header => {
+    const tocHeader = '## Table of Contents\n'; 
+    
+    // slice(2) to skip _root block and the readme top-level header
+    const toc = this.blocks.slice(2).map(({ header }) => {
         const [ marker, ...text ] = header.trim().split(' ');
         const indentCount = marker.length - 1;
         const linkedHeader = Readme.makeLink(...text);
         return `${Readme.repeat(indent, indentCount)}+ ${linkedHeader}`;
       })
-      .slice(1) // ignore title block
       .join('\n') + '\n';
+
+    return `${tocHeader}${toc}`;
 
   }
 
@@ -225,16 +207,18 @@ export default class Readme {
     let output = '';
 
     for (const block of this.blocks) {
-      if (block.type === 'content') {
-        if (!Readme.isRootNode(block)) {
-          output += block.header + '\n';
-        }
+      if (!Readme.isRootNode(block)) {
+        output += block.header + '\n';
       }
       output += block.content.join('\n') + '\n'; 
     }
 
     return output;
 
+  }
+
+  getSectionAt(index:number): Block | null {
+    return this.blocks[index] || null;
   }
 
 
@@ -244,7 +228,7 @@ export default class Readme {
    * @param content - a {@link Block} object to insert before a matched content header. 
    * @param strict - whether to perform a strict string match or not against a content header.
    */
-  getSection(target: Query, strict=false): Content | null {
+  getSection(target: Query, strict=false): Block | null {
 
     return this.getSections(target)[0] || null;
 
@@ -256,9 +240,9 @@ export default class Readme {
    * @param content - a {@link Block} object to insert before a matched content header. 
    * @param strict - whether to perform a strict string match or not against a content header.
    */
-  getSections(target: Query, strict:boolean = false): Content[] {
+  getSections(target: Query, strict:boolean = false): Block[] {
 
-    const blocks:Content[] = [];
+    const blocks = [];
 
     if (typeof target === 'string') {
       for (const [key, contentBlocks] of this.indexedBlocks.entries()) { 
@@ -284,7 +268,6 @@ export default class Readme {
     return blocks;
 
   }
-
 
   /*
    * Prepends content to the beginning of the readme content list.
@@ -325,7 +308,7 @@ export default class Readme {
 
       const block = this.blocks[i];
 
-      if (Readme.isContentBlock(block) && Readme.headerFound(block.header, target, strict)) {
+      if (Readme.headerFound(block.header, target, strict)) {
         this.blocks.splice(i + 1, 0, content);
         return
       }
@@ -350,7 +333,7 @@ export default class Readme {
 
       const block = this.blocks[i];
 
-      if (Readme.isContentBlock(block) && Readme.headerFound(block.header, query, strict)) {
+      if (Readme.headerFound(block.header, query, strict)) {
         this.blocks.splice(i, 0, content);
         return
       }
@@ -375,5 +358,9 @@ export default class Readme {
     }
 
   }
+
+  //setSectionAt(index:number, content:string):void {
+  //}
+
 
 }
