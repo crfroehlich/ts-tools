@@ -175,17 +175,39 @@ export default class Readme {
   }
 
   /* 
-   * Generates a table of contents with links to respective sections.
+   * Generates a table of contents for a specified subset of sections, to avoid
+   * including the readme top level sections, and to provide greater user control.
+   *
+   * @insertionPoint - either a header-matching regex or an index into the readme sections
+   * to match where the toc should be inserted, and where it should start counting headers.
    *
    * @param indent - a string used to pad indentations for the list indentations. 
    *
+   * This does not replace an existing ToC.
    */
-  toc(target: Query | number = 1 , indent:string = '  '):string {
+  toc(insertionPoint: Query | number = 1 , indent:string = '  '):string {
 
     const tocHeader = '## Table of Contents\n'; 
-    
-    // slice(2) to skip _root block and the readme top-level header
-    const toc = this.blocks.slice(2).map(({ header }) => {
+    let insertAt = -1;
+
+    if (insertionPoint instanceof RegExp) {
+      insertAt = this.blocks.findIndex(block => {
+        return insertionPoint.test(block.header);
+      });
+    } else if (typeof insertionPoint === 'string') {
+      insertAt = this.blocks.findIndex(block => {
+        return block.header.includes(insertionPoint);
+      });
+    } else if (typeof insertionPoint === 'number') {
+      insertAt = insertionPoint;
+    }
+
+    if (insertAt === -1) {
+      return '';  //TODO: do i throw here instead?
+    }
+
+    // slice(2) is default to skip _root block and the readme top-level header
+    const toc = this.blocks.slice(insertAt + 1).map(({ header }) => {
         const [ marker, ...text ] = header.trim().split(' ');
         const indentCount = marker.length - 1;
         const linkedHeader = Readme.makeLink(...text);
