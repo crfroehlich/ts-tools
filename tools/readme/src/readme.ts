@@ -300,6 +300,7 @@ export default class Readme {
    */
   prepend(content: Block, strict: boolean = false) {
     this.blocks.unshift(content);
+    this.index();
   }
 
 
@@ -313,6 +314,7 @@ export default class Readme {
 
   append(content: Block, strict: boolean = false) {
     this.blocks.push(content);
+    this.index();
   }
 
   /*
@@ -325,17 +327,15 @@ export default class Readme {
    */
   insertAfter(target: Query, content: Block, strict: boolean = false) {
 
-    let index = 0;
-    for (let i = 0; i < this.blocks.length; ++i) {
+    let index = this.blocks.findIndex(block => {
+      return Readme.headerFound(block.header, target, strict);
+    });
 
-      const block = this.blocks[i];
-
-      if (Readme.headerFound(block.header, target, strict)) {
-        this.blocks.splice(i + 1, 0, content);
-        return
-      }
-
+    if (index > -1) {
+      this.blocks.splice(index + 1, 0, content);
     }
+
+    this.index();
 
   }
 
@@ -348,19 +348,17 @@ export default class Readme {
    * @param strict - whether to perform a strict string match or not against a content header.
    *
    */
-  insertBefore(query: Query, content: Block, strict: boolean = false) {
+  insertBefore(target: Query, content: Block, strict: boolean = false) {
 
-    let index = 0;
-    for (let i = 0; i < this.blocks.length; ++i) {
+    let index = this.blocks.findIndex(block => {
+      return Readme.headerFound(block.header, target, strict);
+    });
 
-      const block = this.blocks[i];
-
-      if (Readme.headerFound(block.header, query, strict)) {
-        this.blocks.splice(i, 0, content);
-        return
-      }
-
+    if (index > -1) {
+      this.blocks.splice(index, 0, content);
     }
+
+    this.index();
 
   }
 
@@ -377,12 +375,19 @@ export default class Readme {
 
     if (sections.length > 0) {
       sections[0].content = content.split('\n');
+      this.index();
     }
 
   }
 
-  //setSectionAt(index:number, content:string):void {
-  //}
+  setSectionAt(index:number, content:string):void {
 
+    if (index >= 0 && index <= this.blocks.length - 1) {
+      this.blocks[index].content = content.split('\n');
+      this.index();
+    }
+
+
+  }
 
 }

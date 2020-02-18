@@ -195,3 +195,165 @@ describe('table of contents', async() => {
   });
 
 })
+
+describe('insertBefore', async() => {
+
+  it('should add a block before the matched content block, when the query target is a valid match', async() => {
+    const readme = await new Readme(TEST_FILES.STANDARD).parse();
+    const previousLength = readme.blocks.length;
+    const newBlock = {
+      header: '## Insert Before',
+      content: ['Newly Inserted block content','']
+    };
+    readme.insertBefore('# Purpose', newBlock); 
+    expect(readme.blocks.length).to.equal(previousLength + 1);
+
+    const foundIndex = readme.blocks.findIndex(block => {
+      return Readme.headerFound(block.header, '# Purpose'); 
+    });
+    expect(foundIndex).to.be.greaterThan(0);
+    const blockBeforeTarget = readme.blocks[foundIndex - 1];
+    expect(blockBeforeTarget.header).to.equal('## Insert Before');
+
+    const foundBlock = readme.blocks.find(block =>  {
+      return Readme.headerFound(block.header, '## Insert Before');
+    });
+    expect(foundBlock).not.to.be.undefined;
+    expect(foundBlock).to.have.property('header');
+    expect(foundBlock).to.have.property('content');
+    expect(foundBlock!.content).to.deep.equal(['Newly Inserted block content','']);
+  })
+
+  it('should not add a block before the matched content block, when the query target is an invalid match', async() => {
+
+    const readme = await new Readme(TEST_FILES.STANDARD).parse();
+    const block = {
+      header: '## Insert Before',
+      content: ['Newly Inserted block content','']
+    };
+
+    const previousLength = readme.blocks.length;
+    readme.insertBefore('# Non-existent Section', block); 
+    expect(readme.blocks.length).to.equal(previousLength);
+
+    const foundBlock = readme.blocks.find(block =>  {
+      return Readme.headerFound(block.header, '## Insert Before');
+    });
+    expect(foundBlock).to.be.undefined;
+
+  })
+
+})
+
+describe('insertAfter', async() => {
+
+  it('should add a block before the matched content block, when the query target is a valid match', async() => {
+
+    const readme = await new Readme(TEST_FILES.STANDARD).parse();
+    const previousLength = readme.blocks.length;
+    const newBlock = {
+      header: '## Insert After',
+      content: ['Newly Inserted block content','']
+    };
+    readme.insertAfter('# Purpose', newBlock); 
+    expect(readme.blocks.length).to.equal(previousLength + 1);
+
+    const foundBlock = readme.blocks.find(block =>  {
+      return Readme.headerFound(block.header, '## Insert After');
+    });
+
+    const foundIndex = readme.blocks.findIndex(block => {
+      return Readme.headerFound(block.header, '# Purpose'); 
+    });
+    expect(foundIndex).to.be.greaterThan(0);
+    const blockAfterTarget = readme.blocks[foundIndex + 1];
+    expect(blockAfterTarget.header).to.equal('## Insert After');
+
+    expect(foundBlock).not.to.be.undefined;
+    expect(foundBlock).to.have.property('header');
+    expect(foundBlock).to.have.property('content');
+    expect(foundBlock!.content).to.deep.equal(['Newly Inserted block content','']);
+  })
+
+  it('should not add a block before the matched content block, when the query target is an invalid match', async() => {
+    const readme = await new Readme(TEST_FILES.STANDARD).parse();
+    const block = {
+      header: '## Insert Before',
+      content: ['Newly Inserted block content','']
+    };
+
+    const previousLength = readme.blocks.length;
+    readme.insertBefore('# Non-existent Section', block); 
+    expect(readme.blocks.length).to.equal(previousLength);
+
+    const foundBlock = readme.blocks.find(block =>  {
+      return Readme.headerFound(block.header, '## Insert Before');
+    });
+    expect(foundBlock).to.be.undefined;
+
+  })
+})
+
+describe('append', async() => {
+  it('should append new block to end of blocks', async() => {
+    const readme = await new Readme(TEST_FILES.STANDARD).parse();
+    const initialBlockCount = readme.blocks.length;
+    const block = {
+      header: '## Append',
+      content: ['Appended Content','']
+    };
+    readme.append(block);
+    const finalBlock = readme.blocks[readme.blocks.length - 1];
+
+    expect(readme.blocks.length).to.equal(initialBlockCount + 1);
+    expect(finalBlock.header).to.deep.equal('## Append');
+    expect(finalBlock.content).to.deep.equal(['Appended Content','']);
+  });
+  //TODO: test indexing
+})
+ 
+describe('prepend', async() => {
+
+  it('should prepend new block to readme content blocks', async() => {
+    const readme = await new Readme(TEST_FILES.STANDARD).parse();
+    const initialBlockCount = readme.blocks.length;
+    const block = {
+      header: '## Prepend',
+      content: ['Prepended Content','']
+    };
+    readme.prepend(block);
+    const firstBlock = readme.blocks[0];
+
+    expect(readme.blocks.length).to.equal(initialBlockCount + 1);
+    expect(firstBlock.header).to.deep.equal('## Prepend');
+    expect(firstBlock.content).to.deep.equal(['Prepended Content','']);
+  });
+
+  //TODO: test indexing
+
+})
+
+describe('setSection', async() => {
+  it('should replace content for a section by index', async() => {
+
+    const readme = await new Readme(TEST_FILES.STANDARD).parse();
+    const licenseBlockIndex = 5;
+
+    readme.setSection('License', 'MIT License');
+    expect(readme.blocks[licenseBlockIndex].content[0]).to.equal('MIT License');
+
+    readme.setSection(/^## License/, 'NS8 Proprietary 1.0 License');
+    expect(readme.blocks[licenseBlockIndex].content[0]).to.equal('NS8 Proprietary 1.0 License');
+
+  })
+})
+
+describe('setSectionAt', async() => {
+
+  it('should replace content for a section by index', async() => {
+    const readme = await new Readme(TEST_FILES.STANDARD).parse();
+    readme.setSectionAt(4, 'MIT License');
+    expect(readme.blocks[4].content[0]).to.equal('MIT License');
+  })
+
+})
