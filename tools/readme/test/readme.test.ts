@@ -309,7 +309,7 @@ describe('append', async() => {
     expect(finalBlock.header).to.deep.equal('## Append');
     expect(finalBlock.content).to.deep.equal(['Appended Content','']);
   });
-  //TODO: test indexing
+  //TODO: test indexing by searching via Query
 })
  
 describe('prepend', async() => {
@@ -327,33 +327,46 @@ describe('prepend', async() => {
     expect(readme.blocks.length).to.equal(initialBlockCount + 1);
     expect(firstBlock.header).to.deep.equal('## Prepend');
     expect(firstBlock.content).to.deep.equal(['Prepended Content','']);
-  });
 
-  //TODO: test indexing
+  //TODO: test indexing by searching via Query
+  });
 
 })
 
 describe('setSection', async() => {
+
   it('should replace content for a section by index', async() => {
 
     const readme = await new Readme(TEST_FILES.STANDARD).parse();
-    const licenseBlockIndex = 5;
+    const privateLicenseBlockIndex = 5; // index includes + 1 for _root block, whereas setSectionAt doesn't.
 
     readme.setSection('License', 'MIT License');
-    expect(readme.blocks[licenseBlockIndex].content[0]).to.equal('MIT License');
+    expect(readme.blocks[privateLicenseBlockIndex].content[0]).to.equal('MIT License');
 
     readme.setSection(/^## License/, 'NS8 Proprietary 1.0 License');
-    expect(readme.blocks[licenseBlockIndex].content[0]).to.equal('NS8 Proprietary 1.0 License');
+    expect(readme.blocks[privateLicenseBlockIndex].content[0]).to.equal('NS8 Proprietary 1.0 License');
+
+    const updatedSection = readme.getSection(/^## License/);
+    expect(updatedSection).not.to.be.null;
+    expect(updatedSection?.content[0]).to.equal('NS8 Proprietary 1.0 License');
 
   })
+
 })
 
 describe('setSectionAt', async() => {
 
   it('should replace content for a section by index', async() => {
+
     const readme = await new Readme(TEST_FILES.STANDARD).parse();
-    readme.setSectionAt(4, 'MIT License');
-    expect(readme.blocks[4].content[0]).to.equal('MIT License');
+    const licenseBlockIndexPublic = 4;
+    const preUpdateLicense = 'This project is licensed with an NS8 1.0 proprietary license.' 
+    const postUpdateLicense = 'MIT License';
+
+    expect(readme.getSection(/^## License/)?.content[0]).to.equal(preUpdateLicense);
+    readme.setSectionAt(licenseBlockIndexPublic, postUpdateLicense); 
+    expect(readme.getSection(/^## License/)?.content[0]).to.equal(postUpdateLicense);
+
   })
 
 })

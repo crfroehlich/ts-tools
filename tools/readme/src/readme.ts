@@ -382,11 +382,15 @@ export default class Readme {
 
   setSectionAt(index:number, content:string):void {
 
-    if (index >= 0 && index <= this.blocks.length - 1) {
-      this.blocks[index].content = content.split('\n');
+    const internalIndex = index + 1; // includes the internal '_root' block
+    if (internalIndex >= 1 && internalIndex <= this.blocks.length - 1) {
+      const targetBlock = this.blocks[internalIndex]; 
+      targetBlock.content = content.split('\n');
       this.index();
-    }
 
+    } else {
+      throw new Error(`Index out of range: ${index}`);
+    }
 
   }
 
