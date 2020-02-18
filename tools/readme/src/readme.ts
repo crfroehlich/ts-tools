@@ -203,7 +203,7 @@ export default class Readme {
     }
 
     if (insertAt === -1) {
-      return '';  //TODO: do i throw here instead?
+      throw new Error(`ToC insertionPoint invalid: ${insertionPoint}`);  
     }
 
     // slice(2) is default to skip _root block and the readme top-level header
