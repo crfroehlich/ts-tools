@@ -8,7 +8,7 @@
     "test": "build && test"
   },
   "scripts": {
-    "test": "mocha -r ts-node/register test/**/*.test.ts",
+    "test": "mocha --reporter spec -r ts-node/register test/**/*.test.ts",
     "docs": "rm -rf ./docs && typedoc --plugin typedoc-plugin-markdown"
   },
   "keywords": [
