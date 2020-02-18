@@ -1,6 +1,8 @@
 import Readme from '../src/readme';
 import { promisify } from 'util';
 import { writeFile } from 'fs';
+import { execSync } from 'child_process';
+
 
 const arg = process.argv[2] || '';
 const infile = './example.md';
@@ -24,23 +26,51 @@ async function toc() {
 
 }
 
+async function queryCode() {
+
+  await readme.parse();
+  const toc = readme.toc();
+  console.log(readme.getSections('run the library'));
+
+}
+
+
 async function query() {
 
   await readme.parse();
   const toc = readme.toc();
-  readme.getSection('info');
-  readme.getSection('info');
+  console.log(readme.getSections(/-header/));
 
 }
 
+async function blocks() {
+
+  await readme.parse();
+  console.log(readme.blocks);
+
+}
+
+async function indexedBlocks() {
+
+  await readme.parse();
+  console.log(readme.indexedBlocks);
+
+}
+
+
 const funcs: Map<string, any> = new Map([
   ['update', update],
+  ['query',  query],
+  ['query-code',  queryCode],
   ['toc',    toc],
+  ['blocks',    blocks],
+  ['indexed-blocks', indexedBlocks]
 ]);
 
 
-if (arg === '-l') {
-  console.log('update\ntoc\nquery');
+if (arg === '-l' || arg === '') {
+  const options = [...funcs.keys()].join('\n');
+  console.log(options);
   process.exit(0);
 }
 

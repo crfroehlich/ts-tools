@@ -1,0 +1,19 @@
+{
+  "name": "@ns8inc/protect-js-tools",
+  "version": "1.0.0",
+  "description": "Tools useful for the development of NS8 Protect",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ns8inc/protect-js-tools.git"
+  },
+  "author": "NS8",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ns8inc/protect-js-tools/issues"
+  },
+  "homepage": "https://github.com/ns8inc/protect-js-tools#readme"
+}
