@@ -1,0 +1,28 @@
+---
+platform: linux
+
+image_resource:
+  type: registry-image
+  source: { repository: node, tag: "12" }
+
+inputs:
+  - name: protect-js-tools-dev-repo
+
+run:
+  path: /bin/sh
+  args:
+    - -c
+    - |
+
+      cd protect-js-tools-dev-repo
+      if ! yarn install
+      then
+        echo "ERROR: yarn install failed"
+        exit 1
+      fi
+
+      if ! yarn test
+      then
+        echo "ERROR: yarn test failed"
+        exit 1
+      fi
