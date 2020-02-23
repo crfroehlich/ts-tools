@@ -1,7 +1,8 @@
 import { expect } from 'chai';
+import { readFileSync } from 'fs';
 import 'mocha';
 
-import { formatScriptsDocumentation, updateReadme } from './scriptDocs';
+import { ScriptsDocs, formatScriptDocs, updateReadme } from './scriptDocs';
 
 const removeBlankLines = (content: string): string => {
   return content
@@ -17,76 +18,6 @@ const removeBlankLines = (content: string): string => {
  * - readme has build script info as the last section
  * - readme has build script info as a middle section
  */
-
-// pre-existing build script info, at the end
-const README_SCRIPT_AT_END_DOCS_ACTUAL = `
-# Test README
-This is a test readme.
-# Getting Started
-Clone the repo and run yarn install
-### \`package.json\` scripts
-\`yarn old-script1\`
-- old-script1 description
-\`yarn old-script2\`
-- old-script2 description
-\`yarn old-script3\`
-- old-script3 description
-\`yarn old-script4\`
-- old-script4 description
-`;
-
-const README_SCRIPT_AT_END_DOCS_EXPECTED = `
-# Test README
-This is a test readme.
-# Getting Started
-Clone the repo and run yarn install
-### \`package.json\` scripts
-\`yarn script1\`
-- script 1 description
-\`yarn script2\`
-- script 2 description
-\`yarn script3\`
-- script 3 description
-\`yarn script4\`
-- script 4 description
-`;
-
-// pre-existing build script info, at the end
-const README_SCRIPT_IN_MIDDLE_DOCS_ACTUAL = `
-# Test README
-This is a test readme.
-# Getting Started
-Clone the repo and run yarn install
-### \`package.json\` scripts
-\`yarn outdated-script1\`
-- outdated-script1 description
-\`yarn outdated-script2\`
-- outdated-script2 description
-\`yarn outdated-script3\`
-- outdated-script3 description
-\`yarn outdated-script4\`
-- outdated-script4 description
-### extra section
-this is an extra section
-`;
-
-const README_SCRIPT_IN_MIDDLE_DOCS_EXPECTED = `
-# Test README
-This is a test readme.
-# Getting Started
-Clone the repo and run yarn install
-### \`package.json\` scripts
-\`yarn script1\`
-- script 1 description
-\`yarn script2\`
-- script 2 description
-\`yarn script3\`
-- script 3 description
-\`yarn script4\`
-- script 4 description
-### extra section
-this is an extra section
-`;
 
 const parsedPackageJson = {
   scripts: {
@@ -115,68 +46,16 @@ const parsedPackageJson = {
   },
 };
 
-const { scriptsDocumentation: docs } = parsedPackageJson;
-const updates = formatScriptsDocumentation(docs);
-
-describe('SYNC-BUILD-SCRIPTS-WITH-README: script updates README.md', () => {
-  it('concatenates build script info to the end of readme when there is no build script section.', () => {
-    const README_NO_SCRIPT_DOCS_ACTUAL = `
-# Test README
-This is a test readme.
-# Getting Started
-Clone the repo and run yarn install
-`;
-
-    const README_NO_SCRIPT_DOCS_EXPECTED = `
-# Test README
-This is a test readme.
-# Getting Started
-Clone the repo and run yarn install
-### \`package.json\` scripts
-\`yarn script1\`
-- script 1 description
-\`yarn script2\`
-- script 2 description
-\`yarn script3\`
-- script 3 description
-\`yarn script4\`
-- script 4 description
-`;
-    const expected = removeBlankLines(README_NO_SCRIPT_DOCS_EXPECTED);
-    const actual = removeBlankLines(
-      updateReadme({
-        readme: README_NO_SCRIPT_DOCS_ACTUAL,
-        updates,
-        targetHeader: '### `package.json` scripts',
-      }),
+describe('formatScriptDocs', () => {
+  it('maps an object of keys mapped to a an object with a description property into a markdown line', () => {
+    const formatted = formatScriptDocs(parsedPackageJson.scriptsDocumentation as ScriptsDocs);
+    expect(formatted).to.equal(
+      [
+        '`yarn script1`\n- script 1 description\n',
+        '`yarn script2`\n- script 2 description\n',
+        '`yarn script3`\n- script 3 description\n',
+        '`yarn script4`\n- script 4 description\n',
+      ].join('\n'),
     );
-
-    expect(actual).to.equal(expected);
-  });
-
-  it('replaces build scripts that exist at the end of the document', () => {
-    const expected = removeBlankLines(README_SCRIPT_AT_END_DOCS_EXPECTED);
-    const actual = removeBlankLines(
-      updateReadme({
-        readme: README_SCRIPT_AT_END_DOCS_ACTUAL,
-        updates,
-        targetHeader: '### `package.json` scripts',
-      }),
-    );
-
-    expect(actual).to.equal(expected);
-  });
-
-  it('simply adds build scripts info to the readme when there is no build script section.', () => {
-    const expected = removeBlankLines(README_SCRIPT_IN_MIDDLE_DOCS_EXPECTED);
-    const actual = removeBlankLines(
-      updateReadme({
-        readme: README_SCRIPT_IN_MIDDLE_DOCS_ACTUAL,
-        updates,
-        targetHeader: '### `package.json` scripts',
-      }),
-    );
-
-    expect(actual).to.equal(expected);
   });
 });
