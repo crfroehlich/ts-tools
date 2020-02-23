@@ -14,7 +14,7 @@ const globOptions = {
 const defaultPath = '**/*.json'; 
 const defaultOptions = {
   dot: true,
-  ignore: ['**/node_modules/**', '.vscode/**'],
+  ignore: ['**/node_modules/**', '.vscode/**', '**/*/tsconfig.json'],
   realPath: true,
 };
 
@@ -39,3 +39,8 @@ const defaultCallback = (er: unknown, files: string[]) => {
 export default function sortJson(path=defaultPath, options=defaultOptions, callback=defaultCallback) {
   glob(path, options, callback);
 }
+
+if (__filename === process?.mainModule?.filename) {
+  sortJson();
+}
+
