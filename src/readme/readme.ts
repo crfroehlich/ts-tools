@@ -356,3 +356,5 @@ export default class Readme {
     }
   }
 }
+
+export { Readme, Block };

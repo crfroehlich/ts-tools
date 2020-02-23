@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
+import { Readme, Block } from '../readme/readme';
 
 interface PatchData {
   readme: string;
@@ -16,7 +17,7 @@ interface ScriptsDocs {
   [index: string]: ScriptDoc;
 }
 
-function formatScriptsDocumentation(docs: ScriptsDocs): string {
+function formatScriptDocs(docs: ScriptsDocs): string {
   return Object.keys(docs)
     .map((scriptName) => {
       const { description } = docs[scriptName];
@@ -25,42 +26,39 @@ function formatScriptsDocumentation(docs: ScriptsDocs): string {
     .join('\n');
 }
 
-function updateReadme({ readme, targetHeader, updates }: PatchData): string {
-  const lines = readme.split('\n');
-  const linesToInsert = [targetHeader, '\n', ...updates.split('\n')];
-  const targetStart = lines.findIndex((line) => line === targetHeader);
+interface ReadmeUpdates {
+  path: string;
+  content: string;
+  target: string;
+}
 
-  // case 1: scripts section docs doesn't exist
-  if (targetStart < 0) {
-    return `${readme}\n${linesToInsert.join('\n')}\n`;
+async function updateReadme({ path, content, target }: ReadmeUpdates) {
+  const readme = await new Readme(path).parse();
+  const scriptDocsSection = readme.getSection(target);
+  if (scriptDocsSection) {
+    readme.setSection(target, content);
+  } else {
+    const newBlock: Block = {
+      header: target,
+      content: content.split('\n')
+    }
+    readme.append(newBlock);
   }
-
-  const nextSectionOffset = lines.slice(targetStart + 1).findIndex((line) => /^#{1,3} /.test(line));
-
-  // case two: scripts is last section
-  if (nextSectionOffset < 0) {
-    return [...lines.slice(0, targetStart), ...linesToInsert, '\n'].join('\n');
-  }
-
-  const restIndex = targetStart + 1 + nextSectionOffset;
-
-  // case 3: scripts documentation exists between other sibling or parent sections
-  return [...lines.slice(0, targetStart), ...linesToInsert, '\n', ...lines.slice(restIndex)].join('\n');
 }
 
 /* istanbul ignore next */
 function main(): void {
+
   const packageJSONPath = join(__dirname, '..', 'package.json');
-  const readmePath = join(__dirname, '..', 'README.md');
-  const readme = readFileSync(readmePath, 'utf8');
   const packageJSON = JSON.parse(readFileSync(packageJSONPath, 'utf8'));
   const { scriptsDocumentation } = packageJSON;
-  const updates = formatScriptsDocumentation(scriptsDocumentation);
+  const updates = formatScriptDocs(scriptsDocumentation);
+  const readmePath = join(__dirname, '..', 'README.md');
 
-  const updatedReadme = updateReadme({
-    readme,
-    updates,
-    targetHeader: '### `package.json` scripts',
+  const updatedReadme = updateReadme({ 
+    path: readmePath,
+    content: updates,
+    target: '### `package.json` scripts'
   });
 
   writeFileSync(join(__dirname, '..', 'README.md'), updatedReadme);
@@ -74,5 +72,4 @@ if (__filename === process?.mainModule?.filename) {
   main();
 }
 
-export { formatScriptsDocumentation, updateReadme };
-export default formatScriptsDocumentation;
+export default formatScriptDocs;
