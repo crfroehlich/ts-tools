@@ -17,9 +17,12 @@ const TEST_FILES = {
 
 describe('Readme constructor', () => {
   it('should throw if an invalid path is passed in', () => {
-      expect(() => {
-        const readme = new Readme('');
-      }).to.throw();
+    expect(() => {
+      const readme = new Readme('');
+      readme.parse().then((rdme) => {
+        return rdme.blocks.length;
+      });
+    }).to.throw();
   });
 
   it('should resolve and store a path parameter relative to the calling cwd.', () => {
