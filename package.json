@@ -29,8 +29,6 @@
     "hard-source-webpack-plugin": "0.13.1",
     "husky": "4.0.10",
     "mocha": "7.0.0",
-    "nock": "11.7.2",
-    "node-fetch": "2.6.0",
     "nyc": "15.0.0",
     "prettier": "1.19.1",
     "semver": "7.1.1",
@@ -57,7 +55,12 @@
   },
   "scripts": {
     "beautify": "ts-node ./src/sortJson/sortJson.ts",
+    "bundle": "yarn beautify && webpack",
+    "build": "rm -rf dist && tsc --emitDeclarationOnly && yarn bundle",
+    "build:prod": "NODE_ENV=production yarn build",
+    "clean": "rm -rf dist",
     "lint": "yarn eslint 'src/**/*.ts'",
+    "docs:sync-build-scripts": "ts-node src/scriptDocs/scriptDocs.ts",
     "lint:fix": "yarn eslint --fix 'src/**/*.ts'",
     "test": "yarn build && nyc mocha '**/*/*.test.ts'",
     "test:coverage": "nyc yarn test:debug"

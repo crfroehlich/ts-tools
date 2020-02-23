@@ -1,0 +1,48 @@
+{
+  "awesomeTypescriptLoaderOptions": {
+    "doTypeCheck": true,
+    "forkChecker": true,
+    "isolatedModules": true,
+    "reportFiles": [
+      "src/**/*.{ts}"
+    ],
+    "useCache": true,
+    "useTranspileModule": true,
+    "useWebpackText": true
+  },
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "declarationDir": "dist/types",
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "esnext"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "noLib": false,
+    "removeComments": false,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2019",
+    "types": [
+      "mocha",
+      "node"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "test/**/*",
+    "dist"
+  ],
+  "include": [
+    "src/**/*"
+  ]
+}
