@@ -49,9 +49,7 @@ function updateReadme({ readme, targetHeader, updates }: PatchData): string {
 }
 
 /* istanbul ignore next */
-function main() {
-
-
+function main(): void {
   const packageJSONPath = join(__dirname, '..', 'package.json');
   const readmePath = join(__dirname, '..', 'README.md');
   const readme = readFileSync(readmePath, 'utf8');
@@ -66,7 +64,6 @@ function main() {
   });
 
   writeFileSync(join(__dirname, '..', 'README.md'), updatedReadme);
-
 }
 
 // if the main module is this filename, it's being run a script.
@@ -74,7 +71,7 @@ function main() {
 
 /* istanbul ignore next */
 if (__filename === process?.mainModule?.filename) {
-  main()
+  main();
 }
 
 export { formatScriptsDocumentation, updateReadme };

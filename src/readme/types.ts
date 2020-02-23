@@ -9,6 +9,6 @@ export type Query = string | RegExp;
 export interface Block {
   header: string;
   content: string[];
-};
+}
 
-export type IndexedBlocks = Map<string, Block[]>; 
+export type IndexedBlocks = Map<string, Block[]>;

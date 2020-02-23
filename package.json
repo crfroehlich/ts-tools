@@ -1,19 +1,81 @@
 {
-  "name": "@ns8inc/protect-js-tools",
-  "version": "1.0.0",
-  "description": "Tools useful for the development of NS8 Protect",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "author": "ns8inc",
+  "dependencies": {
+    "typescript": "3.7.5"
   },
+  "description": "NS8 Protect Client JavaScript Tools",
+  "devDependencies": {
+    "@ns8/eslint-config-ns8-typescript-eslint": "0.0.7",
+    "@types/chai": "4.2.7",
+    "@types/chai-as-promised": "7.1.2",
+    "@types/format-util": "1.0.1",
+    "@types/glob": "^7.1.1",
+    "@types/mocha": "5.2.7",
+    "@types/node": "13.1.8",
+    "@types/semver": "6.2.0",
+    "@types/uuid-validate": "0.0.1",
+    "@typescript-eslint/eslint-plugin": "2.16.0",
+    "@typescript-eslint/parser": "2.16.0",
+    "awesome-typescript-loader": "5.2.1",
+    "chai": "4.2.0",
+    "chai-as-promised": "7.1.1",
+    "dotenv-extended": "2.7.1",
+    "eslint": "6.8.0",
+    "eslint-config-airbnb-base": "14.0.0",
+    "eslint-config-prettier": "6.9.0",
+    "eslint-plugin-import": "2.20.0",
+    "eslint-plugin-prettier": "3.1.2",
+    "eslint-plugin-tsdoc": "0.2.1",
+    "hard-source-webpack-plugin": "0.13.1",
+    "husky": "4.0.10",
+    "mocha": "7.0.0",
+    "nock": "11.7.2",
+    "node-fetch": "2.6.0",
+    "nyc": "15.0.0",
+    "prettier": "1.19.1",
+    "semver": "7.1.1",
+    "sorted-json": "0.2.6",
+    "source-map-support": "0.5.16",
+    "ts-mocha": "6.0.0",
+    "ts-node": "8.6.2",
+    "typedoc": "0.16.7",
+    "typedoc-plugin-markdown": "2.2.16",
+    "uuid-validate": "0.0.3",
+    "webpack": "4.41.5",
+    "webpack-cli": "3.3.10"
+  },
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://github.com/ns8inc/protect-js-tools#readme",
+  "license": "MIT",
+  "main": "dist/protect-js-tools.js",
+  "name": "@ns8/protect-js-tools",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ns8inc/protect-js-tools.git"
   },
-  "author": "NS8",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ns8inc/protect-js-tools/issues"
+  "scripts": {
+    "beautify": "ts-node ./src/sortJson/sortJson.ts",
+    "lint": "yarn eslint 'src/**/*.ts'",
+    "lint:fix": "yarn eslint --fix 'src/**/*.ts'",
+    "test": "yarn build && nyc mocha '**/*/*.test.ts'",
+    "test:coverage": "nyc yarn test:debug"
   },
-  "homepage": "https://github.com/ns8inc/protect-js-tools#readme"
+  "scriptsDocumentation": {
+    "beautify": {
+      "description": "Perform aesthetic operations to make the project files easier to navigate and read.",
+      "dev": true
+    },
+    "lint": {
+      "description": "Lints the codebase.",
+      "dev": true
+    },
+    "test": {
+      "description": "Runs tests and calculates test coverage.",
+      "dev": true
+    }
+  },
+  "types": "dist/types/index.d.ts",
+  "version": "0.0.1"
 }
