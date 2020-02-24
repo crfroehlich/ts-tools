@@ -7,6 +7,12 @@
 `yarn beautify`
 - Perform aesthetic operations to make the project files easier to navigate and read.
 
+`yarn build`
+- assembles build scripts into a single js module with type definitions.
+
+`yarn docs:sync-build-scripts`
+- generates a readme build scripts section like this one using the scriptsDocumentation property, if present, in the package.json file.
+
 `yarn lint`
 - Lints the codebase.
 

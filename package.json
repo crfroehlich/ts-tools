@@ -56,10 +56,8 @@
   "scripts": {
     "beautify": "ts-node ./src/sortJson/sortJson.ts",
     "build": "rm -rf dist && tsc --emitDeclarationOnly && webpack",
-    "build:prod": "NODE_ENV=production yarn build",
-    "lint": "yarn eslint 'src/**/*.ts'",
     "docs:sync-build-scripts": "ts-node src/scriptDocs/scriptDocs.ts",
-    "lint:fix": "yarn eslint --fix 'src/**/*.ts'",
+    "lint": "yarn eslint 'src/**/*.ts'",
     "test": "yarn build && nyc mocha '**/*/*.test.ts'"
   },
   "scriptsDocumentation": {
@@ -67,6 +65,10 @@
       "description": "Perform aesthetic operations to make the project files easier to navigate and read.",
       "dev": true
     },
+    "build": {
+      "description": "assembles build scripts into a single js module with type definitions.",
+      "dev": true
+     }, 
     "docs:sync-build-scripts": {
       "description": "generates a readme build scripts section using the scriptsDocumentation property, if present, in the package.json file",
       "dev": true
