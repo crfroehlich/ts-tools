@@ -1,5 +1,5 @@
 {
-  "author": "Alex Ramsdell",
+  "author": "ns8inc",
   "description": "Programmatically manipulate sections in a readme.",
   "devDependencies": {
     "@types/chai": "^4.2.8",

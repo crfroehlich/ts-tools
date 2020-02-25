@@ -26,15 +26,13 @@ const defaultCallback = (er: unknown, files: string[]): void => {
   files.forEach((fileName) => {
     try {
       const file = readFileSync(fileName, 'utf-8');
-      let json
-
+      let json;
       try {
         json = JSON.parse(file);
-      } catch(e) {
+      } catch (e) {
         console.log(`Error: parsing ${file}.`);
         throw new Error(e);
       }
-
       const sorted = sortedJson.sortify(json);
       writeFileSync(fileName, JSON.stringify(sorted, null, 2));
       console.info(`Alpha-sorted ${fileName} JSON file`);
