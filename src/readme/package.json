@@ -1,22 +1,6 @@
 {
-  "name": "readme",
-  "version": "1.0.0",
-  "description": "Programmatically manipulate sections in a readme.",
-  "main": "index.js",
-  "directories": {
-    "build": "tsc -p .",
-    "test": "build && test"
-  },
-  "scripts": {
-    "test": "mocha --reporter spec -r ts-node/register test/**/*.test.ts",
-    "docs": "rm -rf ./docs && typedoc --plugin typedoc-plugin-markdown"
-  },
-  "keywords": [
-    "readme",
-    "dev-tools"
-  ],
   "author": "Alex Ramsdell",
-  "license": "NS8 Proprietary 1.0",
+  "description": "Programmatically manipulate sections in a readme.",
   "devDependencies": {
     "@types/chai": "^4.2.8",
     "@types/mocha": "^7.0.1",
@@ -27,5 +11,21 @@
     "typedoc": "^0.16.9",
     "typedoc-plugin-markdown": "^2.2.16",
     "typescript": "^3.7.5"
-  }
+  },
+  "directories": {
+    "build": "tsc -p .",
+    "test": "build && test"
+  },
+  "keywords": [
+    "readme",
+    "dev-tools"
+  ],
+  "license": "NS8 Proprietary 1.0",
+  "main": "index.js",
+  "name": "readme",
+  "scripts": {
+    "docs": "rm -rf ./docs && typedoc --plugin typedoc-plugin-markdown",
+    "test": "mocha --reporter spec -r ts-node/register test/**/*.test.ts"
+  },
+  "version": "1.0.0"
 }

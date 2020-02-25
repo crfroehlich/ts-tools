@@ -15,7 +15,7 @@ interface GlobOptions {
 const defaultPath = '**/*.json';
 const defaultOptions = {
   dot: true,
-  ignore: ['**/node_modules/**', '.vscode/**', '**/*/tsconfig.json'],
+  ignore: ['**/node_modules/**', '.vscode/**', '**/*/tsconfig.json', '**/*nyc_output/**'],
   realPath: true,
 };
 
@@ -26,9 +26,17 @@ const defaultCallback = (er: unknown, files: string[]): void => {
   files.forEach((fileName) => {
     try {
       const file = readFileSync(fileName, 'utf-8');
-      const json = JSON.parse(file);
-      const sorted = sortedJson.sortify(JSON.stringify(json, null, 2));
-      writeFileSync(fileName, sorted);
+      let json
+
+      try {
+        json = JSON.parse(file);
+      } catch(e) {
+        console.log(`Error: parsing ${file}.`);
+        throw new Error(e);
+      }
+
+      const sorted = sortedJson.sortify(json);
+      writeFileSync(fileName, JSON.stringify(sorted, null, 2));
       console.info(`Alpha-sorted ${fileName} JSON file`);
     } catch (err) {
       console.error(`${fileName}: failed`);
