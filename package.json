@@ -1,53 +1,53 @@
 {
   "author": "ns8inc",
   "dependencies": {
-    "typescript": "3.7.5"
+    "typescript": "3.8.2"
   },
   "description": "NS8 Protect Client JavaScript Tools",
   "devDependencies": {
     "@ns8/eslint-config-ns8-typescript-eslint": "0.0.7",
-    "@types/chai": "4.2.7",
+    "@types/chai": "4.2.9",
     "@types/chai-as-promised": "7.1.2",
     "@types/format-util": "1.0.1",
     "@types/glob": "^7.1.1",
-    "@types/mocha": "5.2.7",
-    "@types/node": "13.1.8",
-    "@types/semver": "6.2.0",
+    "@types/mocha": "7.0.1",
+    "@types/node": "13.7.6",
+    "@types/semver": "7.1.0",
     "@types/uuid-validate": "0.0.1",
-    "@typescript-eslint/eslint-plugin": "2.16.0",
-    "@typescript-eslint/parser": "2.16.0",
+    "@typescript-eslint/eslint-plugin": "2.21.0",
+    "@typescript-eslint/parser": "2.21.0",
     "awesome-typescript-loader": "5.2.1",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "dotenv-extended": "2.7.1",
     "eslint": "6.8.0",
     "eslint-config-airbnb-base": "14.0.0",
-    "eslint-config-prettier": "6.9.0",
-    "eslint-plugin-import": "2.20.0",
+    "eslint-config-prettier": "6.10.0",
+    "eslint-plugin-import": "2.20.1",
     "eslint-plugin-prettier": "3.1.2",
-    "eslint-plugin-tsdoc": "0.2.1",
+    "eslint-plugin-tsdoc": "0.2.3",
     "hard-source-webpack-plugin": "0.13.1",
-    "husky": "4.0.10",
-    "mocha": "7.0.0",
+    "husky": "4.2.3",
+    "mocha": "7.0.1",
     "node-glob": "^1.2.0",
     "nyc": "15.0.0",
     "prettier": "1.19.1",
-    "semver": "7.1.1",
+    "semver": "7.1.3",
     "sorted-json": "0.2.6",
     "source-map-support": "0.5.16",
     "ts-mocha": "6.0.0",
     "ts-node": "8.6.2",
-    "typedoc": "0.16.7",
-    "typedoc-plugin-markdown": "2.2.16",
+    "typedoc": "0.16.10",
+    "typedoc-plugin-markdown": "2.2.17",
     "uuid-validate": "0.0.3",
-    "webpack": "4.41.5",
-    "webpack-cli": "3.3.10"
+    "webpack": "4.41.6",
+    "webpack-cli": "3.3.11"
   },
   "files": [
     "dist"
   ],
   "homepage": "https://github.com/ns8inc/protect-js-tools#readme",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "main": "dist/protect-js-tools.js",
   "name": "@ns8/protect-js-tools",
   "repository": {
@@ -56,10 +56,12 @@
   },
   "scripts": {
     "beautify": "ts-node ./src/sortJson/sortJson.ts",
-    "build": "rm -rf dist && tsc --emitDeclarationOnly && webpack",
+    "build": "tsc --emitDeclarationOnly && webpack",
+    "clean": "rm -rf dist .awcache .tmp",
     "docs:sync-build-scripts": "ts-node src/scriptDocs/scriptDocs.ts",
-    "lint": "yarn eslint 'src/**/*.ts'",
-    "test": "yarn build && nyc mocha '**/*/*.test.ts'"
+    "lint": "yarn eslint src/**/*.ts",
+    "lint:fix": "yarn eslint src/**/*.ts --fix",
+    "test": "yarn build && nyc mocha src/**/*.test.ts"
   },
   "scriptsDocumentation": {
     "beautify": {
@@ -70,12 +72,20 @@
       "description": "assembles build scripts into a single js module with type definitions.",
       "dev": true
     },
+    "clean": {
+      "description": "Purges all temporary folders.",
+      "dev": true
+    },
     "docs:sync-build-scripts": {
       "description": "generates a readme build scripts section using the scriptsDocumentation property, if present, in the package.json file",
       "dev": true
     },
     "lint": {
       "description": "Lints the codebase.",
+      "dev": true
+    },
+    "lint:fix": {
+      "description": "Lints the codebase and automatically fixes what it can.",
       "dev": true
     },
     "test": {
