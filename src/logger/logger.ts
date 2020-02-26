@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Logger, LoggerOptions, createLogger, format, transports } from 'winston';
+import { loadEnv } from '../env/loadEnv';
+
+loadEnv();
 
 const defaultServiceName = 'js-sdk-log';
 
@@ -24,15 +27,56 @@ const defaultOptions: LoggerOptions = {
   ],
 };
 
+export enum LogLevel {
+  DEBUG = 'debug',
+  INFO = 'info',
+  WARN = 'warn',
+  ERROR = 'error',
+}
+
+export enum LogTransports {
+  CONSOLE = 'console',
+  FILE = 'file',
+}
+
+export interface LogOptions {
+  serviceName: string;
+  logLevel: LogLevel;
+  transports: LogTransports[];
+}
+
+export const DefaultLogOptions: LogOptions = {
+  serviceName: 'js-tools',
+  logLevel: LogLevel.ERROR,
+  transports: [LogTransports.FILE],
+};
+
+export const buildLoggerConfig = (options: LogOptions): LoggerOptions => {
+  const loggerOptions: LoggerOptions = {
+    level: options.logLevel,
+    format: format.combine(
+      format.timestamp({
+        format: 'YYYY-MM-DD HH:mm:ss',
+      }),
+      format.errors({ stack: true }),
+      format.splat(),
+      format.json(),
+    ),
+    defaultMeta: { service: options.serviceName },
+  };
+  return loggerOptions;
+};
+
 export class Log {
   logger: Logger;
 
-  constructor(serviceName: string = defaultServiceName, loggerOptions: LoggerOptions = defaultOptions) {
-    if (serviceName !== defaultServiceName) {
-      // eslint-disable-next-line no-param-reassign
-      loggerOptions.defaultMeta.service = serviceName;
+  constructor(logOptions: LogOptions = DefaultLogOptions) {
+    const loggerConfig = buildLoggerConfig(logOptions);
+    this.logger = createLogger(loggerConfig);
+
+    if (logOptions.transports.find((t) => t === LogTransports.FILE)) {
+      this.logger.add(new transports.File({ filename: `error.log`, level: 'error' }));
     }
-    this.logger = createLogger(loggerOptions);
 
     //
     // If we're not in production then **ALSO** log to the `console`
