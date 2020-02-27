@@ -59,7 +59,7 @@
   "scripts": {
     "beautify": "ts-node ./src/sortJson/sortJson.ts",
     "build": "tsc --emitDeclarationOnly && webpack",
-    "clean": "rm -rf dist .awcache .tmp",
+    "clean": "rm -rf dist .awcache *.log",
     "docs:sync-build-scripts": "ts-node src/scriptDocs/scriptDocs.ts",
     "lint": "yarn eslint src/**/*.ts",
     "lint:fix": "yarn eslint src/**/*.ts --fix",
