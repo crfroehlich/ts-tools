@@ -8,7 +8,7 @@ import { Block, IndexedBlocks, Query } from './types';
  * The Readme class represents a markdown README file and provides an API for programmatic transformations of it.
  */
 
-export default class Readme {
+export class Readme {
   public static isHeader = (line: string): boolean => /^ *#+ /.test(line);
 
   public static isCodeStartTag = (line: string): boolean => /^ *```[^`]*$/.test(line);
@@ -356,5 +356,3 @@ export default class Readme {
     }
   }
 }
-
-export { Readme, Block };

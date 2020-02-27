@@ -1,0 +1,24 @@
+{
+  addNewline: true,
+  excludes: [
+    '@types',
+    'typings',
+    '__test__',
+    '__tests__',
+    'node_modules',
+    'internal',
+    'test-data'
+  ],
+  fileExcludePatterns: ['*.test.ts', '*.test'],
+  fileFirst: false,
+  includeCWD: true,
+  quote: "'",
+  targetExts: [
+    'ts',
+    'tsx',
+  ],
+  useSemicolon: true,
+  useTimestamp: false,
+  verbose: false,
+  withoutComment: false,
+}

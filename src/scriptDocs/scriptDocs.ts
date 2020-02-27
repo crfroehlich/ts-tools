@@ -1,16 +1,17 @@
 import { readFileSync, writeFileSync } from 'fs';
-import { join, relative } from 'path';
-import { Block, Readme } from '../readme/readme';
+import { join } from 'path';
+import { Readme } from '../readme/readme';
+import { Block } from '../readme/types';
 
 const SCRIPT_DIR = __dirname;
 
-interface PatchData {
+export interface PatchData {
   readme: string;
   targetHeader: string;
   updates: string;
 }
 
-interface ScriptDoc {
+export interface ScriptDoc {
   description: string;
   dev: boolean;
 }
@@ -19,14 +20,14 @@ export interface ScriptsDocs {
   [index: string]: ScriptDoc;
 }
 
-export function formatScriptDocs(docs: ScriptsDocs): string {
+export const formatScriptDocs = (docs: ScriptsDocs): string => {
   return Object.keys(docs)
     .map((scriptName): string => {
       const { description } = docs[scriptName];
       return `\`yarn ${scriptName}\`\n- ${description}\n`;
     })
     .join('\n');
-}
+};
 
 interface ReadmeUpdates {
   path: string;
@@ -34,7 +35,7 @@ interface ReadmeUpdates {
   target: string;
 }
 
-export async function updateReadme({ path, content, target }: ReadmeUpdates): Promise<string> {
+export const updateReadme = async ({ path, content, target }: ReadmeUpdates): Promise<string> => {
   let readme;
   try {
     readme = await new Readme(path).parse();
@@ -52,10 +53,10 @@ export async function updateReadme({ path, content, target }: ReadmeUpdates): Pr
     readme.append(newBlock);
   }
   return readme.export();
-}
+};
 
 /* istanbul ignore next */
-function main(rootPath: string | null): void {
+const main = (rootPath: string | null): void => {
   const rootDir = process.cwd() || SCRIPT_DIR;
   const packageJSONPath = join(SCRIPT_DIR, 'package.json');
   const packageJSON = JSON.parse(readFileSync(packageJSONPath, 'utf8'));
@@ -90,5 +91,3 @@ if (__filename === process?.mainModule?.filename) {
   const userSuppliedReadmePath = process.argv[2];
   main(userSuppliedReadmePath || null);
 }
-
-export default formatScriptDocs;

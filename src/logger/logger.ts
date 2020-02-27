@@ -2,8 +2,6 @@
 import { Logger, LoggerOptions, createLogger, format, transports } from 'winston';
 import { loadEnv } from '../env/loadEnv';
 
-const env = loadEnv();
-
 /**
  * The valid log levels
  */
@@ -131,8 +129,9 @@ export class Log implements LogInterface {
       this.logger.add(new transports.File({ filename: `${logOptions.serviceName}_info.log` }));
     }
 
+    const env = loadEnv();
     const addConsoleTransport =
-      logOptions.transports.find((t) => t === LogOutput.CONSOLE) || process.env.NODE_ENV !== 'production';
+      logOptions.transports.find((t) => t === LogOutput.CONSOLE) || env.NODE_ENV !== 'production';
 
     if (addConsoleTransport) {
       this.logger.add(

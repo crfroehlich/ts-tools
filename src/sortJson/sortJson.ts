@@ -5,7 +5,7 @@ import { readFileSync, writeFileSync } from 'fs';
 const sortedJson = require('sorted-json');
 
 type globCallback = (err: Error | null, matches: string[]) => void;
-interface GlobOptions {
+export interface GlobOptions {
   dot?: boolean;
   ignore?: string[];
   realPath?: boolean;
@@ -43,13 +43,13 @@ const defaultCallback = (er: unknown, files: string[]): void => {
   });
 };
 
-export default function sortJson(
+export const sortJson = (
   path: string = defaultPath,
   options: GlobOptions = defaultOptions,
   callback: globCallback = defaultCallback,
-): void {
+): void => {
   glob(path, options, callback);
-}
+};
 
 if (__filename === process?.mainModule?.filename) {
   sortJson();
