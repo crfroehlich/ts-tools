@@ -1,17 +1,17 @@
 const envExtended = require('dotenv-extended');
 
 export interface EnvConfig {
-  encoding: string;
-  silent: boolean;
-  path: string;
-  defaults: string;
-  schema: string;
-  errorOnMissing: boolean;
-  errorOnExtra: boolean;
-  errorOnRegex: boolean;
-  includeProcessEnv: boolean;
-  assignToProcessEnv: boolean;
-  overrideProcessEnv: boolean;
+  encoding?: string;
+  silent?: boolean;
+  path?: string;
+  defaults?: string;
+  schema?: string;
+  errorOnMissing?: boolean;
+  errorOnExtra?: boolean;
+  errorOnRegex?: boolean;
+  includeProcessEnv?: boolean;
+  assignToProcessEnv?: boolean;
+  overrideProcessEnv?: boolean;
 }
 
 export const EnvConfigDefaults: EnvConfig = {

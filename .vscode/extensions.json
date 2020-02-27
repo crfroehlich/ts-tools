@@ -4,9 +4,10 @@
     "eamodio.gitlens",
     "editorconfig.editorconfig",
     "gamunu.vscode-yarn",
-    "hookyqr.beautify",
-    "markis.code-coverage",
     "hbenl.vscode-mocha-test-adapter",
+    "hookyqr.beautify",
+    "joelday.docthis",
+    "markis.code-coverage",
     "redhat.vscode-yaml",
     "yzhang.markdown-all-in-one",
   ]
