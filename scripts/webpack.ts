@@ -1,11 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable
-  @typescript-eslint/explicit-function-return-type,
-  @typescript-eslint/no-empty-function,
-  @typescript-eslint/no-var-requires,
-  func-names,
-  no-console,
-  global-require */
 import * as path from 'path';
 import * as webpack from 'webpack';
 import { loadEnv } from '../src/env';
@@ -41,7 +33,7 @@ export interface BundleConfig {
 
 export const BundleDefaults: BundleConfig = {
   sourceDirectory: './src/index.ts',
-  distDirectory: './dist',
+  distDirectory: '../dist',
   libraryName: 'app',
   bundleTarget: BundleTarget.NODE,
   mode: undefined,
@@ -57,24 +49,32 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
     }
   }
   const watch: boolean = env.HMR?.toString().toLowerCase() === 'true';
-  log.info('Starting bundle', {
-    processEnv: env.NODE_ENV,
-    resolvedEnv: mode,
-    outputPath: path.resolve(config.distDirectory),
-    watch,
-  });
 
   const filename =
     mode === BundleMode.PRODUCTION
       ? `${config.libraryName.toLowerCase().trim()}.min.js`
       : `${config.libraryName.toLowerCase().trim()}.js`;
 
+  const entry = config.sourceDirectory || './src/index.ts';
+
+  const outputPath = path.resolve(__dirname, config.distDirectory || '../dist');
+
+  log.info('Starting bundle', {
+    processEnv: env.NODE_ENV,
+    resolvedEnv: mode,
+    watch,
+    filename,
+    entry,
+    outputPath,
+    target: config.bundleTarget,
+  });
+
   return {
-    entry: config.sourceDirectory || './src/index.ts',
+    entry,
     mode,
     watch,
     output: {
-      path: path.resolve(__dirname, config.distDirectory || 'dist'),
+      path: outputPath,
       filename,
       library: config.libraryName,
       libraryTarget: 'umd',
