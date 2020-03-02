@@ -48,9 +48,9 @@ rules:
     - error
     - ignoreDeclarationSort: true
   tsdoc/syntax: warn
-  # complexity:
-  #  - warn
-  #  - max: 5
+  complexity:
+   - warn
+   - max: 5
 settings:
   import/resolver:
     node:

@@ -50,7 +50,7 @@ export enum BundleTarget {
 
 export enum BundleDevTool {
   INLINE = 'inline-source-map',
-  OUTLINE = 'source-map',
+  FILE = 'source-map',
 }
 
 export interface BundleConfig {
@@ -58,7 +58,7 @@ export interface BundleConfig {
   distDirectory: string;
   libraryName: string;
   bundleTarget: BundleTarget;
-  mode?: BundleMode | undefined;
+  mode: BundleMode | undefined;
 }
 
 export const BundleDefaults: BundleConfig = {
@@ -141,7 +141,7 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
       extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js'],
       modules: ['node_modules'],
     },
-    devtool: BundleDevTool.OUTLINE,
+    devtool: BundleDevTool.FILE,
     module: {
       rules: [
         {
