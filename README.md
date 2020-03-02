@@ -1,6 +1,6 @@
 # Test README
 
-[![Concourse-CI](https://concourse.ns8-infrastructure.com/api/v1/teams/main/pipelines/protect-js-tools/jobs/test/badge)](https://concourse.ns8-infrastructure.com/teams/main/pipelines/protect-js-tools)
+[![Concourse-CI](https://concourse.ns8-infrastructure.com/api/v1/teams/main/pipelines/protect-tools-js/jobs/test/badge)](https://concourse.ns8-infrastructure.com/teams/main/pipelines/protect-tools-js)
 
 ### `package.json` scripts
 

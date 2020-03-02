@@ -48,13 +48,13 @@
   "files": [
     "dist"
   ],
-  "homepage": "https://github.com/ns8inc/protect-js-tools#readme",
+  "homepage": "https://github.com/ns8inc/protect-tools-js#readme",
   "license": "UNLICENSED",
-  "main": "dist/protect-js-tools.js",
-  "name": "@ns8/protect-js-tools",
+  "main": "dist/protect-tools-js.js",
+  "name": "@ns8/protect-tools-js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ns8inc/protect-js-tools.git"
+    "url": "git+https://github.com/ns8inc/protect-tools-js.git"
   },
   "scripts": {
     "beautify": "ts-node ./src/sortJson/sortJson.ts",

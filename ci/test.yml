@@ -6,7 +6,7 @@ image_resource:
   source: { repository: node, tag: "12" }
 
 inputs:
-  - name: protect-js-tools-dev-repo
+  - name: protect-tools-js-dev-repo
 
 run:
   path: /bin/sh
@@ -14,7 +14,7 @@ run:
     - -c
     - |
 
-      cd protect-js-tools-dev-repo
+      cd protect-tools-js-dev-repo
       if ! yarn install
       then
         echo "ERROR: yarn install failed"
