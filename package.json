@@ -10,7 +10,6 @@
     "sorted-json": "0.2.6",
     "stdio": "^2.1.0",
     "typescript": "3.8.3",
-    "uglifyjs-webpack-plugin": "2.2.0",
     "webpack": "4.41.6",
     "webpack-cli": "3.3.11",
     "webpack-fail-plugin": "2.0.0",

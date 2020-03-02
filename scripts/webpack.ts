@@ -59,7 +59,7 @@ export interface BundleConfig {
   distDirectory: string;
   libraryName: string;
   bundleTarget: BundleTarget;
-  mode: BundleMode | undefined;
+  mode?: BundleMode;
 }
 
 export const BundleDefaults: BundleConfig = {
