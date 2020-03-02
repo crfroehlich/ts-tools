@@ -1,15 +1,7 @@
 import { expect } from 'chai';
-import { readFileSync } from 'fs';
 import 'mocha';
 
-import { ScriptsDocs, formatScriptDocs, updateReadme } from './scriptDocs';
-
-const removeBlankLines = (content: string): string => {
-  return content
-    .split('\n')
-    .filter(Boolean)
-    .join('\n');
-};
+import { ScriptsDocs, formatScriptDocs } from './scriptDocs';
 
 /*
  * Test Cases:

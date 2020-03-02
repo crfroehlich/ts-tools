@@ -1,25 +1,33 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
+import * as stdio from 'stdio';
 import { Readme } from '../readme/readme';
 import { Block } from '../readme/types';
 
-const SCRIPT_DIR = __dirname;
-
-export interface PatchData {
-  readme: string;
-  targetHeader: string;
-  updates: string;
-}
-
 export interface ScriptDoc {
+  /*
+   * yarn script description property.
+   */
   description: string;
+
+  /*
+   * flag as to whether script is for devs or not, for potential future programmatic organization.
+   */
   dev: boolean;
 }
 
 export interface ScriptsDocs {
+  /*
+   * A string to {@link ScriptDoc}-block mapping.
+   */
   [index: string]: ScriptDoc;
 }
 
+/*
+ * @param docs - a {@link ScriptDocs} object
+ *
+ * @returns a string composed of formatted {@link ScriptDocs} joined together.
+ */
 export const formatScriptDocs = (docs: ScriptsDocs): string => {
   return Object.keys(docs)
     .map((scriptName): string => {
@@ -30,13 +38,39 @@ export const formatScriptDocs = (docs: ScriptsDocs): string => {
 };
 
 interface ReadmeUpdates {
-  path: string;
+  /*
+   * The string content you want to replace in the readme.
+   */
+
   content: string;
+
+  /*
+   * The path to the readme file you want to load and update.
+   */
+
+  path: string;
+
+  /*
+   * A string matching the section in the readme whose content is to be replaced.
+   *
+   */
   target: string;
 }
 
-export const updateReadme = async ({ path, content, target }: ReadmeUpdates): Promise<string> => {
+/*
+ * Updates a section from a readme filepath if the file at that path exists
+ * and the target section and is successfully matched.
+ *
+ * @param updates - a {@link ReadmeUpdates}
+ *
+ * @returns a Promise-wrapped string with the entire updated readme.
+ *
+ */
+
+const updateReadme = async (updates: ReadmeUpdates): Promise<string> => {
+  const { path, content, target } = updates;
   let readme;
+
   try {
     readme = await new Readme(path).parse();
   } catch (e) {
@@ -55,39 +89,46 @@ export const updateReadme = async ({ path, content, target }: ReadmeUpdates): Pr
   return readme.export();
 };
 
-/* istanbul ignore next */
-const main = (rootPath: string | null): void => {
-  const rootDir = process.cwd() || SCRIPT_DIR;
-  const packageJSONPath = join(SCRIPT_DIR, 'package.json');
+/*
+ * @param packageJSONPath - path to package.json with the scriptsDocumentation object
+ * @param readmePath - path to target README.md to update
+ *
+ * @returns a void Promise
+ */
+
+export async function updateScriptDocs(packageJSONPath: string, readmePath: string): Promise<void> {
   const packageJSON = JSON.parse(readFileSync(packageJSONPath, 'utf8'));
   const { scriptsDocumentation } = packageJSON;
   const updates = formatScriptDocs(scriptsDocumentation);
-  const readmePath = rootPath || join(SCRIPT_DIR, '..', '..', 'README.md');
 
-  const updatedReadme = updateReadme({
+  const updatedReadme = await updateReadme({
     path: readmePath,
     content: updates,
     target: '### `package.json` scripts',
-  }).then((newReadme: string): void => {
-    writeFileSync(join(SCRIPT_DIR, '..', 'README.md'), updatedReadme);
   });
+
+  writeFileSync(readmePath, updatedReadme);
 }
 
-// if the main module is this filename, it's being run a script.
-// execute top level code in this case only.
+if (process?.mainModule?.filename === __filename) {
+  const optsDef = {
+    'json-file': {
+      key: 'p',
+      description: 'path to a json file containing a scriptsDocumentation object',
+      multiple: true,
+      required: true,
+    },
+    'readme-file': {
+      key: 'r',
+      description: 'path to a a README.md file target to update with script documentation',
+      multiple: true,
+      required: true,
+    },
+  };
 
-/* istanbul ignore next */
-if (__filename === process?.mainModule?.filename) {
-  if (['-h', '--help'].includes(process.argv[2])) {
-    process.stdout.write('usage: scriptDocs [rootPath]');
-    process.exit(0);
-  }
+  const opts = stdio.getopt(optsDef) || {};
+  const jsonPath = join(process.cwd(), opts['json-file'].toString());
+  const readmePath = join(process.cwd(), opts['readme-file'].toString());
 
-  /*
-   * TODO: generates script docs using in ../Readme
-   * user passess in 'scriptDocs README.md', shouild take path of README.md
-   *
-   */
-  const userSuppliedReadmePath = process.argv[2];
-  main(userSuppliedReadmePath || null);
+  updateScriptDocs(jsonPath, readmePath);
 }

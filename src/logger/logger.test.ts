@@ -2,7 +2,6 @@
 import { expect } from 'chai';
 import 'mocha';
 import { Log, LogLevel, LogOutput, getLogger } from './logger';
-import { loadEnv } from '../env/loadEnv';
 
 describe('Logging', () => {
   it('logs using the default settings', () => {
