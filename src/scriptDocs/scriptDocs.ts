@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import * as stdio from 'stdio';
+import { getopt } from 'stdio';
 import { Readme } from '../readme/readme';
 import { Block } from '../readme/types';
 
@@ -126,7 +126,7 @@ if (process?.mainModule?.filename === __filename) {
     },
   };
 
-  const opts = stdio.getopt(optsDef) || {};
+  const opts = getopt(optsDef) || {};
   const jsonPath = join(process.cwd(), opts['json-file'].toString());
   const readmePath = join(process.cwd(), opts['readme-file'].toString());
 
