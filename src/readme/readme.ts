@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicated-branches */
 /* eslint-disable no-restricted-syntax */
 import { Block, IndexedBlocks, Query } from './types';
 

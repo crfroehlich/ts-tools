@@ -15,7 +15,6 @@ overrides:
       - '**/*.test.ts'
       - '**/*.spec.ts'
       - '**/*-spec.ts'
-      - test/**/*
 parser: '@typescript-eslint/parser'
 parserOptions:
   ecmaVersion: 2019
@@ -49,9 +48,9 @@ rules:
     - error
     - ignoreDeclarationSort: true
   tsdoc/syntax: warn
-  complexity:
-    - error
-    - max: 5
+  # complexity:
+  #  - warn
+  #  - max: 5
 settings:
   import/resolver:
     node:
