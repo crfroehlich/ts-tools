@@ -43,12 +43,11 @@
     "mocha": "7.1.0",
     "nyc": "15.0.0",
     "prettier": "1.19.1",
-    "source-map-support": "0.5.16",
     "ts-mocha": "6.0.0",
     "ts-node": "8.6.2",
     "typedoc": "0.16.11",
     "typedoc-plugin-markdown": "2.2.17",
-    "webpack-cli": "3.3.11"
+    "eslint-plugin-sonarjs": "0.5.0"
   },
   "files": [
     "dist"
