@@ -1,15 +1,4 @@
 {
-  "awesomeTypescriptLoaderOptions": {
-    "doTypeCheck": true,
-    "forkChecker": true,
-    "isolatedModules": true,
-    "reportFiles": [
-      "src/**/*.{ts}"
-    ],
-    "useCache": true,
-    "useTranspileModule": true,
-    "useWebpackText": true
-  },
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "declaration": true,

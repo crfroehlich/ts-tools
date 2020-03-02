@@ -55,7 +55,7 @@ export const DefaultLogOptions: LogOptions = {
  * @returns winston.LoggerOptions
  */
 export const buildLoggerConfig = (options: LogOptions): LoggerOptions => {
-  const loggerOptions: LoggerOptions = {
+  return {
     level: options.logLevel,
     format: format.combine(
       format.timestamp({
@@ -68,7 +68,6 @@ export const buildLoggerConfig = (options: LogOptions): LoggerOptions => {
     defaultMeta: { service: options.serviceName },
     transports: [],
   };
-  return loggerOptions;
 };
 
 export type logMethod = (level: LogLevel, message: string, ...args: any[]) => void;
