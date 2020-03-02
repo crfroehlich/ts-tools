@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import * as path from 'path';
 import * as webpack from 'webpack';
 import { readFileSync } from 'fs';
@@ -81,7 +82,7 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
 
   const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
   const banner = `
-    ${pkg.name}: ${pkg.version}
+    ${pkg.name}: v${pkg.version}
     ${license}
   `;
 
