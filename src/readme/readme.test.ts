@@ -4,7 +4,7 @@ import { join } from 'path';
 import { promisify } from 'util';
 import { readFile } from 'fs';
 import 'mocha';
-import Readme from './readme';
+import { Readme } from './readme';
 
 const TEST_FILES = {
   EMPTY: join(__dirname, 'test-data/empty.md'),
