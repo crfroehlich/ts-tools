@@ -1,26 +1,30 @@
 {
   "author": "ns8inc",
   "dependencies": {
-    "awesome-typescript-loader": "5.2.1",
     "dotenv-extended": "2.7.1",
+    "fork-ts-checker-notifier-webpack-plugin": "2.0.0",
+    "fork-ts-checker-webpack-plugin": "4.0.5",
     "hard-source-webpack-plugin": "0.13.1",
+    "pnp-webpack-plugin": "1.6.4",
     "sorted-json": "0.2.6",
     "stdio": "^2.1.0",
-    "typescript": "3.8.2",
+    "typescript": "3.8.3",
+    "uglifyjs-webpack-plugin": "2.2.0",
     "webpack": "4.41.6",
     "webpack-cli": "3.3.11",
+    "webpack-fail-plugin": "2.0.0",
+    "webpack-notifier": "1.8.0",
     "winston": "3.2.1"
   },
   "description": "NS8 Protect JavaScript project providing build tooling",
   "devDependencies": {
-    "@ns8/eslint-config-ns8-typescript-eslint": "0.0.7",
     "@types/chai": "4.2.9",
     "@types/chai-as-promised": "7.1.2",
     "@types/format-util": "1.0.1",
-    "@types/glob": "^7.1.1",
+    "@types/glob": "7.1.1",
     "@types/hard-source-webpack-plugin": "1.0.1",
     "@types/mocha": "7.0.1",
-    "@types/node": "13.7.6",
+    "@types/node": "13.7.7",
     "@types/webpack": "4.41.7",
     "@types/webpack-dev-server": "3.10.0",
     "@types/winston": "2.4.4",
@@ -42,7 +46,7 @@
     "source-map-support": "0.5.16",
     "ts-mocha": "6.0.0",
     "ts-node": "8.6.2",
-    "typedoc": "0.16.10",
+    "typedoc": "0.16.11",
     "typedoc-plugin-markdown": "2.2.17",
     "webpack-cli": "3.3.11"
   },
@@ -50,6 +54,9 @@
     "dist"
   ],
   "homepage": "https://github.com/ns8inc/protect-tools-js#readme",
+  "installConfig": {
+    "pnp": true
+  },
   "license": "UNLICENSED",
   "main": "dist/protect-tools-js.js",
   "name": "@ns8/protect-tools-js",
@@ -60,8 +67,9 @@
   "scripts": {
     "beautify": "ts-node ./src/sortJson/sortJson.ts",
     "build": "yarn clean && yarn generate:exports && yarn beautify && tsc --emitDeclarationOnly && webpack",
-    "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp",
+    "build:dev": "NODE_ENV=dev yarn generate:exports && yarn beautify && tsc --emitDeclarationOnly && webpack",
     "docs:sync-build-scripts": "ts-node src/scriptDocs/scriptDocs.ts -p package.json -r README.md",
+    "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp",
     "generate:exports": "yarn cti create ./src -w",
     "lint": "yarn eslint src/**/*.ts",
     "lint:fix": "yarn eslint src/**/*.ts --fix",

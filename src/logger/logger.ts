@@ -142,7 +142,7 @@ export class Log implements LogInterface {
         }),
       );
     }
-  }
+  } //
 
   public log = (level: LogLevel, message: string, ...args: any[]): void => {
     this.logger.log(level, message, ...args);
