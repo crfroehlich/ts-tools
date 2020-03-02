@@ -10,7 +10,7 @@
     "webpack-cli": "3.3.11",
     "winston": "3.2.1"
   },
-  "description": "NS8 Protect Client JavaScript Tools",
+  "description": "NS8 Protect JavaScript project providing build tooling",
   "devDependencies": {
     "@ns8/eslint-config-ns8-typescript-eslint": "0.0.7",
     "@types/chai": "4.2.9",
