@@ -277,10 +277,8 @@ export class Readme {
 
     if (typeof target === 'string') {
       for (const [key, contentBlocks] of this.indexedBlocks.entries()) {
-        if (strict) {
-          if (key === target) {
-            blocks.push(...contentBlocks);
-          }
+        if (strict && key === target) {
+          blocks.push(...contentBlocks);
         } else if (key.includes(target)) {
           blocks.push(...contentBlocks);
         }

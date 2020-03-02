@@ -10,7 +10,6 @@ const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-web
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const webpackFailPlugin = require('webpack-fail-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
-const PnpWebpackPlugin = require('pnp-webpack-plugin');
 
 const license = `
 -------------------------- NS8 PROPRIETARY 1.0 --------------------------
@@ -141,10 +140,6 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
     resolve: {
       extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js'],
       modules: ['node_modules'],
-      plugins: [PnpWebpackPlugin],
-    },
-    resolveLoader: {
-      plugins: [PnpWebpackPlugin.moduleLoader(module)],
     },
     devtool: BundleDevTool.OUTLINE,
     module: {

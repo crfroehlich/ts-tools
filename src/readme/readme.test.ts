@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import 'mocha';
 import { Readme } from './readme';
+import { Block } from './types';
 
 const TEST_FILES = {
   EMPTY: join(__dirname, 'test-data/empty.md'),
@@ -261,7 +263,7 @@ describe('insertBefore', () => {
     readme.insertBefore('# Purpose', newBlock);
     expect(readme.blocks.length).to.equal(previousLength + 1);
 
-    const foundIndex = readme.blocks.findIndex((block) => {
+    const foundIndex = readme.blocks.findIndex((block: Block) => {
       return Readme.headerFound(block.header, '# Purpose');
     });
     expect(foundIndex).to.be.greaterThan(0);

@@ -1,11 +1,11 @@
 {
   "author": "ns8inc",
   "dependencies": {
+    "concurrently": "5.1.0",
     "dotenv-extended": "2.7.1",
     "fork-ts-checker-notifier-webpack-plugin": "2.0.0",
     "fork-ts-checker-webpack-plugin": "4.0.5",
     "hard-source-webpack-plugin": "0.13.1",
-    "pnp-webpack-plugin": "1.6.4",
     "sorted-json": "0.2.6",
     "stdio": "^2.1.0",
     "typescript": "3.8.3",
@@ -54,9 +54,6 @@
     "dist"
   ],
   "homepage": "https://github.com/ns8inc/protect-tools-js#readme",
-  "installConfig": {
-    "pnp": true
-  },
   "license": "UNLICENSED",
   "main": "dist/protect-tools-js.js",
   "name": "@ns8/protect-tools-js",
@@ -68,12 +65,14 @@
     "beautify": "ts-node ./src/sortJson/sortJson.ts",
     "build": "yarn clean && yarn generate:exports && yarn beautify && tsc --emitDeclarationOnly && webpack",
     "build:dev": "NODE_ENV=dev yarn generate:exports && yarn beautify && tsc --emitDeclarationOnly && webpack",
-    "docs:sync-build-scripts": "ts-node src/scriptDocs/scriptDocs.ts -p package.json -r README.md",
+    "build:watch": "concurrently \"yarn build\" \"yarn test:watch\"",
     "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp",
+    "docs:sync-build-scripts": "ts-node src/scriptDocs/scriptDocs.ts -p package.json -r README.md",
     "generate:exports": "yarn cti create ./src -w",
     "lint": "yarn eslint src/**/*.ts",
     "lint:fix": "yarn eslint src/**/*.ts --fix",
     "test": "nyc mocha src/**/*.test.ts"
+    "test:watch": "nyc mocha --watch src/**/*.test.ts"
   },
   "scriptsDocumentation": {
     "beautify": {
