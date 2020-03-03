@@ -1,53 +1,47 @@
 import { expect } from 'chai';
 import 'mocha';
 
-import { ScriptsDocs, formatScriptDocs } from './scriptDocs';
-
-/*
- * Test Cases:
- *
- * - readme has no build script information at all
- * - readme has build script info as the last section
- * - readme has build script info as a middle section
- */
+import { formatScriptDocs } from './scriptDocs';
 
 const parsedPackageJson = {
   scripts: {
-    script1: 'test',
-    script2: 'test',
-    script3: 'test',
-    script4: 'test',
+    lint: 'yarn lint',
+    build: 'yarn build',
+    deploy: 'yarn deploy',
+    test: 'yarn test',
   },
   scriptsDocumentation: {
-    script1: {
+    lint: {
       dev: true,
-      description: 'script 1 description',
+      description: 'lints code',
     },
-    script2: {
+    build: {
       dev: true,
-      description: 'script 2 description',
+      description: 'builds for dist',
     },
-    script3: {
+    deploy: {
       dev: true,
-      description: 'script 3 description',
+      description: 'deploys to an s3 bucket',
     },
-    script4: {
+    test: {
       dev: true,
-      description: 'script 4 description',
+      description: 'runs tests',
     },
   },
 };
 
 describe('formatScriptDocs', () => {
-  it('maps an object of keys mapped to a an object with a description property into a markdown line', () => {
-    const formatted = formatScriptDocs(parsedPackageJson.scriptsDocumentation as ScriptsDocs);
-    expect(formatted).to.equal(
-      [
-        '`yarn script1`\n- script 1 description\n',
-        '`yarn script2`\n- script 2 description\n',
-        '`yarn script3`\n- script 3 description\n',
-        '`yarn script4`\n- script 4 description\n',
-      ].join('\n'),
-    );
+  it('maps a package.json ScriptDocs object to a markdown block of documentation on script docs.', () => {
+
+    const formatted = formatScriptDocs(parsedPackageJson.scriptsDocumentation);
+    const expected = [
+      `\`yarn lint\`\n- lints code\n`,
+      `\`yarn build\`\n- builds for dist\n`,
+      `\`yarn deploy\`\n- deploys to an s3 bucket\n`,
+      `\`yarn test\`\n- runs tests\n`,
+    ].join('\n');
+
+    expect(formatted).to.equal(expected);
+
   });
 });

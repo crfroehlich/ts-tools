@@ -4,19 +4,19 @@ import { getopt } from 'stdio';
 import { Readme } from '../readme/readme';
 import { Block } from '../readme/types';
 
-export interface ScriptDoc {
+interface ScriptDoc {
   /*
-   * yarn script description property.
+   * script doc description property.
    */
   description: string;
 
   /*
-   * flag as to whether script is for devs or not, for potential future programmatic organization.
+   * flag as to whether script is for devs or not. not currently used, but potentially useful for future organization.
    */
   dev: boolean;
 }
 
-export interface ScriptsDocs {
+interface ScriptsDocs {
   /*
    * A string to {@link ScriptDoc}-block mapping.
    */
@@ -37,17 +37,16 @@ export const formatScriptDocs = (docs: ScriptsDocs): string => {
     .join('\n');
 };
 
-interface ReadmeUpdates {
+interface ReadmeUpdate {
+
   /*
    * The string content you want to replace in the readme.
    */
-
   content: string;
 
   /*
    * The path to the readme file you want to load and update.
    */
-
   path: string;
 
   /*
@@ -55,20 +54,20 @@ interface ReadmeUpdates {
    *
    */
   target: string;
+
 }
 
 /*
  * Updates a section from a readme filepath if the file at that path exists
  * and the target section and is successfully matched.
  *
- * @param updates - a {@link ReadmeUpdates}
+ * @param updates - a {@link ReadmeUpdate}
  *
  * @returns a Promise-wrapped string with the entire updated readme.
  *
  */
 
-const updateReadme = async (updates: ReadmeUpdates): Promise<string> => {
-  const { path, content, target } = updates;
+const updateReadme = async ({ path, content, target }: ReadmeUpdate): Promise<string> => {
   let readme;
 
   try {
