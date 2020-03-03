@@ -30,9 +30,9 @@ describe('Readme constructor', () => {
     const dot = '.';
     const cwd = process.cwd();
 
-    expect(new Readme(dot).path).to.equal(cwd);
-    expect(new Readme(dotSlash).path).to.equal(cwd);
-    expect(new Readme('test-path').path).to.equal(join(cwd, 'test-path'));
+    expect(new Readme(dot).readmePath).to.equal(cwd);
+    expect(new Readme(dotSlash).readmePath).to.equal(cwd);
+    expect(new Readme('test-path').readmePath).to.equal(join(cwd, 'test-path'));
   });
 });
 

@@ -43,9 +43,15 @@ export class Readme {
   }
 
   /*
-   * path resolved relative to the calling code's cwd, resolved with 'path.resolve'.
+   * readmePath resolved relative to the calling code's cwd, resolved with 'path.resolve'.
    */
-  path: string;
+  readmePath: string;
+
+  /*
+   * 
+   */
+
+  content: string | null;
 
   /*
    * A list of {@link Content} or {@link Code} blocks.
@@ -58,37 +64,46 @@ export class Readme {
   indexedBlocks: IndexedBlocks = new Map();
 
   /*
-   * @param path - path to the readme file to be parsed.
+   * @param readmePath - path to the readme file to be parsed.
    *
    */
-  constructor(path: string) {
-    if (path.trim().length === 0) {
-      throw new Error(`invalid path: ${path}`);
+  constructor(readmePath: string | null, content: string = '') {
+
+    if (readmePath && content) {
+      throw new Error('Invalid Invocation: please pass either a string path or string content, but not both');
     }
 
-    this.path = resolve(path);
+    if (typeof readmePath === 'string' && readmePath.trim().length > 0) {
+      this.readmePath = resolve(readmePath);
+    } else {
+      throw new Error(`invalid path: ${readmePath}`);
+    }
+
+    this.content = content; 
+
   }
 
   /*
-   * Reads the readme at {@link path} and returns it as a Promise-wrapped string.
+   * Reads the readme at {@link readmePath} and returns it as a Promise-wrapped string.
    */
   async getReadme(): Promise<string> {
-    let content = '';
 
+    let content = '';
     try {
-      content = await promisify(readFile)(this.path, { encoding: 'utf8' });
+      content = await promisify(readFile)(this.readmePath, { encoding: 'utf8' });
     } catch (e) {
       if (e.code === 'ENOENT') {
-        process.stdout.write(`The file ${this.path} could not be read.\n`);
+        process.stdout.write(`The file ${this.readmePath} could not be read.\n`);
         process.exit(1);
       }
     }
 
     return content;
+
   }
 
   /*
-   * Parses the readme file at {@link path} and returns it as Promise-wrapped Readme instance for chaining.
+   * Parses the readme file at {@link readmePath} and returns it as Promise-wrapped Readme instance for chaining.
    */
   async parse(): Promise<Readme> {
     const content = await this.getReadme();

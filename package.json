@@ -65,7 +65,7 @@
     "generate:exports": "yarn cti create ./src -w",
     "lint": "yarn eslint src/**/*.ts",
     "lint:fix": "yarn eslint src/**/*.ts --fix",
-    "test": "yarn build && nyc mocha src/**/*.test.ts"
+    "test": "nyc mocha src/**/*.test.ts"
   },
   "scriptsDocumentation": {
     "beautify": {

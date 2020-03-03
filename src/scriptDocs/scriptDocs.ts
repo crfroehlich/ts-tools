@@ -58,8 +58,8 @@ interface ReadmeUpdate {
 }
 
 /*
- * Updates a section from a readme filepath if the file at that path exists
- * and the target section and is successfully matched.
+ * Updates a section from a readme filepath if the file at that path exists.
+ * If the target is matched, the content there is replaced. otherwise, the content is appended.
  *
  * @param updates - a {@link ReadmeUpdate}
  *
@@ -67,7 +67,7 @@ interface ReadmeUpdate {
  *
  */
 
-const updateReadme = async ({ path, content, target }: ReadmeUpdate): Promise<string> => {
+export const updateReadme = async ({ path, content, target }: ReadmeUpdate): Promise<string> => {
   let readme;
 
   try {
