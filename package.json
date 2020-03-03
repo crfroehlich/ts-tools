@@ -6,7 +6,6 @@
     "fork-ts-checker-notifier-webpack-plugin": "2.0.0",
     "fork-ts-checker-webpack-plugin": "4.0.5",
     "hard-source-webpack-plugin": "0.13.1",
-    "inchjs": "0.4.1",
     "mocha-parallel-tests": "2.3.0",
     "sorted-json": "0.2.6",
     "stdio": "^2.1.0",
