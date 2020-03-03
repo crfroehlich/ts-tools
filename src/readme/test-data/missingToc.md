@@ -15,7 +15,7 @@ Purpose statement.
 
 #### `yarn` scripts
 
-# Authors
+## Authors
 Spacer content.
 Spacer content.
 Spacer content.
@@ -63,9 +63,9 @@ Spacer content.
 Spacer content.
 Spacer content.
 
-# Contributing
+## Contributing
 Make a PR using our PR template.
 
-# License
+## License
 This project is licensed with an NS8 1.0 proprietary license.
 

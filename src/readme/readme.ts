@@ -1,11 +1,10 @@
 /* eslint-disable no-restricted-syntax */
-
-import { promisify } from 'util';
-import { readFile } from 'fs';
-import { resolve } from 'path';
 import { Block, IndexedBlocks, Query } from './types';
 
-
+interface TocArgs {
+  insertionPoint: Query | number;
+  indent: string;
+}
 /**
  * The Readme class represents a markdown README and provides an API for programmatic transformations of it.
  */
@@ -27,18 +26,14 @@ export class Readme {
     return `[${textParts.join(' ')}](#${Readme.sanitize(textParts.join('-')).toLowerCase()})`;
   };
 
-
   public static headerFound(header: string, query: Query, strict = false): boolean {
-    // doesnt match case insensitive. should it?
-
     if (typeof query === 'string') {
-      if (strict && header === query) {
-        return true;
+      if (strict) {
+        return header === query;
       }
-      if (header.includes(query)) {
-        return true;
-      }
-    } else if (query instanceof RegExp && query.test(header)) {
+      return header.includes(query);
+    }
+    if (query instanceof RegExp && query.test(header)) {
       return true;
     }
 
@@ -48,7 +43,7 @@ export class Readme {
   /*
    * pass readme content in as a string.
    */
-  content: string = '';
+  content = '';
 
   /*
    * A list of {@link Content} or {@link Code} blocks.
@@ -61,12 +56,10 @@ export class Readme {
   indexedBlocks: IndexedBlocks = new Map();
 
   /*
-   * @param content - readme content as a string. 
+   * @param content - readme content as a string.
    */
-  constructor(content: string = '') {
-
+  constructor(content = '') {
     this.content = content;
-
   }
 
   /*
@@ -145,43 +138,26 @@ export class Readme {
    * Generates a table of contents for a specified subset of sections, to avoid
    * including the readme top level sections, and to provide greater user control.
    *
-   * @insertionPoint - either a header-matching regex or an index into the readme sections
-   * to match where the toc should be inserted, and where it should start counting headers.
-   *
+   * @param startAt - the index of blocks to start parsing for the table of contents
    * @param indent - a string used to pad indentations for the list indentations.
    *
    * This does not replace an existing ToC.
    */
-  toc(insertionPoint: Query | number = 1, indent = '  '): string {
+  toc(startAt = 1, indent = '  '): string {
     const tocHeader = '## Table of Contents\n';
-    let insertAt = -1;
-
-    if (insertionPoint instanceof RegExp) {
-      insertAt = this.blocks.findIndex((block) => {
-        return insertionPoint.test(block.header);
-      });
-    } else if (typeof insertionPoint === 'string') {
-      insertAt = this.blocks.findIndex((block) => {
-        return block.header.includes(insertionPoint);
-      });
-    } else if (typeof insertionPoint === 'number') {
-      insertAt = insertionPoint;
+    if (startAt < 0) {
+      throw new Error(`ToC insertionPoint invalid: ${startAt}`);
     }
 
-    if (insertAt === -1) {
-      throw new Error(`ToC insertionPoint invalid: ${insertionPoint}`);
-    }
-
-    // slice(2) is default to skip _root block and the readme top-level header
-    const toc = `${this.blocks
-      .slice(insertAt + 1)
+    const toc = this.blocks
+      .slice(startAt + 1) // +1 to skip _root block and the readme top-level header
       .map(({ header }) => {
         const [marker, ...text] = header.trim().split(' ');
         const indentCount = marker.length - 1;
         const linkedHeader = Readme.makeLink(...text);
         return `${Readme.repeat(indent, indentCount)}+ ${linkedHeader}`;
       })
-      .join('\n')}\n`;
+      .join('\n');
 
     return `${tocHeader}${toc}`;
   }
@@ -204,8 +180,11 @@ export class Readme {
     return output;
   }
 
-  getSectionAt(index: number): Block | null {
-    return this.blocks[index] || null;
+  getSectionAt(index: number): Block {
+    if (index < 0 || index > this.blocks.length) {
+      throw new Error(`Index out of range: ${index}`);
+    }
+    return this.blocks[index];
   }
 
   /*

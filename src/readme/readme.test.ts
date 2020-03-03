@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import { join } from 'path';
-import { promisify } from 'util';
 import { readFileSync } from 'fs';
 import 'mocha';
 import { Readme } from './readme';
@@ -16,65 +15,66 @@ const TEST_FILES = {
 };
 
 describe('Readme constructor', () => {
-
   it('should bind the passed in content', () => {
-
     const content = '# Test Readme\n# Description: Test Description';
     const readme = new Readme(content);
     expect(readme.content).to.equal(content);
+  });
 
-  })
-
+  it('should provide default content if none is supplied', () => {
+    const readme = new Readme();
+    expect(readme.content).to.equal('');
+  });
 });
 
-describe('Readme.parse', () => {
-  it('empty readme content should only result in a _root block and a _root indexedBlock.', async () => {
+describe('parse', () => {
+  it('empty readme content should only result in a _root block and a _root indexedBlock.', () => {
     const readme = new Readme('').parse();
     expect(readme.indexedBlocks.size === 1);
     expect(readme.blocks.length === 1);
   });
 
-  it('6 headers (1 duplicate) should result in 7 blocks.', async () => {
+  it('6 headers (1 duplicate) should result in 7 blocks.', () => {
     const duplicateHeadersContent = readFileSync(TEST_FILES.DUPLICATE_HEADERS, 'utf8');
     const readme = new Readme(duplicateHeadersContent).parse();
     expect(readme.blocks.length).to.equal(7);
   });
 
-  it('6 headers (1 duplicate) header should result in 6 indexedBlocks.', async () => {
+  it('6 headers (1 duplicate) header should result in 6 indexedBlocks.', () => {
     const duplicateHeadersContent = readFileSync(TEST_FILES.DUPLICATE_HEADERS, 'utf8');
     const readme = new Readme(duplicateHeadersContent).parse();
     expect(readme.indexedBlocks.size).to.equal(6);
   });
 
-  it('triplicate headers and no contents should result in 4 blocks (1 for root, 3 for each toc).', async () => {
+  it('triplicate headers and no contents should result in 4 blocks (1 for root, 3 for each toc).', () => {
     const headersOnlyContent = readFileSync(TEST_FILES.HEADERS_ONLY, 'utf8');
     const readme = new Readme(headersOnlyContent).parse();
     expect(readme.blocks.length).to.equal(4);
   });
 
-  it('triplicate headers and no contents should result in 2 indexedBlocks (1 for root + 1 for toc).', async () => {
+  it('triplicate headers and no contents should result in 2 indexedBlocks (1 for root + 1 for toc).', () => {
     const headersOnlyContent = readFileSync(TEST_FILES.HEADERS_ONLY, 'utf8');
     const readme = new Readme(headersOnlyContent).parse();
     expect(readme.indexedBlocks.size).to.equal(2);
   });
 });
 
-describe('Readme.getSection', async () => {
-  it('should return null when a query doesnt match any heading', async () => {
+describe('getSection', () => {
+  it('should return null when a query doesnt match any heading', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
     readme.setSection('Table of Contents', 'REPLACED CONTENT');
     expect(readme.getSection('Non-existent Heading')).to.be.null;
   });
 
-  it('should return null for any getSection call with an emtpy file', async () => {
+  it('should return null for any getSection call with an emtpy file', () => {
     const emptyContent = readFileSync(TEST_FILES.EMPTY, 'utf8');
     const readme = new Readme(emptyContent).parse();
     const nonExistentSection = readme.getSection('Table of Contents');
     expect(nonExistentSection).to.equal(null);
   });
 
-  it('should return value for an existing section using a RegExp', async () => {
+  it('should return value for an existing section using a RegExp', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
     const section = readme.getSection(/^ *#+ *Table of Contents/);
@@ -83,29 +83,88 @@ describe('Readme.getSection', async () => {
   });
 });
 
-describe('Readme.getSections', async () => {
-  it('should return any emtpy array for any getSections call where there are no matches.', async () => {
+describe('getSectionAt', () => {
+  it('should throw if the index is out of range (less than 0)', () => {
+    expect(() => {
+      const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
+      const readme = new Readme(standardContent).parse();
+      readme.getSectionAt(-1);
+    }).to.throw();
+  });
+
+  it('should throw if the index is out of range (greater than block count)', () => {
+    expect(() => {
+      const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
+      const readme = new Readme(standardContent).parse();
+      readme.getSectionAt(readme.blocks.length + 1);
+    }).to.throw();
+  });
+
+  it('should return the expected content block, given the appropriate block index', () => {
+    const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
+    const readme = new Readme(standardContent).parse();
+    const newBlock = {
+      header: '## Insert Before',
+      content: ['Newly Inserted block content', ''],
+    };
+    readme.append(newBlock);
+    const blockCount = readme.blocks.length;
+    const fetchedBlock = readme.getSectionAt(blockCount - 1);
+    expect(fetchedBlock).to.equal(newBlock);
+  });
+});
+
+describe('getSections', () => {
+  it('should return any emtpy array for any getSections call where there are no matches.', () => {
     const headersOnlyContent = readFileSync(TEST_FILES.HEADERS_ONLY, 'utf8');
     const readme = new Readme(headersOnlyContent).parse();
     const sections = readme.getSections('Table of Contents');
     expect(sections.length).to.equal(3);
   });
 
-  it('should two entries for a duplicate header.', async () => {
+  it('should return two entries for a duplicate header.', () => {
     const duplicateHeadersContent = readFileSync(TEST_FILES.DUPLICATE_HEADERS, 'utf8');
     const readme = new Readme(duplicateHeadersContent).parse();
     const sections = readme.getSections('Purpose');
     expect(sections.length).to.equal(2);
   });
 
-  it('should ignore content inside of code blocks', async () => {
+  it('Regex matching.', () => {
+    const duplicateHeadersContent = readFileSync(TEST_FILES.DUPLICATE_HEADERS, 'utf8');
+    const readme = new Readme(duplicateHeadersContent).parse();
+    const sections = readme.getSections(/## Purpose/);
+    expect(sections.length).to.equal(2);
+  });
+
+  it('Regex not matching.', () => {
+    const duplicateHeadersContent = readFileSync(TEST_FILES.DUPLICATE_HEADERS, 'utf8');
+    const readme = new Readme(duplicateHeadersContent).parse();
+    const sections = readme.getSections(/Porpose/, true);
+    expect(sections.length).to.equal(0);
+  });
+
+  it('should return two entries for a duplicate header.', () => {
+    const duplicateHeadersContent = readFileSync(TEST_FILES.DUPLICATE_HEADERS, 'utf8');
+    const readme = new Readme(duplicateHeadersContent).parse();
+
+    const sectionsStrictNoMatch = readme.getSections('Purpose', true);
+    expect(sectionsStrictNoMatch.length).to.equal(0);
+
+    const sectionsStrictMatchRegExp = readme.getSections(/Purpose/, true);
+    expect(sectionsStrictMatchRegExp.length).to.equal(2);
+
+    const sectionsStrictMatchString = readme.getSections('## Purpose', true);
+    expect(sectionsStrictMatchString.length).to.equal(2);
+  });
+
+  it('should ignore content inside of code blocks', () => {
     const codeBlocksWithHeadersContent = readFileSync(TEST_FILES.CODE_BLOCKS_CONTAINING_HEADERS, 'utf8');
     const readme = new Readme(codeBlocksWithHeadersContent).parse();
     const section = readme.getSection('Code Header');
     expect(section).to.be.null;
   });
 
-  it('should return value for an existing section using a RegExp', async () => {
+  it('should return value for an existing section using a RegExp', () => {
     const headersOnlyContent = readFileSync(TEST_FILES.HEADERS_ONLY, 'utf8');
     const readme = new Readme(headersOnlyContent).parse();
     const sections = readme.getSections('Table of Contents');
@@ -115,10 +174,10 @@ describe('Readme.getSections', async () => {
   });
 });
 
-describe('Readme.export', async () => {
-  it('should return a section when Table of Contents is replaced with dummy data', async () => {
+describe('Readme.export', () => {
+  it('should return a section when Table of Contents is replaced with dummy data', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
-    const readme = await new Readme(standardContent).parse();
+    const readme = new Readme(standardContent).parse();
     const noModificationExport = readme.export();
     readme.setSection('Table of Contents', 'REPLACED CONTENT');
     expect(readme.getSection('Table of Contents')?.content.join('\n')).to.equal('REPLACED CONTENT');
@@ -127,7 +186,7 @@ describe('Readme.export', async () => {
     expect(noModificationExport).not.to.equal(modificationExport);
   });
 
-  it('should export file correctly if it contains code blocks', async () => {
+  it('should export file correctly if it contains code blocks', () => {
     const codeBlocksWithHeadersContent = readFileSync(TEST_FILES.CODE_BLOCKS_CONTAINING_HEADERS, 'utf8');
     const readme = new Readme(codeBlocksWithHeadersContent).parse();
 
@@ -147,27 +206,51 @@ describe('Readme.export', async () => {
   });
 });
 
-describe('table of contents', async () => {
-  it('should generate a toc', async () => {
-    const expectedToc = `## Table of Contents
-  + [Header with a \`tag in it\`](#header-with-a-tag-in-it)
-  + [Sub-purpose section](#sub-purpose-section)
-    + [Sub-sub purpose section](#sub-sub-purpose-section)
-      + [\`yarn\` scripts](#yarn-scripts)
-+ [Authors](#authors)
-+ [Contributing](#contributing)
-+ [License](#license)
-`;
-
+describe('table of contents', () => {
+  it('Generates a correct toc using a default target startAt index of 1.', () => {
     const missingTocContent = readFileSync(TEST_FILES.MISSING_TOC, 'utf8');
     const readme = new Readme(missingTocContent).parse();
     const toc = readme.toc();
-    expect(toc).to.equal(expectedToc);
+    expect(toc).to.equal(
+      '## Table of Contents\n' +
+        '  + [Header with a `tag in it`](#header-with-a-tag-in-it)\n' +
+        '  + [Sub-purpose section](#sub-purpose-section)\n' +
+        '    + [Sub-sub purpose section](#sub-sub-purpose-section)\n' +
+        '      + [`yarn` scripts](#yarn-scripts)\n' +
+        '  + [Authors](#authors)\n' +
+        '  + [Contributing](#contributing)\n' +
+        '  + [License](#license)',
+    );
+  });
+
+  it('Generates a correct toc using a startAt index of 0.', () => {
+    const missingTocContent = readFileSync(TEST_FILES.MISSING_TOC, 'utf8');
+    const readme = new Readme(missingTocContent).parse();
+    const toc = readme.toc(0);
+    expect(toc).to.equal(
+      '## Table of Contents\n' +
+        '+ [Demo Repo](#demo-repo)\n' +
+        '  + [Header with a `tag in it`](#header-with-a-tag-in-it)\n' +
+        '  + [Sub-purpose section](#sub-purpose-section)\n' +
+        '    + [Sub-sub purpose section](#sub-sub-purpose-section)\n' +
+        '      + [`yarn` scripts](#yarn-scripts)\n' +
+        '  + [Authors](#authors)\n' +
+        '  + [Contributing](#contributing)\n' +
+        '  + [License](#license)',
+    );
+  });
+
+  it('throws if an invalid index is passed', () => {
+    expect(() => {
+      const missingTocContent = readFileSync(TEST_FILES.MISSING_TOC, 'utf8');
+      const readme = new Readme(missingTocContent).parse();
+      readme.toc(-1);
+    }).to.throw();
   });
 });
 
-describe('insertBefore', async () => {
-  it('should add a block before the matched content block, when the query target is a valid match', async () => {
+describe('insertBefore', () => {
+  it('should add a block before the matched content block, when the query target is a valid match', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
     const previousLength = readme.blocks.length;
@@ -196,10 +279,9 @@ describe('insertBefore', async () => {
       .to.deep.equal(['Newly Inserted block content', '']);
   });
 
-  it('should not add a block before the matched content block, when the query target is an invalid match', async () => {
-
+  it('should not add a block before the matched content block, when the query target is an invalid match', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
-    const readme = await new Readme(standardContent).parse();
+    const readme = new Readme(standardContent).parse();
     const block = {
       header: '## Insert Before',
       content: ['Newly Inserted block content', ''],
@@ -216,10 +298,10 @@ describe('insertBefore', async () => {
   });
 });
 
-describe('insertAfter', async () => {
-  it('should add a block before the matched content block, when the query target is a valid match', async () => {
+describe('insertAfter', () => {
+  it('should add a block before the matched content block, when the query target is a valid match', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
-    const readme = await new Readme(standardContent).parse();
+    const readme = new Readme(standardContent).parse();
     const previousLength = readme.blocks.length;
     const newBlock = {
       header: '## Insert After',
@@ -227,6 +309,9 @@ describe('insertAfter', async () => {
     };
     readme.insertAfter('# Purpose', newBlock);
     expect(readme.blocks.length).to.equal(previousLength + 1);
+
+    readme.insertAfter(/Purpose/, newBlock);
+    expect(readme.blocks.length).to.equal(previousLength + 2);
 
     const foundBlock = readme.blocks.find((block) => {
       return Readme.headerFound(block.header, '## Insert After');
@@ -247,7 +332,19 @@ describe('insertAfter', async () => {
       .to.deep.equal(['Newly Inserted block content', '']);
   });
 
-  it('should not add a block before the matched content block, when the query target is an invalid match', async () => {
+  it('should fail if strict matching is enabled and the match is not an exact header match', () => {
+    const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
+    const readme = new Readme(standardContent).parse();
+    const block = {
+      header: '## Insert Before',
+      content: ['Newly Inserted block content', ''],
+    };
+    const previousLength = readme.blocks.length;
+    readme.insertAfter('authors', block, true);
+    expect(readme.blocks.length).to.equal(previousLength);
+  });
+
+  it('should not add a block before the matched content block, when the query target is an invalid match', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
     const block = {
@@ -264,10 +361,26 @@ describe('insertAfter', async () => {
     });
     expect(foundBlock).to.be.undefined;
   });
+
+  it('should fail if strict matching is enabled and the match is not an exact header match', () => {
+    const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
+    const readme = new Readme(standardContent).parse();
+    const block = {
+      header: '## Insert Before',
+      content: ['Newly Inserted block content', ''],
+    };
+    const previousLength = readme.blocks.length;
+
+    readme.insertBefore('authors', block, true);
+    expect(readme.blocks.length).to.equal(previousLength);
+
+    readme.insertBefore(/authors/, block, true);
+    expect(readme.blocks.length).to.equal(previousLength);
+  });
 });
 
-describe('append', async () => {
-  it('should append new block to end of blocks', async () => {
+describe('append', () => {
+  it('should append new block to end of blocks', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
     const initialBlockCount = readme.blocks.length;
@@ -285,8 +398,8 @@ describe('append', async () => {
   // TODO: test indexing by searching via Query
 });
 
-describe('prepend', async () => {
-  it('should prepend new block to readme content blocks', async () => {
+describe('prepend', () => {
+  it('should prepend new block to readme content blocks', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
     const initialBlockCount = readme.blocks.length;
@@ -305,8 +418,8 @@ describe('prepend', async () => {
   });
 });
 
-describe('setSection', async () => {
-  it('should replace content for a section by index', async () => {
+describe('setSection', () => {
+  it('should replace content for a section by index', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
     const privateLicenseBlockIndex = 5; // index includes + 1 for _root block, whereas setSectionAt doesn't.
@@ -323,9 +436,8 @@ describe('setSection', async () => {
   });
 });
 
-describe('setSectionAt', async () => {
-  it('should replace content for a section by index', async () => {
-
+describe('setSectionAt', () => {
+  it('should replace content for a section by index', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
     const licenseBlockIndexPublic = 4;
@@ -335,6 +447,13 @@ describe('setSectionAt', async () => {
     expect(readme.getSection(/^## License/)?.content[0]).to.equal(preUpdateLicense);
     readme.setSectionAt(licenseBlockIndexPublic, postUpdateLicense);
     expect(readme.getSection(/^## License/)?.content[0]).to.equal(postUpdateLicense);
+  });
 
+  it('Should throw when the index is out of range', () => {
+    const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
+    const readme = new Readme(standardContent).parse();
+    expect(() => {
+      readme.setSectionAt(-1, 'content');
+    }).to.throw();
   });
 });
