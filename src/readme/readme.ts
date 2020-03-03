@@ -7,7 +7,7 @@ import { Block, IndexedBlocks, Query } from './types';
 
 
 /**
- * The Readme class represents a markdown README file and provides an API for programmatic transformations of it.
+ * The Readme class represents a markdown README and provides an API for programmatic transformations of it.
  */
 
 export class Readme {
@@ -27,9 +27,6 @@ export class Readme {
     return `[${textParts.join(' ')}](#${Readme.sanitize(textParts.join('-')).toLowerCase()})`;
   };
 
-  private sourceIsFilepath(): boolean {
-    return Boolean(this.filepath);
-  }
 
   public static headerFound(header: string, query: Query, strict = false): boolean {
     // doesnt match case insensitive. should it?
@@ -49,14 +46,9 @@ export class Readme {
   }
 
   /*
-   * filepath resolved relative to the calling code's cwd, resolved with 'path.resolve'.
+   * pass readme content in as a string.
    */
-  private filepath?: string | null = null;
-
-  /*
-   * pass readme content in as a string instead of reading from a filepath. 
-   */
-  private content?: string | null = null;
+  content: string = '';
 
   /*
    * A list of {@link Content} or {@link Code} blocks.
@@ -69,50 +61,22 @@ export class Readme {
   indexedBlocks: IndexedBlocks = new Map();
 
   /*
-   * @param filepath - path to the readme file to be parsed.
-   * @param content - pass readme content in as a string instead of reading from a filepath. 
+   * @param content - readme content as a string. 
    */
-  constructor({ filepath = null, content = null }) {
+  constructor(content: string = '') {
 
-    if (filepath && content || !(filepath && content)) {
-      throw new Error('Invalid Invocation: please pass either a string path or string content.');
-    }
-
-    this.content = content || null;
-
-    if (filepath === null) {
-      return;
-    }
-   
-    this.filepath = filepath || null;
+    this.content = content;
 
   }
 
   /*
-   * Reads the readme at {@link filepath} and returns it as a Promise-wrapped string.
+   * Parses the readme content and returns it as Promise-wrapped Readme instance for chaining.
+   *
+   * @returns a {@link Readme} instance.
    */
-  private async getReadme(): Promise<string> {
 
-    let content = '';
-    try {
-      content = await promisify(readFile)(this.filepath || '', 'utf8');
-    } catch (e) {
-      if (e.code === 'ENOENT') {
-        process.stdout.write(`The file ${this.filepath} could not be read.\n`);
-        process.exit(1);
-      }
-    }
-
-    return content;
-
-  }
-
-  /*
-   * Parses the readme file at {@link filepath} and returns it as Promise-wrapped Readme instance for chaining.
-   */
-  async parse(): Promise<Readme> {
-    const content = this.sourceIsFilepath() ? await this.getReadme() : this.content;
-    const lines = (content as string).split('\n');
+  parse(): Readme {
+    const lines = this.content.split('\n');
 
     const rootBlock: Block = {
       header: '_root',
