@@ -4,10 +4,10 @@ env:
   node: true
 extends:
   - eslint-config-airbnb-base
-  - plugin:@typescript-eslint/recommended
+  - 'plugin:@typescript-eslint/recommended'
   - prettier/@typescript-eslint
-  - plugin:prettier/recommended
-  - plugin:sonarjs/recommended
+  - 'plugin:prettier/recommended'
+  - 'plugin:sonarjs/recommended'
 overrides:
   - env:
       mocha: true
@@ -25,6 +25,9 @@ plugins:
   - sonarjs
 rules:
   '@typescript-eslint/no-var-requires': 'off'
+  complexity:
+    - warn
+    - max: 5
   import/extensions:
     - error
     - .ts: ignorePackages
@@ -48,9 +51,6 @@ rules:
     - error
     - ignoreDeclarationSort: true
   tsdoc/syntax: warn
-  complexity:
-   - warn
-   - max: 5
 settings:
   import/resolver:
     node:

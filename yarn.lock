@@ -136,6 +136,13 @@
     js-yaml "^3.13.1"
     resolve-from "^5.0.0"
 
+"@istanbuljs/nyc-config-typescript@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@istanbuljs/nyc-config-typescript/-/nyc-config-typescript-1.0.1.tgz#55172f5663b3635586add21b14d42ca94a163d58"
+  integrity sha512-/gz6LgVpky205LuoOfwEZmnUtaSmdk0QIMcNFj9OvxhiMhPpKftMgZmGN7jNj7jR+lr8IB1Yks3QSSSNSxfoaQ==
+  dependencies:
+    "@istanbuljs/schema" "^0.1.2"
+
 "@istanbuljs/schema@^0.1.2":
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/@istanbuljs/schema/-/schema-0.1.2.tgz#26520bf09abe4a5644cd5414e37125a8954241dd"
@@ -1299,6 +1306,11 @@ cliui@^6.0.0:
     string-width "^4.2.0"
     strip-ansi "^6.0.0"
     wrap-ansi "^6.2.0"
+
+cloc@2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/cloc/-/cloc-2.5.1.tgz#d62d077f6a5f3f3c22482f47e00c213de1bb899e"
+  integrity sha512-ZHJ592HbnHAshQ7gtnrgeZaVyvou+a+7TM/E/oTZth2c9Mycp4Ymp3/npQ/Qhxgq9ksf8GjTLB9bEyCMTf42BA==
 
 collection-visit@^1.0.0:
   version "1.0.0"

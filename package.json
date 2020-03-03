@@ -1,12 +1,14 @@
 {
   "author": "ns8inc",
   "dependencies": {
+    "cloc": "2.5.1",
     "concurrently": "5.1.0",
     "dotenv-extended": "2.7.1",
     "fork-ts-checker-notifier-webpack-plugin": "2.0.0",
     "fork-ts-checker-webpack-plugin": "4.0.5",
     "hard-source-webpack-plugin": "0.13.1",
     "mocha-parallel-tests": "2.3.0",
+    "nodemon": "2.0.2",
     "sorted-json": "0.2.6",
     "stdio": "^2.1.0",
     "typescript": "3.8.3",
@@ -14,11 +16,11 @@
     "webpack-cli": "3.3.11",
     "webpack-fail-plugin": "2.0.0",
     "webpack-notifier": "1.8.0",
-    "winston": "3.2.1",
-    "nodemon": "2.0.2"
+    "winston": "3.2.1"
   },
   "description": "NS8 Protect JavaScript project providing build tooling",
   "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "1.0.1",
     "@types/chai": "4.2.9",
     "@types/chai-as-promised": "7.1.2",
     "@types/format-util": "1.0.1",
@@ -45,6 +47,7 @@
     "mocha": "7.1.0",
     "nyc": "15.0.0",
     "prettier": "1.19.1",
+    "source-map-support": "0.5.16",
     "ts-mocha": "6.0.0",
     "ts-node": "8.6.2",
     "typedoc": "0.16.11",
@@ -67,6 +70,7 @@
     "build:dev": "NODE_ENV=dev yarn generate:exports && yarn beautify && tsc --emitDeclarationOnly && webpack",
     "build:watch": "concurrently \"yarn build\" \"yarn test:watch\"",
     "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp",
+    "count": "cloc src/",
     "docs:sync-build-scripts": "ts-node src/scriptDocs/scriptDocs.ts -p package.json -r README.md",
     "generate:exports": "yarn cti create ./src -w",
     "lint": "yarn eslint src/**/*.ts",
