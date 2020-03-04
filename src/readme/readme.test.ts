@@ -174,7 +174,7 @@ describe('getSections', () => {
   });
 });
 
-describe('Readme.export', () => {
+describe('export', () => {
   it('should return a section when Table of Contents is replaced with dummy data', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
@@ -434,6 +434,20 @@ describe('setSection', () => {
     expect(updatedSection).not.to.be.null;
     expect(updatedSection?.content[0]).to.equal('NS8 Proprietary 1.0 License');
   });
+
+  it('setSection with no match should do nothing', () => {
+    const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
+    const readme = new Readme(standardContent).parse();
+    const privateLicenseBlockIndex = 5; // index includes + 1 for _root block, whereas setSectionAt doesn't.
+
+    readme.setSection('Non-existent', 'non-existent content string version');
+    readme.setSection(/Non-existent/, 'non-existent content regex version');
+
+    expect(readme.getSection('Non-existent')).to.be.null;
+    expect(readme.getSection(/Non-existent/)).to.be.null;
+
+  });
+
 });
 
 describe('setSectionAt', () => {
