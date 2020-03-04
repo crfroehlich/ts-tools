@@ -78,6 +78,7 @@ export function updateScriptDocs(docs: ScriptsDocs, readmeContent: string): stri
   return readme.export();
 }
 
+/* istanbul ignore next */
 if (process?.mainModule?.filename === __filename) {
   const optsDef = {
     'json-file': {
