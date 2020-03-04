@@ -1,31 +1,70 @@
 /* eslint-disable no-restricted-syntax */
 import { Block, IndexedBlocks, Query } from './types';
 
-interface TocArgs {
-  insertionPoint: Query | number;
-  indent: string;
-}
 /**
  * The Readme class represents a markdown README and provides an API for programmatic transformations of it.
  */
 
 export class Readme {
+  /*
+   * @param line - string representing a single line from a readme content.
+   *
+   * @returns a boolean indicating whether the readme line is a header
+   */
   public static isHeader = (line: string): boolean => /^ *#+ /.test(line);
 
+  /*
+   * @param line - string representing a single line from a readme content.
+   *
+   * @returns a boolean indicating whether the readme line is a code start tag.
+   */
   public static isCodeStartTag = (line: string): boolean => /^ *```[^`]*$/.test(line);
 
+  /*
+   * @param line - string representing a single line from a readme content.
+   *
+   * @returns a boolean indicating whether the readme line is a code end tag.
+   */
   public static isCodeEndTag = (line: string): boolean => /^ *``` *$/.test(line);
 
+  /*
+   * @param block - a {@link Block} object representing a content block in a parsed readme file.
+   *
+   * @returns a boolean indicating whether the readme line is a code end tag.
+   */
   public static isRootNode = (block: Block): boolean => block.header === '_root';
 
+  /*
+   * @param line - string representing a single line from a readme content.
+   *
+   * @returns a github-sanitized string to be used as an anchor tag linking to another section of the same readme document.
+   */
   public static sanitize = (line: string): string => line.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/g, ''); // ascii-centric
 
+  /*
+   * @param s - a string to be repeated
+   * @param count - the number of times a string should be repeated.
+   *
+   * @returns a string comprised of {@link s}, repeated {@link count} times.
+   */
   public static repeat = (s: string, count: number): string => [...Array(count).keys()].map(() => s).join('');
 
+  /*
+   * @param testParts - a list of strings that are used to build a table of contents entry that links to a content section
+   *
+   * @returns a string representing a markdown anchor tag to a link in the same document.
+   */
   public static makeLink = (...textParts: string[]): string => {
     return `[${textParts.join(' ')}](#${Readme.sanitize(textParts.join('-')).toLowerCase()})`;
   };
 
+  /*
+   * @param header - a string representing a readme content section header.
+   * @param query - a {@link Query} object
+   * @param strict - a boolean flag to enable strict string matching.
+   *
+   * @returns - a boolean indicating whether a specific header was found in the readme content.
+   */
   public static headerFound(header: string, query: Query, strict = false): boolean {
     if (typeof query === 'string') {
       if (strict) {
@@ -41,7 +80,7 @@ export class Readme {
   }
 
   /*
-   * pass readme content in as a string.
+   * readme content
    */
   content = '';
 
@@ -98,7 +137,6 @@ export class Readme {
             content: [],
           };
           this.blocks.push(newBlock);
-          // TODO: maybe index previous block on the fly here?
         } else {
           if (Readme.isCodeStartTag(line)) {
             inCodeBlock = true;
@@ -141,7 +179,7 @@ export class Readme {
    * @param startAt - the index of blocks to start parsing for the table of contents
    * @param indent - a string used to pad indentations for the list indentations.
    *
-   * This does not replace an existing ToC.
+   * @returns a table of contents in string form.
    */
   toc(startAt = 1, indent = '  '): string {
     const tocHeader = '## Table of Contents\n';
@@ -163,9 +201,9 @@ export class Readme {
   }
 
   /*
+   * Export the readme as a string.
    *
-   * Renders the parsed readme {@link Block} list as a string.
-   *
+   * @returns a string representing the entire readme after any transformations.
    */
   export(): string {
     let output = '';
@@ -180,6 +218,13 @@ export class Readme {
     return output;
   }
 
+  /*
+   * Get a content parsed block by index.
+   *
+   * @param index - index of block in list of parsed content blocks.
+   *
+   * @returns a {@link Block} at the supplied index.  If the index is out of range, it throws an error.
+   */
   getSectionAt(index: number): Block {
     if (index < 0 || index > this.blocks.length) {
       throw new Error(`Index out of range: ${index}`);
@@ -192,16 +237,20 @@ export class Readme {
    *
    * @param content - a {@link Block} object to insert before a matched content header.
    * @param strict - whether to perform a strict string match or not against a content header.
+   *
+   * @returns a single {@link Block } object if a section is matched, or null.
    */
   getSection(target: Query, strict = false): Block | null {
     return this.getSections(target, strict)[0] || null;
   }
 
   /*
-   * Find content (non-code) blocks by header.
+   * Find content blocks by header.
    *
    * @param content - a {@link Block} object to insert before a matched content header.
    * @param strict - whether to perform a strict string match or not against a content header.
+   *
+   * @returns a list of matched content {@link Block}s.
    */
   getSections(target: Query, strict = false): Block[] {
     const blocks = [];
@@ -232,7 +281,6 @@ export class Readme {
    *
    * @param content - a {@link Block} object to insert before a matched content header.
    * @param strict - whether to perform a strict string match or not against a content header.
-   *
    */
   prepend(content: Block): void {
     this.blocks.unshift(content);
@@ -244,9 +292,7 @@ export class Readme {
    *
    * @param content - a {@link Block} object to insert before a matched content header.
    * @param strict - whether to perform a strict string match or not against a content header.
-   *
    */
-
   append(content: Block): void {
     this.blocks.push(content);
     this.index();
@@ -257,8 +303,7 @@ export class Readme {
    *
    * @param target - a {@link Query} object to match a content section.
    * @param content - a {@link Block} object to insert after a matched content header.
-   * @param strict - whether to perform a strict match or not against a content header.
-   *
+   * @param strict - boolean indicating whether to perform a strict match or not against a content header.
    */
   insertAfter(target: Query, content: Block, strict = false): void {
     const index = this.blocks.findIndex((block) => {
@@ -278,7 +323,6 @@ export class Readme {
    * @param target - a {@link Query} object to match a content section.
    * @param content - a {@link Block} object to insert before a matched content header.
    * @param strict - whether to perform a strict string match or not against a content header.
-   *
    */
   insertBefore(target: Query, content: Block, strict = false): void {
     const index = this.blocks.findIndex((block) => {
@@ -297,7 +341,6 @@ export class Readme {
    *
    * @param target - a {@link Query} object to match a content section for replacement.
    * @param content - a {@link Block} object to insert after a matched content header.
-   *
    */
   setSection(target: Query, content: string): void {
     const sections: Block[] = this.getSections(target);
@@ -308,6 +351,12 @@ export class Readme {
     }
   }
 
+  /*
+   * Set the section content at the supplied index. If the index is out of range, throw an error.
+   *
+   * @param index - index at which to set a section's content.
+   * @param content - a {@link Block} object to insert after a matched content header.
+   */
   setSectionAt(index: number, content: string): void {
     const internalIndex = index + 1; // includes the internal '_root' block
     if (internalIndex >= 1 && internalIndex <= this.blocks.length - 1) {
