@@ -139,7 +139,7 @@ describe('getSections', () => {
   it('Regex not matching.', () => {
     const duplicateHeadersContent = readFileSync(TEST_FILES.DUPLICATE_HEADERS, 'utf8');
     const readme = new Readme(duplicateHeadersContent).parse();
-    const sections = readme.getSections(/Porpose/, true);
+    const sections = readme.getSections(/Porpose/);
     expect(sections.length).to.equal(0);
   });
 

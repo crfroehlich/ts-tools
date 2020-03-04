@@ -216,7 +216,8 @@ export class Readme {
           blocks.push(...contentBlocks);
         }
       }
-    } else if (target instanceof RegExp) {
+    }
+    else {
       for (const [key, contentBlocks] of this.indexedBlocks.entries()) {
         if (target.test(key)) {
           blocks.push(...contentBlocks);
@@ -299,7 +300,7 @@ export class Readme {
    * @param content - a {@link Block} object to insert after a matched content header.
    *
    */
-  setSection(target: Query, content = ''): void {
+  setSection(target: Query, content: string): void {
     const sections: Block[] = this.getSections(target);
 
     if (sections.length > 0) {
