@@ -107,7 +107,7 @@ export class Readme {
    * @returns a {@link Readme} instance.
    */
 
-  parse(): Readme {
+  public parse(): Readme {
     const lines = this.content.split('\n');
 
     const rootBlock: Block = {
@@ -181,7 +181,7 @@ export class Readme {
    *
    * @returns a table of contents in string form.
    */
-  toc(startAt = 1, indent = '  '): string {
+  public toc(startAt = 1, indent = '  '): string {
     const tocHeader = '## Table of Contents\n';
     if (startAt < 0) {
       throw new Error(`ToC insertionPoint invalid: ${startAt}`);
@@ -205,7 +205,7 @@ export class Readme {
    *
    * @returns a string representing the entire readme after any transformations.
    */
-  export(): string {
+  public export(): string {
     let output = '';
 
     for (const block of this.blocks) {
@@ -216,6 +216,15 @@ export class Readme {
     }
 
     return output;
+  }
+
+  /* Implements toString method so that the readme is coerced properly 
+   * when stringified.
+   *
+   * @returns a string representing the entire readme, post any transformations.
+   */
+  public toString():string {
+    return this.export();
   }
 
   /*
@@ -275,6 +284,7 @@ export class Readme {
 
     return blocks;
   }
+
 
   /*
    * Prepends content to the beginning of the readme content list.

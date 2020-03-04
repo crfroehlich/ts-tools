@@ -447,6 +447,13 @@ describe('setSection', () => {
   });
 });
 
+describe('toString method', () => {
+  it('converts the readme instance into an exported readme string', () => {
+    const readme = new Readme('# Demo Readme\n## Contributing\nYou can contribute by submitting a PR.').parse();
+    expect(`${readme}`).to.be.a('string');
+  });
+})
+
 describe('setSectionAt', () => {
   it('should replace content for a section by index', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
