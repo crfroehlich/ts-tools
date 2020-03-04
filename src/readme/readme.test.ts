@@ -452,7 +452,21 @@ describe('toString method', () => {
     const readme = new Readme('# Demo Readme\n## Contributing\nYou can contribute by submitting a PR.').parse();
     expect(`${readme}`).to.be.a('string');
   });
-})
+});
+
+describe('license block', () => {
+  it('has a method that generates an NS8 license block', () => {
+    const licenseBlock = Readme.licenseBlock();
+    expect(licenseBlock.header).to.equal('## License');
+    expect(licenseBlock.content).to.deep.equal(['NS8 PROPRIETARY 1.0']);
+  });
+
+  it('has a method that generates an NS8 license block', () => {
+    const licenseBlock = Readme.licenseBlock('###');
+    expect(licenseBlock.header).to.equal('### License');
+    expect(licenseBlock.content).to.deep.equal(['NS8 PROPRIETARY 1.0']);
+  });
+});
 
 describe('setSectionAt', () => {
   it('should replace content for a section by index', () => {

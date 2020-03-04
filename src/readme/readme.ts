@@ -7,6 +7,17 @@ import { Block, IndexedBlocks, Query } from './types';
 
 export class Readme {
   /*
+   * Generates a content block with an NS8 proprietary license.
+   * @param heading - type of heading to use for the license block.
+   */
+  public static licenseBlock(header = '##'): Block {
+    return {
+      header: `${header} License`,
+      content: ['NS8 PROPRIETARY 1.0'],
+    };
+  }
+
+  /*
    * @param line - string representing a single line from a readme content.
    *
    * @returns a boolean indicating whether the readme line is a header
@@ -218,12 +229,12 @@ export class Readme {
     return output;
   }
 
-  /* Implements toString method so that the readme is coerced properly 
+  /* Implements toString method so that the readme is coerced properly
    * when stringified.
    *
    * @returns a string representing the entire readme, post any transformations.
    */
-  public toString():string {
+  public toString(): string {
     return this.export();
   }
 
@@ -284,7 +295,6 @@ export class Readme {
 
     return blocks;
   }
-
 
   /*
    * Prepends content to the beginning of the readme content list.
