@@ -59,7 +59,7 @@
   },
   "scripts": {
     "beautify": "ts-node ./src/sortJson/sortJson.ts",
-    "build": "yarn generate:exports && yarn beautify && tsc --emitDeclarationOnly && webpack",
+    "build": "yarn clean && yarn generate:exports && yarn beautify && tsc --emitDeclarationOnly && webpack",
     "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp",
     "docs:sync-build-scripts": "ts-node src/scriptDocs/scriptDocs.ts -p package.json -r README.md",
     "generate:exports": "yarn cti create ./src -w",

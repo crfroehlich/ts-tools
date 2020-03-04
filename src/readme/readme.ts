@@ -216,8 +216,7 @@ export class Readme {
           blocks.push(...contentBlocks);
         }
       }
-    }
-    else {
+    } else {
       for (const [key, contentBlocks] of this.indexedBlocks.entries()) {
         if (target.test(key)) {
           blocks.push(...contentBlocks);

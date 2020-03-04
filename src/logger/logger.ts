@@ -133,6 +133,7 @@ export class Log implements LogInterface {
     const addConsoleTransport =
       logOptions.transports.find((t) => t === LogOutput.CONSOLE) || env.NODE_ENV !== 'production';
 
+    /* istanbul ignore else */
     if (addConsoleTransport) {
       this.logger.add(
         new transports.Console({
