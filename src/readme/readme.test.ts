@@ -438,16 +438,13 @@ describe('setSection', () => {
   it('setSection with no match should do nothing', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
-    const privateLicenseBlockIndex = 5; // index includes + 1 for _root block, whereas setSectionAt doesn't.
 
     readme.setSection('Non-existent', 'non-existent content string version');
     readme.setSection(/Non-existent/, 'non-existent content regex version');
 
     expect(readme.getSection('Non-existent')).to.be.null;
     expect(readme.getSection(/Non-existent/)).to.be.null;
-
   });
-
 });
 
 describe('setSectionAt', () => {

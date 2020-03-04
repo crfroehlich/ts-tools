@@ -1,8 +1,7 @@
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { join } from 'path';
 import { getopt } from 'stdio';
 import { Readme } from '../readme/readme';
-import { Block } from '../readme/types';
 
 interface ScriptDoc {
   /*
@@ -38,75 +37,45 @@ export const formatScriptDocs = (docs: ScriptsDocs): string => {
 };
 
 interface ReadmeUpdate {
-
   /*
    * The string content you want to replace in the readme.
    */
-  content: string;
+  content?: string;
 
   /*
    * The path to the readme file you want to load and update.
    */
-  path: string;
+  path?: string | null;
 
   /*
    * A string matching the section in the readme whose content is to be replaced.
    *
    */
   target: string;
-
 }
-
-/*
- * Updates a section from a readme filepath if the file at that path exists.
- * If the target is matched, the content there is replaced. otherwise, the content is appended.
- *
- * @param updates - a {@link ReadmeUpdate}
- *
- * @returns a Promise-wrapped string with the entire updated readme.
- *
- */
-
-export const updateReadme = async ({ path, content, target }: ReadmeUpdate): Promise<string> => {
-  let readme;
-
-  try {
-    readme = await new Readme(path).parse();
-  } catch (e) {
-    throw new Error(e);
-  }
-  const scriptDocsSection = readme.getSection(target);
-  if (scriptDocsSection) {
-    readme.setSection(target, content);
-  } else {
-    const newBlock: Block = {
-      header: target,
-      content: content.split('\n'),
-    };
-    readme.append(newBlock);
-  }
-  return readme.export();
-};
 
 /*
  * @param packageJSONPath - path to package.json with the scriptsDocumentation object
  * @param readmePath - path to target README.md to update
  *
- * @returns a void Promise
+ * @returns the updated readme in the form of a string
  */
 
-export async function updateScriptDocs(packageJSONPath: string, readmePath: string): Promise<void> {
-  const packageJSON = JSON.parse(readFileSync(packageJSONPath, 'utf8'));
-  const { scriptsDocumentation } = packageJSON;
-  const updates = formatScriptDocs(scriptsDocumentation);
+export function updateScriptDocs(docs: ScriptsDocs, readmeContent: string): string {
+  const updates = formatScriptDocs(docs);
+  const readme = new Readme(readmeContent).parse();
+  const target = '### `package.json` scripts';
 
-  const updatedReadme = await updateReadme({
-    path: readmePath,
-    content: updates,
-    target: '### `package.json` scripts',
-  });
+  if (readme.getSection(target)) {
+    readme.setSection(target, updates);
+  } else {
+    readme.append({
+      header: target,
+      content: updates.split('\n'),
+    });
+  }
 
-  writeFileSync(readmePath, updatedReadme);
+  return readme.export();
 }
 
 if (process?.mainModule?.filename === __filename) {
@@ -128,6 +97,9 @@ if (process?.mainModule?.filename === __filename) {
   const opts = getopt(optsDef) || {};
   const jsonPath = join(process.cwd(), opts['json-file'].toString());
   const readmePath = join(process.cwd(), opts['readme-file'].toString());
+  const readmeContent = readFileSync(readmePath, 'utf8');
+  const { scriptsDocumentation: scriptDocs } = JSON.parse(readFileSync(jsonPath, 'utf8'));
+  const updatedReadme = updateScriptDocs(scriptDocs, readmeContent);
 
-  updateScriptDocs(jsonPath, readmePath);
+  process.stdout.write(`${updatedReadme}\n`);
 }
