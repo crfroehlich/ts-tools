@@ -1,6 +1,6 @@
-/* eslint-disable no-console */
 import glob from 'glob';
 import { readFileSync, writeFileSync } from 'fs';
+import { LogLevel, LogOutput, getLogger } from '../logger';
 
 const sortedJson = require('sorted-json');
 
@@ -11,6 +11,15 @@ export interface GlobOptions {
   realPath?: boolean;
 }
 
+const log = getLogger(
+  {
+    logLevel: LogLevel.INFO,
+    serviceName: 'js-tools/sort-json',
+    transports: [LogOutput.CONSOLE],
+  },
+  true,
+);
+
 // Sort all the JSON files to improve readability and reduce conflicts
 const defaultPath = '**/*.json';
 const defaultOptions = {
@@ -19,9 +28,9 @@ const defaultOptions = {
   realPath: true,
 };
 
-const defaultCallback = (er: unknown, files: string[]): void => {
+const defaultCallback = (er: Error | null, files: string[]): void => {
   if (er) {
-    console.error(er);
+    log.error(er.toString());
   }
   files.forEach((fileName) => {
     try {
@@ -30,15 +39,15 @@ const defaultCallback = (er: unknown, files: string[]): void => {
       try {
         json = JSON.parse(file);
       } catch (e) {
-        console.log(`Error: parsing ${file}.`);
+        log.error(`Error: parsing ${file}.`);
         throw new Error(e);
       }
       const sorted = sortedJson.sortify(json);
       writeFileSync(fileName, JSON.stringify(sorted, null, 2));
-      console.info(`Alpha-sorted ${fileName} JSON file`);
+      log.info(`Alpha-sorted ${fileName} JSON file`);
     } catch (err) {
-      console.error(`${fileName}: failed`);
-      console.error(err);
+      log.error(`${fileName}: failed`);
+      log.error(err);
     }
   });
 };
