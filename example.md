@@ -1,13 +1,16 @@
+hiii 
+
 # Test README
 
 [![Concourse-CI](https://concourse.ns8-infrastructure.com/api/v1/teams/main/pipelines/protect-tools-js/jobs/test/badge)](https://concourse.ns8-infrastructure.com/teams/main/pipelines/protect-tools-js)
 
-## Table of Contents
+## Getting Started
 
-+ [Table of Contents](#table-of-contents)
-  + [Getting Started](#getting-started)
-  + [`package.json` scripts](#packagejson-scripts)
-  + [License](#license)
+Please [read the docs](public/en/platform/protect-tools-js/getting-started.md)
+
+### `package.json` scripts
+
+`yarn beautify`- Perform aesthetic operations to make the project files easier to navigate and read.`yarn build`- assembles build scripts into a single js module with type definitions.`yarn docs:sync-build-scripts`- generates a readme build scripts section like this one using the scriptsDocumentation property, if present, in the package.json file.`yarn lint`- Lints the codebase.`yarn test`- Runs tests and calculates test coverage.
 
 ## Getting Started
 
@@ -17,6 +20,10 @@ To get started, take a look at the documentation listed below:
 - [Getting Started](public/en/platform/protect-tools-js/getting-started.md)
 - [Logging Client](public/en/platform/protect-tools-js/logger.md)
 - [Readme Tool](public/en/platform/protect-tools-js/readme.md)
+
+## License
+
+NS8 PROPRIETARY 1.0
 
 ## `package.json` scripts
 
@@ -32,9 +39,6 @@ To get started, take a look at the documentation listed below:
 `yarn docs:sync-build-scripts`
 - generates a readme build scripts section using the scriptsDocumentation property, if present, in the package.json file
 
-`yarn docs:sync-readme`
-- creates or updates a new readme with a toc, script docs, links to docs and a license
-
 `yarn generate:exports`
 - Generates index.ts files for all exports recursively in the 'src' folder
 
@@ -47,6 +51,5 @@ To get started, take a look at the documentation listed below:
 `yarn test`
 - Runs tests and calculates test coverage.
 
-## License
 
-NS8 PROPRIETARY 1.0
+

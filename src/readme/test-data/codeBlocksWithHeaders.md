@@ -5,15 +5,16 @@
 + Contributing
 + License
 
-
 ```bash
-# Code Header
-
+# This is a code comment, Not a Markdown Header
 ```
+
 # header
+
 later
 
 ## License
+
 This project is licensed with an NS8 1.0 proprietary license.
 
 # Table Of Contents

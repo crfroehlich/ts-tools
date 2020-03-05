@@ -1,12 +1,11 @@
 # Table of Contents
-
 + Purpose
 + Authors 
 + Contributing
 + License
 
 ## Purpose
-duplicate section
+The purpose of this readme is to be used as a test for the readme tool.
 
 ## Authors
 This was authored by Alex.
@@ -16,4 +15,3 @@ Make a PR using our PR template.
 
 ## License
 This project is licensed with an NS8 1.0 proprietary license.
-

@@ -1,6 +1,7 @@
 # Demo Repo
 
 ## Header with a `tag in it`
+
 Purpose statement.
 
 ## Sub-purpose section
@@ -16,6 +17,7 @@ Purpose statement.
 #### `yarn` scripts
 
 ## Authors
+
 Spacer content.
 Spacer content.
 Spacer content.
@@ -64,8 +66,9 @@ Spacer content.
 Spacer content.
 
 ## Contributing
+
 Make a PR using our PR template.
 
 ## License
-This project is licensed with an NS8 1.0 proprietary license.
 
+This project is licensed with an NS8 1.0 proprietary license.

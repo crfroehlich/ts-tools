@@ -1,22 +1,49 @@
 /* eslint-disable sonarjs/no-duplicated-branches */
 /* eslint-disable no-restricted-syntax */
+import { readFileSync, readdirSync, statSync } from 'fs';
+import { join, relative } from 'path';
 import { Block, IndexedBlocks, Query } from './types';
+
+/*
+ * The ReadmeBlock represents the header and the content of a Readme section.
+ * It exists to provide a way for the user to use methods returning {@link ReadmeBlock}
+ * with the {@link Readme} instance.
+ */
+export class ReadmeBlock {
+
+  /*
+   * A parsed Markdown header.
+   */
+  header: string;
+
+  /*
+   * A parsed Markdown section.
+   */
+  content: string;
+
+  /*
+   * @param block - an object conforming to the {@link Block} interface
+   */
+  constructor(block: Block) {
+    this.header = block.header;
+    this.content = block.content;
+  }
+
+  /*
+   * @returns a string formatting the combination of the header and the content lines.
+   */
+  toString(): string {
+    return `${this.header}\n${this.content}\n`;
+  }
+
+}
 
 /**
  * The Readme class represents a markdown README and provides an API for programmatic transformations of it.
  */
 
 export class Readme {
-  /*
-   * Generates a content block with an NS8 proprietary license.
-   * @param heading - type of heading to use for the license block.
-   */
-  public static licenseBlock(header = '##'): Block {
-    return {
-      header: `${header} License`,
-      content: ['NS8 PROPRIETARY 1.0'],
-    };
-  }
+  STANDARD_DOCS_PATH = 'public/en/platform/protect-tools-js';
 
   /*
    * @param line - string representing a single line from a readme content.
@@ -62,15 +89,6 @@ export class Readme {
   public static repeat = (s: string, count: number): string => [...Array(count).keys()].map(() => s).join('');
 
   /*
-   * @param testParts - a list of strings that are used to build a table of contents entry that links to a content section
-   *
-   * @returns a string representing a markdown anchor tag to a link in the same document.
-   */
-  public static makeLink = (...textParts: string[]): string => {
-    return `[${textParts.join(' ')}](#${Readme.sanitize(textParts.join('-')).toLowerCase()})`;
-  };
-
-  /*
    * @param header - a string representing a readme content section header.
    * @param query - a {@link Query} object
    * @param strict - a boolean flag to enable strict string matching.
@@ -92,6 +110,36 @@ export class Readme {
   }
 
   /*
+   * @param testParts - a list of strings that are used to build a table of contents entry that links to a content section
+   *
+   * @returns a string representing a markdown anchor tag to a link in the same document.
+   */
+  public static makeLink = (...textParts: string[]): string => {
+    return `[${textParts.join(' ')}](#${Readme.sanitize(textParts.join('-')).toLowerCase()})`;
+  };
+
+  /*
+   * Generates a content block with an NS8 proprietary license.
+   * @param heading - type of heading to use for the license block.
+   */
+  public static getLicenseBlock(header = '##'): ReadmeBlock {
+    return new ReadmeBlock({
+      header: `${header} License`,
+      content: 'NS8 PROPRIETARY 1.0',
+    });
+  }
+
+  /*
+   * @param content - a string representing an unparsed section
+   * @returns a parsed readme section as a {@link ReadmeBlock}
+   */
+  static parseBlockFromContent(content: string): ReadmeBlock {
+    const blocks: ReadmeBlock[] = Readme.parse(content);
+    // skip first block, the internal _root node 
+    return blocks[1];
+  }
+
+  /*
    * readme content
    */
   content = '';
@@ -99,7 +147,7 @@ export class Readme {
   /*
    * A list of {@link Content} or {@link Code} blocks.
    */
-  blocks: Block[] = [];
+  blocks: ReadmeBlock[] = [];
 
   /*
    * A map of {@link Content} blocks.
@@ -110,24 +158,26 @@ export class Readme {
    * @param content - readme content as a string.
    */
   constructor(content = '') {
-    this.content = content;
+    this.blocks = Readme.parse(content.trim());
+    this.index();
   }
 
   /*
-   * Parses the readme content and returns it as Promise-wrapped Readme instance for chaining.
+   * Parses the readme content and returns a Readme instance for chaining.
    *
    * @returns a {@link Readme} instance.
    */
 
-  public parse(): Readme {
-    const lines = this.content.split('\n');
+  public static parse(content:string = ''): ReadmeBlock[] {
+    const lines = content.split('\n').filter(Boolean);
+    const blocks: ReadmeBlock[] = [];
 
-    const rootBlock: Block = {
+    const rootBlock = new ReadmeBlock({
       header: '_root',
-      content: [],
-    };
+      content: '',
+    });
 
-    this.blocks.push(rootBlock);
+    blocks.push(rootBlock);
     let inCodeBlock = false;
 
     // basic state machine to detect, line-by-line, which part of the readme
@@ -137,35 +187,32 @@ export class Readme {
         if (Readme.isCodeEndTag(line)) {
           inCodeBlock = false;
         }
-
-        this.blocks[this.blocks.length - 1].content.push(line);
+        blocks[blocks.length - 1].content += `${line}\n`;
       } else {
         // in regular content block
 
-        /* eslint-disable no-lonely-if */
         if (Readme.isHeader(line)) {
-          const newBlock = {
+          const newBlock = new ReadmeBlock({
             header: line,
-            content: [],
-          };
-          this.blocks.push(newBlock);
+            content: '',
+          })
+          blocks.push(newBlock);
         } else {
           if (Readme.isCodeStartTag(line)) {
             inCodeBlock = true;
           }
           // regular content line
-          this.blocks[this.blocks.length - 1].content.push(line);
+          blocks[blocks.length - 1].content += `${line}\n`;
         }
       }
     }
 
-    this.index();
+    return blocks;
 
-    return this;
   }
 
   /*
-   * Indexes {@link blocks} by header to support efficient querying.
+   * Indexes {@link Block}s by header to support efficient querying.
    */
 
   public index(): void {
@@ -193,13 +240,12 @@ export class Readme {
    *
    * @returns a table of contents in string form.
    */
-  public toc(startAt = 1, indent = '  '): string {
-    const tocHeader = '## Table of Contents\n';
+  public getTocBlock(startAt = 1, indent = '  '): ReadmeBlock {
     if (startAt < 0) {
-      throw new Error(`ToC insertionPoint invalid: ${startAt}`);
+      throw new Error(`Table of Contents insertionPoint invalid: ${startAt}`);
     }
 
-    const toc = this.blocks
+    const content = this.blocks
       .slice(startAt + 1) // +1 to skip _root block and the readme top-level header
       .map(({ header }) => {
         const [marker, ...text] = header.trim().split(' ');
@@ -207,13 +253,13 @@ export class Readme {
         const linkedHeader = Readme.makeLink(...text);
         return `${Readme.repeat(indent, indentCount)}+ ${linkedHeader}`;
       })
-      .join('\n');
+      .concat(['\n']).join('\n');
 
-    return `${tocHeader}${toc}`;
+    return new ReadmeBlock({ header: '## Table of Contents', content });
   }
 
   /*
-   * Export the readme as a string.
+   * Convert the internal readme representation back to a string.
    *
    * @returns a string representing the entire readme after any transformations.
    */
@@ -222,12 +268,13 @@ export class Readme {
 
     for (const block of this.blocks) {
       if (!Readme.isRootNode(block)) {
-        output += `${block.header}\n`;
+        output += `${block.header.trim()}\n`;
       }
-      output += `${block.content.join('\n')}\n`;
+      output += `${block.content.trim()}\n\n`;
     }
 
-    return output;
+    const justRootBlock = this.blocks.length === 1;
+    return justRootBlock ? this.blocks[0].content : `${output.trim()}\n`;
   }
 
   /* Implements toString method so that the readme is coerced properly
@@ -246,7 +293,7 @@ export class Readme {
    *
    * @returns a {@link Block} at the supplied index.  If the index is out of range, it throws an error.
    */
-  getSectionAt(index: number): Block {
+  getSectionAt(index: number): ReadmeBlock {
     if (index < 0 || index > this.blocks.length) {
       throw new Error(`Index out of range: ${index}`);
     }
@@ -278,9 +325,7 @@ export class Readme {
 
     if (typeof target === 'string') {
       for (const [key, contentBlocks] of this.indexedBlocks.entries()) {
-        if (strict && key === target) {
-          blocks.push(...contentBlocks);
-        } else if (key.includes(target)) {
+        if (strict && key === target || key.includes(target)) {
           blocks.push(...contentBlocks);
         }
       }
@@ -296,13 +341,23 @@ export class Readme {
   }
 
   /*
-   * Prepends content to the beginning of the readme content list.
-   *
-   * @param content - a {@link Block} object to insert before a matched content header.
-   * @param strict - whether to perform a strict string match or not against a content header.
+  /*
+   * Parses content and adds it as a block to the end of the readme.
+   * @param content - a string representing an unparsed readme section
    */
-  prepend(content: Block): void {
-    this.blocks.unshift(content);
+  appendContent(content: string): void {
+    const parsedBlock: ReadmeBlock = Readme.parseBlockFromContent(content);
+    this.blocks.push(parsedBlock);
+    this.index();
+  }
+
+  /*
+   * Parses content and adds it as a block to the beginning of the readme.
+   * @param content - a string representing an unparsed readme section
+   */
+  prependContent(content: string): void {
+    const parsedBlock: ReadmeBlock = Readme.parseBlockFromContent(content);
+    this.blocks.splice(1, 0, parsedBlock);
     this.index();
   }
 
@@ -312,8 +367,20 @@ export class Readme {
    * @param content - a {@link Block} object to insert before a matched content header.
    * @param strict - whether to perform a strict string match or not against a content header.
    */
-  append(content: Block): void {
-    this.blocks.push(content);
+  appendBlock(block: ReadmeBlock): void {
+    this.blocks.push(block);
+    this.index();
+  }
+
+  /*
+   * Prepends content to the beginning of the readme content list.
+   *
+   * @param content - a {@link Block} object to insert before a matched content header.
+   * @param strict - whether to perform a strict string match or not against a content header.
+   */
+  prependBlock(block: ReadmeBlock): void {
+    // TODO: insert between root node and rest
+    this.blocks.splice(1, 0, block);
     this.index();
   }
 
@@ -324,13 +391,13 @@ export class Readme {
    * @param content - a {@link Block} object to insert after a matched content header.
    * @param strict - boolean indicating whether to perform a strict match or not against a content header.
    */
-  insertAfter(target: Query, content: Block, strict = false): void {
+  insertAfter(target: Query, block: Block, strict = false): void {
     const index = this.blocks.findIndex((block) => {
       return Readme.headerFound(block.header, target, strict);
     });
 
     if (index > -1) {
-      this.blocks.splice(index + 1, 0, content);
+      this.blocks.splice(index + 1, 0, block);
     }
 
     this.index();
@@ -343,13 +410,13 @@ export class Readme {
    * @param content - a {@link Block} object to insert before a matched content header.
    * @param strict - whether to perform a strict string match or not against a content header.
    */
-  insertBefore(target: Query, content: Block, strict = false): void {
+  insertBefore(target: Query, block: Block, strict = false): void {
     const index = this.blocks.findIndex((block) => {
       return Readme.headerFound(block.header, target, strict);
     });
 
     if (index > -1) {
-      this.blocks.splice(index, 0, content);
+      this.blocks.splice(index, 0, block);
     }
 
     this.index();
@@ -362,10 +429,10 @@ export class Readme {
    * @param content - a {@link Block} object to insert after a matched content header.
    */
   setSection(target: Query, content: string): void {
-    const sections: Block[] = this.getSections(target);
+    const sections: ReadmeBlock[] = this.getSections(target);
 
     if (sections.length > 0) {
-      sections[0].content = content.split('\n');
+      sections[0].content = content;
       this.index();
     }
   }
@@ -377,10 +444,10 @@ export class Readme {
    * @param content - a {@link Block} object to insert after a matched content header.
    */
   setSectionAt(index: number, content: string): void {
-    const internalIndex = index + 1; // includes the internal '_root' block
+    const internalIndex = index + 1; // includes the first (internal) '_root' block
     if (internalIndex >= 1 && internalIndex <= this.blocks.length - 1) {
       const targetBlock = this.blocks[internalIndex];
-      targetBlock.content = content.split('\n');
+      targetBlock.content = content;
       this.index();
     } else {
       throw new Error(`Index out of range: ${index}`);

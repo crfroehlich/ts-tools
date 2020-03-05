@@ -62,12 +62,14 @@
     "build:watch": "concurrently \"yarn build\" \"yarn test:watch\"",
     "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp",
     "count": "cloc src/",
+    "standardize-readme": "ts-node src/readme/standardReadme.ts -r .",
     "docs:sync-build-scripts": "ts-node src/scriptDocs/scriptDocs.ts -p package.json -r README.md",
+    "docs:sync-readme": "ts-node src/readme/standardizeReadme.ts", 
     "generate:exports": "yarn cti create ./src -w",
     "lint": "yarn eslint src/**/*.ts",
     "lint:docs": "tsc --project tsconfig.docs.json",
     "lint:fix": "yarn eslint src/**/*.ts --fix",
-    "test": "nyc mocha-parallel-tests src/**/*.test.ts",
+    "test": "nyc mocha -R spec src/**/*.test.ts",
     "test:watch": "nodemon --exec nyc mocha src/**/*.test.ts"
   },
   "scriptsDocumentation": {
@@ -85,6 +87,10 @@
     },
     "docs:sync-build-scripts": {
       "description": "generates a readme build scripts section using the scriptsDocumentation property, if present, in the package.json file",
+      "dev": true
+    },
+    "docs:sync-readme": {
+      "description": "creates or updates a new readme with a toc, script docs, links to docs and a license", 
       "dev": true
     },
     "generate:exports": {

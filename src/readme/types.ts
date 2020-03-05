@@ -8,7 +8,7 @@ export type Query = string | RegExp;
  */
 export interface Block {
   header: string;
-  content: string[];
+  content: string;
 }
 
 export type IndexedBlocks = Map<string, Block[]>;
