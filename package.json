@@ -1,18 +1,16 @@
 {
   "author": "ns8inc",
   "dependencies": {
-    "@ns8/protect-tools-bundle": "0.0.7",
+    "@ns8/protect-tools-bundle": "0.0.8",
     "cloc": "2.5.1",
     "concurrently": "5.1.0",
     "dotenv-extended": "2.7.1",
     "mocha-parallel-tests": "2.3.0",
-    "nodemon": "2.0.2",
     "sorted-json": "0.2.6",
     "stdio": "^2.1.0",
     "ts-node": "8.6.2",
     "typescript": "3.8.3",
-    "webpack": "4.42.0",
-    "webpack-cli": "^3.3.11",
+    "webpack-cli": "3.3.11",
     "winston": "3.2.1"
   },
   "description": "NS8 Protect JavaScript project providing build tooling",
