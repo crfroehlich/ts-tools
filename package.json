@@ -1,7 +1,7 @@
 {
   "author": "ns8inc",
   "dependencies": {
-    "@ns8/protect-tools-bundle": "0.0.8",
+    "@ns8/protect-tools-bundle": "0.0.9",
     "cloc": "2.5.1",
     "concurrently": "5.1.0",
     "dotenv-extended": "2.7.1",
@@ -32,10 +32,10 @@
     "eslint-config-airbnb-base": "14.0.0",
     "eslint-config-prettier": "6.10.0",
     "eslint-plugin-import": "2.20.1",
+    "eslint-plugin-markdown": "1.0.2",
     "eslint-plugin-prettier": "3.1.2",
     "eslint-plugin-sonarjs": "0.5.0",
     "eslint-plugin-tsdoc": "0.2.3",
-    "eslint-plugin-markdown": "1.0.2",
     "husky": "4.2.3",
     "mocha": "7.1.0",
     "nyc": "15.0.0",
