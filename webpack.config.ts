@@ -1,8 +1,8 @@
-import { BundleTarget, getWebpackConfig } from './scripts/webpack';
+import { BundleTarget, getWebpackConfig } from '@ns8/protect-tools-bundle';
 
 export default getWebpackConfig({
   bundleTarget: BundleTarget.NODE,
-  distDirectory: '../dist',
+  distDirectory: './dist',
   sourceDirectory: './src/index.ts',
   libraryName: 'protect-tools-js',
 });

@@ -32,7 +32,6 @@
     "dist"
   ],
   "include": [
-    "src/**/*",
-    "scripts/webpack.ts"
+    "src/**/*"
   ]
 }
