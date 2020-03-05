@@ -23,6 +23,7 @@ plugins:
   - eslint-plugin-tsdoc
   - prettier
   - sonarjs
+  - markdown
 rules:
   '@typescript-eslint/no-var-requires': 'off'
   complexity:
@@ -57,3 +58,4 @@ settings:
       extensions:
         - .js
         - .ts
+        - .md

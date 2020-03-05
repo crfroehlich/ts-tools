@@ -2,6 +2,10 @@
 
 [![Concourse-CI](https://concourse.ns8-infrastructure.com/api/v1/teams/main/pipelines/protect-tools-js/jobs/test/badge)](https://concourse.ns8-infrastructure.com/teams/main/pipelines/protect-tools-js)
 
+## Getting Started
+
+Please [read the docs](public/en/platform/protect-tools-js/getting-started.md)
+
 ### `package.json` scripts
 
 `yarn beautify`
