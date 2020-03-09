@@ -62,7 +62,7 @@
     "build:watch": "concurrently \"yarn build\" \"yarn test:watch\"",
     "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp",
     "count": "cloc src/",
-    "docs:sync-readme": "ts-node src/readme/standardizeReadme.ts -r .", 
+    "docs:sync-readme": "ts-node src/readme/standardizeReadme.ts -r .",
     "generate:exports": "yarn cti create ./src -w",
     "lint": "yarn eslint src/**/*.ts",
     "lint:docs": "tsc --project tsconfig.docs.json",
@@ -96,7 +96,7 @@
       "dev": true
     },
     "docs:sync-readme": {
-      "description": "creates or updates a new readme with a toc, script docs, links to docs and a license", 
+      "description": "creates or updates a new readme with a toc, script docs, links to docs and a license",
       "dev": true
     },
     "generate:exports": {
