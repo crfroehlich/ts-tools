@@ -62,7 +62,6 @@
     "build:watch": "concurrently \"yarn build\" \"yarn test:watch\"",
     "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp",
     "count": "cloc src/",
-    "standardize-readme": "ts-node src/readme/standardReadme.ts -r .",
     "docs:sync-readme": "ts-node src/readme/standardizeReadme.ts -r .", 
     "generate:exports": "yarn cti create ./src -w",
     "lint": "yarn eslint src/**/*.ts",
@@ -78,14 +77,22 @@
     },
     "build": {
       "description": "assembles build scripts into a single js module with type definitions.",
+      "dev": false
+    },
+    "build:dev": {
+      "description": "assembles build scripts into a single js module with type definitions.",
+      "dev": true
+    },
+    "build:watch": {
+      "description": "build and test concurrently while developing.",
       "dev": true
     },
     "clean": {
       "description": "Purges all temporary folders.",
       "dev": true
     },
-    "docs:sync-build-scripts": {
-      "description": "generates a readme build scripts section using the scriptsDocumentation property, if present, in the package.json file",
+    "count": {
+      "description": "count lines of source code",
       "dev": true
     },
     "docs:sync-readme": {
@@ -98,6 +105,10 @@
     },
     "lint": {
       "description": "Lints the codebase.",
+      "dev": true
+    },
+    "lint:docs": {
+      "description": "Documentation coming soon.",
       "dev": true
     },
     "lint:fix": {

@@ -243,6 +243,7 @@ export class Readme {
 
     const content = this.blocks
       .slice(startAt + 1) // +1 to skip _root block and the readme top-level header
+      .filter(({ header }) => !header.includes('Table of Contents'))
       .map(({ header }) => {
         const [marker, ...text] = header.trim().split(' ');
         const indentCount = marker.length - 1;
@@ -267,7 +268,7 @@ export class Readme {
       if (!Readme.isRootNode(block)) {
         output += `${block.header.trim()}\n`;
       }
-      output += `${block.content.trim()}\n\n`;
+      output += `${block.content.trimRight()}\n\n`;
     }
 
     const justRootBlock = this.blocks.length === 1;

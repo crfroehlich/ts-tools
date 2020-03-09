@@ -1,25 +1,8 @@
-import * as readline from 'readline'; 
-import { promisify } from 'util';
-import { existsSync, fstat, statSync, readdirSync, readFileSync, writeFileSync } from 'fs';
-import { Readme, ReadmeBlock } from './readme';
-import { relative, resolve, join, isAbsolute } from 'path';
+import { readFileSync, readdirSync, statSync, writeFileSync } from 'fs';
+import { isAbsolute, join, relative, resolve } from 'path';
 import * as stdio from 'stdio';
-
-const STANDARD_DOCS_PATH = 'public/en/platform/protect-tools-js';
-
-/*
- * @param docs - a {@link ScriptDocs} object
- *
- * @returns a string composed of formatted {@link ScriptDocs} joined together.
- */
-export const formatScriptDocs = (docs: ScriptDocs): string => {
-  return Object.keys(docs)
-    .map((scriptName): string => {
-      const { description } = docs[scriptName];
-      return `\`yarn ${scriptName}\`\n- ${description}\n`;
-    })
-    .join('\n');
-};
+import { Readme, ReadmeBlock } from './readme';
+import { DocLinksParams, ScriptDocs } from './types';
 
 /*
  * string field is for inserting new sections.
@@ -31,7 +14,7 @@ const HEADERS = {
   },
   TOC: {
     STRING: '## Table of Contents',
-    RE: /^ *#* *Table of Contents/
+    RE: /^ *#* *Table of Contents/,
   },
   LICENSE: {
     STRING: '## License',
@@ -44,35 +27,30 @@ const HEADERS = {
   SCRIPTS: {
     STRING: '## `package.json` scripts',
     RE: /^ *#* *`package.json` scripts/,
-  }
+  },
 };
 
-interface ScriptDoc {
-  /*
-   * script doc description property.
-   */
-  description: string;
+const STANDARD_DOCS_PATH = 'public/en/platform/protect-tools-js';
 
-  /*
-   * flag as to whether script is for devs or not. 
-   * not currently used, but potentially useful for f  uture organization.
-   */
-  dev: boolean;
-}
+/*
+ * @param docs - a {@link ScriptDocs} object
+ *
+ * @returns a string composed of formatted {@link ScriptDocs} joined together.
+ */
+const formatScriptDocs = (docs: ScriptDocs): string => {
+  return Object.keys(docs)
+    .map((scriptName): string => {
+      const { description } = docs[scriptName];
+      return `\`yarn ${scriptName}\`\n- ${description}\n`;
+    })
+    .join('\n');
+};
 
-export interface ScriptDocs {
-  /*
-   * A string to {@link ScriptDoc}-block mapping.
-   */
-  [index: string]: ScriptDoc;
-}
-
-function getRepoRoot():string {
-
+function getRepoRoot(): string {
   const argsDef = {
     'repo-root': {
       key: 'r',
-      description: 'root path for your repository (used to find the standard documentation directory)', 
+      description: 'root path for your repository (used to find the standard documentation directory)',
       required: true,
       multiple: true,
     },
@@ -84,33 +62,18 @@ function getRepoRoot():string {
     throw new Error('Required argument: -r, --repo-root');
   }
 
-  return  args['repo-root'];
-
+  return args['repo-root'];
 }
 
-
-interface DocLinksParams {
-  /*
-   * A string representing the header line for the link block to standard documentation files.
-   */
-  header: string;
-
-  /*
-   * An string representing an introduction to the standard documentation links block.
-   */
-  introduction?: string;
-
-  /*
-   * path to the repo root for calculation of a relative path to the standard documentation directory.
-   */
-  repoRoot: string | null;
-}
 /*
  * @params {@link DocLinksParams}
  * @returns a {@link ReadmeBlock} of relative links to the documents in the standardized documentation path
  */
-function buildDocumentationLinksBlock({ header = '## Getting Started', introduction = '', repoRoot = null }: DocLinksParams): ReadmeBlock {
-
+function buildDocumentationLinksBlock({
+  header = '## Getting Started',
+  introduction = '',
+  repoRoot = null,
+}: DocLinksParams): ReadmeBlock {
   if (!repoRoot) {
     throw new Error('null repo root!');
   }
@@ -150,8 +113,7 @@ function buildDocumentationLinksBlock({ header = '## Getting Started', introduct
   return new ReadmeBlock({ header, content });
 }
 
-function standardize(content: string, scriptDocs: ScriptDocs, repoRoot: string):string {
-
+function standardize(content: string, scriptDocs: ScriptDocs, repoRoot: string, repoName: string): string {
   const readme = new Readme(content);
   const docLinksBlock = buildDocumentationLinksBlock({
     header: HEADERS.GETTING_STARTED.STRING,
@@ -163,11 +125,11 @@ function standardize(content: string, scriptDocs: ScriptDocs, repoRoot: string):
   const gettingStartedSection = readme.getSection(HEADERS.GETTING_STARTED.RE);
   if (gettingStartedSection) {
     gettingStartedSection.content = docLinksBlock.content;
-  } else { 
+  } else {
     readme.appendBlock(docLinksBlock);
   }
 
-    // Update script documentation 
+  // Update script documentation
   const scriptDocsSection = readme.getSection(HEADERS.SCRIPTS.RE);
   if (scriptDocsSection) {
     scriptDocsSection.content = formatScriptDocs(scriptDocs);
@@ -186,49 +148,51 @@ function standardize(content: string, scriptDocs: ScriptDocs, repoRoot: string):
     readme.appendBlock(Readme.getLicenseBlock());
   }
 
-
-  // Update table of contents
+  // either update the toc content or figure out where to insert it
   const tocSection = readme.getSection(HEADERS.TOC.RE);
+  const tocBlock = readme.getTocBlock();
+  const h1 = readme.getSection(/^ *# /);
+
   if (tocSection) {
-    console.log('matched', tocSection);
-    tocSection.content = readme.getTocBlock().content;
+    tocSection.content = tocBlock.content;
+  } else if (h1) {
+    readme.insertAfter(h1.header, tocBlock);
   } else {
-    readme.insertAfter(/^ *#* /, readme.getTocBlock());
+    readme.appendBlock({
+      header: `# ${repoName}`,
+      content: `${tocBlock}`,
+    });
   }
 
-  return readme.export();
+  // add concourse badge for pipeline and test
+  // [![Concourse-CI](https://concourse.ns8-infrastructure.com/api/v1/teams/main/pipelines/protect-tools-js/jobs/test/badge)](https://concourse.ns8-infrastructure.com/teams/main/pipelines/protect-tools-js)
 
+  return readme.export();
 }
 
-async function main() {
-
+async function main(): Promise<void> {
   /*
    * Assumption: README.md and package.json are located in the ${repoRoot} directory
    */
-
   const repoRoot = getRepoRoot();
   const resolvedRepoRoot = isAbsolute(repoRoot) ? repoRoot : resolve(join(process.cwd(), repoRoot));
   const readmePath = join(resolvedRepoRoot, 'README.md');
   let readmeContent = '';
   try {
     readmeContent = readFileSync(readmePath, 'utf8');
-  } catch(e) {
+  } catch (e) {
     if (e.code === 'ENOENT') {
       readmeContent = '';
     } else {
       throw new Error(e);
     }
   }
-  const packageJsonContent = JSON.parse(
-    readFileSync(join(resolvedRepoRoot, 'package.json'), 'utf8')
-  );
+  const packageJsonContent = JSON.parse(readFileSync(join(resolvedRepoRoot, 'package.json'), 'utf8'));
   const scriptDocs = packageJsonContent.scriptsDocumentation || {};
-  const readme  = new Readme(readmeContent);
+  const repoName = packageJsonContent.name || 'README';
 
-  writeFileSync(readmePath, standardize(readmeContent, scriptDocs, repoRoot));
-
+  writeFileSync(readmePath, standardize(readmeContent, scriptDocs, repoRoot, repoName));
 }
-
 
 if (process?.mainModule?.filename === __filename) {
   main();
