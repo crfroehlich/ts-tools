@@ -1,7 +1,6 @@
 /* eslint-disable sonarjs/no-duplicated-branches */
 /* eslint-disable no-restricted-syntax */
-import { readFileSync, readdirSync, statSync } from 'fs';
-import { join, relative } from 'path';
+/* eslint-disable no-lonely-if */
 import { Block, IndexedBlocks, Query } from './types';
 
 /*
@@ -10,7 +9,6 @@ import { Block, IndexedBlocks, Query } from './types';
  * with the {@link Readme} instance.
  */
 export class ReadmeBlock {
-
   /*
    * A parsed Markdown header.
    */
@@ -35,7 +33,6 @@ export class ReadmeBlock {
   toString(): string {
     return `${this.header}\n${this.content}\n`;
   }
-
 }
 
 /**
@@ -125,7 +122,7 @@ export class Readme {
   public static getLicenseBlock(header = '##'): ReadmeBlock {
     return new ReadmeBlock({
       header: `${header} License`,
-      content: 'NS8 PROPRIETARY 1.0',
+      content: 'See [License](./LICENSE)\n\n© [ns8inc](https://ns8.com)\n',
     });
   }
 
@@ -135,7 +132,7 @@ export class Readme {
    */
   static parseBlockFromContent(content: string): ReadmeBlock {
     const blocks: ReadmeBlock[] = Readme.parse(content);
-    // skip first block, the internal _root node 
+    // skip first block, the internal _root node
     return blocks[1];
   }
 
@@ -168,7 +165,7 @@ export class Readme {
    * @returns a {@link Readme} instance.
    */
 
-  public static parse(content:string = ''): ReadmeBlock[] {
+  public static parse(content = ''): ReadmeBlock[] {
     const lines = content.split('\n').filter(Boolean);
     const blocks: ReadmeBlock[] = [];
 
@@ -195,7 +192,7 @@ export class Readme {
           const newBlock = new ReadmeBlock({
             header: line,
             content: '',
-          })
+          });
           blocks.push(newBlock);
         } else {
           if (Readme.isCodeStartTag(line)) {
@@ -208,7 +205,6 @@ export class Readme {
     }
 
     return blocks;
-
   }
 
   /*
@@ -253,7 +249,8 @@ export class Readme {
         const linkedHeader = Readme.makeLink(...text);
         return `${Readme.repeat(indent, indentCount)}+ ${linkedHeader}`;
       })
-      .concat(['\n']).join('\n');
+      .concat(['\n'])
+      .join('\n');
 
     return new ReadmeBlock({ header: '## Table of Contents', content });
   }
@@ -325,7 +322,7 @@ export class Readme {
 
     if (typeof target === 'string') {
       for (const [key, contentBlocks] of this.indexedBlocks.entries()) {
-        if (strict && key === target || key.includes(target)) {
+        if ((strict && key === target) || key.includes(target)) {
           blocks.push(...contentBlocks);
         }
       }
@@ -391,13 +388,13 @@ export class Readme {
    * @param content - a {@link Block} object to insert after a matched content header.
    * @param strict - boolean indicating whether to perform a strict match or not against a content header.
    */
-  insertAfter(target: Query, block: Block, strict = false): void {
+  insertAfter(target: Query, newBlock: Block, strict = false): void {
     const index = this.blocks.findIndex((block) => {
       return Readme.headerFound(block.header, target, strict);
     });
 
     if (index > -1) {
-      this.blocks.splice(index + 1, 0, block);
+      this.blocks.splice(index + 1, 0, newBlock);
     }
 
     this.index();
@@ -410,13 +407,13 @@ export class Readme {
    * @param content - a {@link Block} object to insert before a matched content header.
    * @param strict - whether to perform a strict string match or not against a content header.
    */
-  insertBefore(target: Query, block: Block, strict = false): void {
+  insertBefore(target: Query, newBlock: Block, strict = false): void {
     const index = this.blocks.findIndex((block) => {
       return Readme.headerFound(block.header, target, strict);
     });
 
     if (index > -1) {
-      this.blocks.splice(index, 0, block);
+      this.blocks.splice(index, 0, newBlock);
     }
 
     this.index();

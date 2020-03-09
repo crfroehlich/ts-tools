@@ -5,6 +5,8 @@ import { Readme, ReadmeBlock } from './readme';
 import { relative, resolve, join, isAbsolute } from 'path';
 import * as stdio from 'stdio';
 
+const STANDARD_DOCS_PATH = 'public/en/platform/protect-tools-js';
+
 /*
  * @param docs - a {@link ScriptDocs} object
  *
@@ -18,8 +20,6 @@ export const formatScriptDocs = (docs: ScriptDocs): string => {
     })
     .join('\n');
 };
-
-const STANDARD_DOCS_PATH = 'public/en/platform/protect-tools-js';
 
 /*
  * string field is for inserting new sections.
