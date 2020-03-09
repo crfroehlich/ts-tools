@@ -68,7 +68,7 @@
     "lint": "yarn eslint src/**/*.ts",
     "lint:docs": "tsc --project tsconfig.docs.json",
     "lint:fix": "yarn eslint src/**/*.ts --fix",
-    "test": "nyc mocha -R spec src/**/*.test.ts",
+    "test": "nyc mocha --reporter spec src/**/*.test.ts",
     "test:watch": "nodemon --exec nyc mocha src/**/*.test.ts"
   },
   "scriptsDocumentation": {
