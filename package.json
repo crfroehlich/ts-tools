@@ -62,7 +62,7 @@
     "build:watch": "concurrently \"yarn build\" \"yarn test:watch\"",
     "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp",
     "count": "cloc src/",
-    "docs:sync-readme": "ts-node src/readme/standardizeReadme.ts -r .",
+    "docs:sync-readme": "ts-node src/readme/standardizeReadme.ts --repo-root .",
     "generate:exports": "yarn cti create ./src -w",
     "lint": "yarn eslint src/**/*.ts",
     "lint:docs": "tsc --project tsconfig.docs.json",
