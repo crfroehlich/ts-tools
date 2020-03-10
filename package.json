@@ -57,8 +57,8 @@
   },
   "scripts": {
     "beautify": "ts-node ./src/sortJson/sortJson.ts",
-    "build": "yarn clean && yarn generate:exports && yarn beautify && tsc --emitDeclarationOnly && webpack",
-    "build:dev": "NODE_ENV=dev yarn generate:exports && yarn beautify && tsc --emitDeclarationOnly && webpack",
+    "build": "yarn clean && yarn generate:exports && yarn beautify && yarn docs:sync-readme && tsc --emitDeclarationOnly && webpack",
+    "build:dev": "NODE_ENV=dev yarn generate:exports && yarn beautify && yarn docs:sync-readme && tsc --emitDeclarationOnly && webpack",
     "build:watch": "concurrently \"yarn build\" \"yarn test:watch\"",
     "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp",
     "count": "cloc src/",
@@ -68,35 +68,36 @@
     "lint:docs": "tsc --project tsconfig.docs.json",
     "lint:fix": "yarn eslint src/**/*.ts --fix",
     "test": "nyc mocha --reporter spec src/**/*.test.ts",
+    "test:fast": "nyc mocha-parallel-tests src/**/*.test.ts",
     "test:watch": "nodemon --exec nyc mocha src/**/*.test.ts"
   },
   "scriptsDocumentation": {
     "beautify": {
-      "description": "Perform aesthetic operations to make the project files easier to navigate and read.",
+      "description": "Performs aesthetic operations to make the project files easier to navigate and read",
       "dev": true
     },
     "build": {
-      "description": "assembles build scripts into a single js module with type definitions.",
+      "description": "Assembles build scripts into a single js module with type definitions",
       "dev": false
     },
     "build:dev": {
-      "description": "assembles build scripts into a single js module with type definitions.",
+      "description": "Assembles build scripts into a single js module with type definitions",
       "dev": true
     },
     "build:watch": {
-      "description": "build and test concurrently while developing.",
+      "description": "Builds and tests concurrently while you develop",
       "dev": true
     },
     "clean": {
-      "description": "Purges all temporary folders.",
+      "description": "Purges all temporary folders",
       "dev": true
     },
     "count": {
-      "description": "count lines of source code",
+      "description": "Counts lines of source code",
       "dev": true
     },
     "docs:sync-readme": {
-      "description": "creates or updates a new readme with a toc, script docs, links to docs and a license",
+      "description": "Creates or updates a new readme with a standard set of readme sections, including a toc, yarn script documention, links to repo documentation files and an NS8 license",
       "dev": true
     },
     "generate:exports": {
@@ -104,19 +105,27 @@
       "dev": true
     },
     "lint": {
-      "description": "Lints the codebase.",
+      "description": "Lints the codebase",
       "dev": true
     },
     "lint:docs": {
-      "description": "Documentation coming soon.",
+      "description": "Lints the code documentation",
       "dev": true
     },
     "lint:fix": {
-      "description": "Lints the codebase and automatically fixes what it can.",
+      "description": "Lints the codebase and automatically fixes what it can",
       "dev": true
     },
     "test": {
-      "description": "Runs tests and calculates test coverage.",
+      "description": "Runs tests and calculates test coverage",
+      "dev": true
+    },
+    "test:fast": {
+      "description": "Runs tests in parallel and calculates test coverage",
+      "dev": true
+    },
+    "test:watch": {
+      "description": "Re-runs tests as you develop",
       "dev": true
     }
   },
