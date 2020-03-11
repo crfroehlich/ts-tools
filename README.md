@@ -1,5 +1,5 @@
-# Test README
-[![Concourse-CI](https://concourse.ns8-infrastructure.com/api/v1/teams/main/pipelines/protect-tools-js/jobs/test/badge)](https://concourse.ns8-infrastructure.com/teams/main/pipelines/protect-tools-js)
+# @ns8/protect-tools-js
+
 
 ## Table of Contents
   + [Getting Started](#getting-started)
@@ -15,40 +15,46 @@ To get started, take a look at the documentation listed below:
 
 ## `package.json` scripts
 `yarn beautify`
-- Perform aesthetic operations to make the project files easier to navigate and read.
+- Performs aesthetic operations to make the project files easier to navigate and read
 
 `yarn build`
-- assembles build scripts into a single js module with type definitions.
+- Assembles build scripts into a single js module with type definitions
 
 `yarn build:dev`
-- assembles build scripts into a single js module with type definitions.
+- Assembles build scripts into a single js module with type definitions
 
 `yarn build:watch`
-- build and test concurrently while developing.
+- Builds and tests concurrently while you develop
 
 `yarn clean`
-- Purges all temporary folders.
+- Purges all temporary folders
 
 `yarn count`
-- count lines of source code
+- Counts lines of source code
 
 `yarn docs:sync-readme`
-- creates or updates a new readme with a toc, script docs, links to docs and a license
+- Creates or updates a new readme with a standard set of readme sections, including a toc, yarn script documention, links to repo documentation files and an NS8 license
 
 `yarn generate:exports`
 - Generates index.ts files for all exports recursively in the 'src' folder
 
 `yarn lint`
-- Lints the codebase.
+- Lints the codebase
 
 `yarn lint:docs`
-- Documentation coming soon.
+- Lints the code documentation
 
 `yarn lint:fix`
-- Lints the codebase and automatically fixes what it can.
+- Lints the codebase and automatically fixes what it can
 
 `yarn test`
-- Runs tests and calculates test coverage.
+- Runs tests and calculates test coverage
+
+`yarn test:fast`
+- Runs tests in parallel and calculates test coverage
+
+`yarn test:watch`
+- Re-runs tests as you develop
 
 ## License
 See [License](./LICENSE)
