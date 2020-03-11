@@ -26,6 +26,9 @@ plugins:
   - markdown
 rules:
   '@typescript-eslint/no-var-requires': 'off'
+  complexity:
+    - warn
+    - max: 5
   import/extensions:
     - error
     - .ts: ignorePackages
