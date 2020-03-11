@@ -33,7 +33,8 @@ const HEADERS = {
 const STANDARD_DOCS_PATH = 'public/en/platform/protect-tools-js';
 
 /*
- * @param docs - a {@link ScriptDocs} object
+ * @param docs - a {@link ScriptDocs} object containing documentation objects describing
+ * package.json scripts.
  *
  * @returns a string composed of formatted {@link ScriptDocs} joined together.
  */
@@ -45,6 +46,11 @@ const formatScriptDocs = (docs: ScriptDocs): string => {
     })
     .join('\n');
 };
+
+/*
+ * @returns a string path to the repository root, which is used in building links to documentation
+ * and referencing the standard package.json and README.md locations.
+ */
 
 function getRepoRoot(): string {
   const argsDef = {
@@ -66,7 +72,7 @@ function getRepoRoot(): string {
 }
 
 /*
- * @params {@link DocLinksParams}
+ * @params {@link DocLinksParams} - a doc links section header, an introductory paragraph, and a path to the repository.
  * @returns a {@link ReadmeBlock} of relative links to the documents in the standardized documentation path
  */
 function buildDocumentationLinksBlock({
@@ -112,6 +118,14 @@ function buildDocumentationLinksBlock({
 
   return new ReadmeBlock({ header, content });
 }
+
+/*
+ * @param content - readme text content.
+ * @param scriptDocs - a {@link ScriptDocs} object containing documentation on package.json scripts.
+ * @ param repoName - the name of the repository, used as a fallback for the top-level readme header if it's missing.
+ *
+ * @returns an exported {@link Readme} instance.
+ */
 
 function standardize(content: string, scriptDocs: ScriptDocs, repoRoot: string, repoName: string): string {
   const readme = new Readme(content);
@@ -164,12 +178,12 @@ function standardize(content: string, scriptDocs: ScriptDocs, repoRoot: string, 
     });
   }
 
-  // add concourse badge for pipeline and test
-  // [![Concourse-CI](https://concourse.ns8-infrastructure.com/api/v1/teams/main/pipelines/protect-tools-js/jobs/test/badge)](https://concourse.ns8-infrastructure.com/teams/main/pipelines/protect-tools-js)
-
   return readme.export();
 }
 
+/*
+ * Reads the package.json and README.md files, and generates a standardized {@link Readme}, exports it and writes to disk.
+ */
 async function main(): Promise<void> {
   /*
    * Assumption: README.md and package.json are located in the ${repoRoot} directory
@@ -194,6 +208,6 @@ async function main(): Promise<void> {
   writeFileSync(readmePath, standardize(readmeContent, scriptDocs, repoRoot, repoName));
 }
 
-if (process?.mainModule?.filename === __filename) {
+if (__filename === process?.mainModule?.filename) {
   main();
 }
