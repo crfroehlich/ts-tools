@@ -107,7 +107,7 @@ export class Readme {
   }
 
   /*
-   * @param testParts - a list of strings that are used to build a table of contents entry that links to a content section
+   * @param textParts - a list of strings that are used to build a table of contents entry that links to a content section
    *
    * @returns a string representing a markdown anchor tag to a link in the same document.
    */
@@ -118,6 +118,7 @@ export class Readme {
   /*
    * Generates a content block with an NS8 proprietary license.
    * @param heading - type of heading to use for the license block.
+   * @returns a {@link ReadmeBlock}
    */
   public static getLicenseBlock(header = '##'): ReadmeBlock {
     return new ReadmeBlock({
@@ -160,6 +161,7 @@ export class Readme {
   }
 
   /*
+   * @param content - readme content as string, to be parsed into {@link ReadmeBlock}s.
    * Parses the readme content and returns a Readme instance for chaining.
    *
    * @returns a {@link Readme} instance.
