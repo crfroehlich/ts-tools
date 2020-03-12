@@ -368,36 +368,97 @@ describe('readme.appendBlock()', () => {
   it('should append new block to end of blocks', () => {
     const readme = new Readme(TEST_FILES.STANDARD);
     const initialBlockCount = readme.blocks.length;
-    const block = {
+    readme.appendBlock({
       header: '## Append',
       content: 'Appended Content',
-    };
-    readme.appendBlock(block);
+    });
     const finalBlock = readme.blocks[readme.blocks.length - 1];
 
     expect(readme.blocks.length).to.equal(initialBlockCount + 1);
     expect(finalBlock.header).to.deep.equal('## Append');
     expect(finalBlock.content).to.deep.equal('Appended Content');
   });
-  // TODO: test indexing by searching via Query
+  it('should append new block to an optional target block', () => {
+    const readme = new Readme(TEST_FILES.STANDARD);
+    const initialBlockCount = readme.blocks.length;
+    readme.appendBlock({
+      header: '## Append',
+      content: 'Content',
+    });
+    const appendedBlock = readme.getSection('## Append');
+    readme.appendBlock({
+      header: '## Appended Block',
+      content: 'Appended Block Content',
+    }, appendedBlock);
+    const finalBlock = readme.blocks[readme.blocks.length - 1];
+
+    expect(readme.blocks.length).to.equal(initialBlockCount + 2);
+    expect(finalBlock.header).to.deep.equal('## Appended Block');
+    expect(finalBlock.content).to.deep.equal('Appended Block Content');
+  });
+  it('should not append a new block to an unmatched target block', () => {
+    const readme = new Readme('');
+    const initialBlockCount = readme.blocks.length;
+    readme.appendBlock({
+      header: '## Appended Block',
+      content: 'Appended Block Content',
+    }, new ReadmeBlock({
+      header: '# Not in Readme',
+      content: 'Not in Readme'
+    }));
+    const finalBlock = readme.blocks[readme.blocks.length - 1];
+
+    expect(readme.blocks.length).to.equal(initialBlockCount);
+  });
 });
 
 describe('readme.prependBlock', () => {
   it('should prepend new block to readme content blocks', () => {
-    const readme = new Readme(TEST_FILES.STANDARD);
+    const readme = new Readme('');
     const initialBlockCount = readme.blocks.length;
-    const block = {
-      header: '## Prepend',
-      content: 'Prepended Content',
-    };
-    readme.prependBlock(block);
-    const firstBlock = readme.blocks[1];
+    readme.prependBlock({
+      header: '## Prepended Block',
+      content: 'Block Content',
+    });
+    expect(readme.blocks.length).to.equal(initialBlockCount + 1);
+    expect(readme.blocks[1].header).to.equal('## Prepended Block');
+    expect(readme.blocks[1].content).to.equal('Block Content');
+
+  });
+  it('should prepend new block to readme content blocks if its target is valid', () => {
+    const readme = new Readme('');
+    const initialBlockCount = readme.blocks.length;
+    readme.appendBlock({
+      header: '## Block',
+      content: 'Block Content',
+    });
+    const prependedBlock = readme.getSection('## Block');
+    readme.prependBlock({
+      header: '## Prepended Block',
+      content: 'Prepended Block Content'
+    }, prependedBlock);
+
+    expect(readme.blocks.length).to.equal(initialBlockCount + 2);
+    expect(readme.blocks[1].header).to.equal('## Prepended Block');
+    expect(readme.blocks[1].content).to.equal('Prepended Block Content');
+
+  });
+  it('should prepend new block to readme content blocks if its target is INvalid', () => {
+    const readme = new Readme('');
+    const initialBlockCount = readme.blocks.length;
+    readme.appendBlock({
+      header: '## Block',
+      content: 'Block Content'
+    });
+    readme.prependBlock({
+      header: '## I should not be appended',
+      content: 'I should not be appended content',
+    }, new ReadmeBlock({ header: '## Prepend', content: 'Prepended Content' }));
 
     expect(readme.blocks.length).to.equal(initialBlockCount + 1);
-    expect(firstBlock.header).to.deep.equal('## Prepend');
-    expect(firstBlock.content).to.deep.equal('Prepended Content');
+    expect(readme.blocks[1].header).to.equal('## Block');
+    expect(readme.blocks[1].content).to.equal('Block Content');
 
-    // TODO: test indexing by searching via Query
   });
 });
 

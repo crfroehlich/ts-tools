@@ -364,24 +364,40 @@ export class Readme {
   /*
    * Appends content at end of the readme content list.
    *
-   * @param content - a {@link Block} object to insert before a matched content header.
-   * @param strict - whether to perform a strict string match or not against a content header.
+   * @param block - a {@link Block} object to insert before a matched content header.
+   * @param target - optional target block to append the new block after.
    */
-  appendBlock(block: ReadmeBlock): void {
-    this.blocks.push(block);
-    this.index();
+  appendBlock(block: ReadmeBlock, target: ReadmeBlock | null = null): void {
+    if (target) {
+      const targetIndex = this.blocks.findIndex(b => b === target);
+      if (targetIndex >= 0) {
+        this.blocks.splice(targetIndex + 1, 0, block); 
+        this.index();
+      }
+    } else {
+      this.blocks.push(block);
+      this.index();
+    }
   }
 
   /*
    * Prepends content to the beginning of the readme content list.
    *
-   * @param content - a {@link Block} object to insert before a matched content header.
-   * @param strict - whether to perform a strict string match or not against a content header.
+   * @param block - a {@link Block} object to insert before a matched content header.
+   * @param target - optional target block to prepend the new block before.
    */
-  prependBlock(block: ReadmeBlock): void {
-    // TODO: insert between root node and rest
-    this.blocks.splice(1, 0, block);
-    this.index();
+  prependBlock(block: ReadmeBlock, target: ReadmeBlock | null = null): void {
+
+    if (target) {
+      const targetIndex = this.blocks.findIndex(b => b === target);
+      if (targetIndex >= 0) {
+        this.blocks.splice(targetIndex, 0, block); 
+        this.index();
+      }
+    } else {
+      this.blocks.splice(1, 0, block);
+      this.index();
+    }
   }
 
   /*
