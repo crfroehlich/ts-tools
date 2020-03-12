@@ -401,10 +401,7 @@ describe('readme.appendBlock()', () => {
     readme.appendBlock({
       header: '## Appended Block',
       content: 'Appended Block Content',
-    }, new ReadmeBlock({
-      header: null,
-      content: null
-    }));
+    }, new ReadmeBlock({}));
     const finalBlock = readme.blocks[readme.blocks.length - 1];
 
     expect(readme.blocks.length).to.equal(initialBlockCount);
