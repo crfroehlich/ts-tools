@@ -27,6 +27,12 @@ const LITERALS = {
   LICENSE_HEADER: '## License',
   LICENSE_CONTENT: 'See [License](./LICENSE)\n\n© [ns8inc](https://ns8.com)\n',
   NON_EXISTENT_HEADER: 'Non-existent',
+  APPENDED_HEADER: '## Appended Block',
+  APPENDED_CONTENT: 'Appended Block Content',
+  PREPENDED_HEADER: '## Prepended Header',
+  PREPENDED_CONTENT: 'Prepended Content',
+  REGULAR_HEADER: '## Content',
+  REGULAR_CONTENT: 'Content',
 };
 
 describe('readme.parse()', () => {
@@ -209,8 +215,7 @@ describe('readme.getTocBlock()', () => {
         '      + [`yarn` scripts](#yarn-scripts)\n' +
         '  + [Authors](#authors)\n' +
         '  + [Contributing](#contributing)\n' +
-        '  + [License](#license)' +
-        '\n\n',
+        '  + [License](#license)',
     );
   });
 
@@ -226,8 +231,7 @@ describe('readme.getTocBlock()', () => {
         '      + [`yarn` scripts](#yarn-scripts)\n' +
         '  + [Authors](#authors)\n' +
         '  + [Contributing](#contributing)\n' +
-        '  + [License](#license)' +
-        '\n\n',
+        '  + [License](#license)',
     );
   });
 
@@ -368,42 +372,46 @@ describe('readme.appendBlock()', () => {
     const readme = new Readme(TEST_FILES.STANDARD);
     const initialBlockCount = readme.blocks.length;
     readme.appendBlock({
-      header: '## Append',
-      content: 'Appended Content',
+      header: LITERALS.APPENDED_HEADER,
+      content: LITERALS.APPENDED_CONTENT,
     });
     const finalBlock = readme.blocks[readme.blocks.length - 1];
 
     expect(readme.blocks.length).to.equal(initialBlockCount + 1);
-    expect(finalBlock.header).to.deep.equal('## Append');
-    expect(finalBlock.content).to.deep.equal('Appended Content');
+    expect(finalBlock.header).to.deep.equal(LITERALS.APPENDED_HEADER);
+    expect(finalBlock.content).to.deep.equal(LITERALS.APPENDED_CONTENT);
   });
   it('should append new block to an optional target block', () => {
     const readme = new Readme(TEST_FILES.STANDARD);
     const initialBlockCount = readme.blocks.length;
     readme.appendBlock({
-      header: '## Append',
-      content: 'Content',
+      header: LITERALS.APPENDED_HEADER,
+      content: LITERALS.APPENDED_CONTENT,
     });
     const appendedBlock = readme.getSection('## Append');
-    readme.appendBlock({
-      header: '## Appended Block',
-      content: 'Appended Block Content',
-    }, appendedBlock);
+    readme.appendBlock(
+      {
+        header: LITERALS.REGULAR_HEADER,
+        content: LITERALS.REGULAR_CONTENT,
+      },
+      appendedBlock,
+    );
     const finalBlock = readme.blocks[readme.blocks.length - 1];
 
     expect(readme.blocks.length).to.equal(initialBlockCount + 2);
-    expect(finalBlock.header).to.deep.equal('## Appended Block');
-    expect(finalBlock.content).to.deep.equal('Appended Block Content');
+    expect(finalBlock.header).to.deep.equal(LITERALS.REGULAR_HEADER);
+    expect(finalBlock.content).to.deep.equal(LITERALS.REGULAR_CONTENT);
   });
   it('should not append a new block to an unmatched target block', () => {
     const readme = new Readme('');
     const initialBlockCount = readme.blocks.length;
-    readme.appendBlock({
-      header: '## Appended Block',
-      content: 'Appended Block Content',
-    }, new ReadmeBlock({}));
-    const finalBlock = readme.blocks[readme.blocks.length - 1];
-
+    readme.appendBlock(
+      {
+        header: LITERALS.APPENDED_HEADER,
+        content: LITERALS.APPENDED_CONTENT,
+      },
+      new ReadmeBlock({}),
+    );
     expect(readme.blocks.length).to.equal(initialBlockCount);
   });
 });
@@ -413,48 +421,50 @@ describe('readme.prependBlock', () => {
     const readme = new Readme('');
     const initialBlockCount = readme.blocks.length;
     readme.prependBlock({
-      header: '## Prepended Block',
-      content: 'Block Content',
+      header: LITERALS.PREPENDED_HEADER,
+      content: LITERALS.PREPENDED_CONTENT,
     });
     expect(readme.blocks.length).to.equal(initialBlockCount + 1);
-    expect(readme.blocks[1].header).to.equal('## Prepended Block');
-    expect(readme.blocks[1].content).to.equal('Block Content');
-
+    expect(readme.blocks[1].header).to.equal(LITERALS.PREPENDED_HEADER);
+    expect(readme.blocks[1].content).to.equal(LITERALS.PREPENDED_CONTENT);
   });
   it('should prepend new block to readme content blocks if its target is valid', () => {
     const readme = new Readme('');
     const initialBlockCount = readme.blocks.length;
     readme.appendBlock({
-      header: '## Block',
-      content: 'Block Content',
+      header: LITERALS.REGULAR_HEADER,
+      content: LITERALS.REGULAR_CONTENT,
     });
-    const prependedBlock = readme.getSection('## Block');
-    readme.prependBlock({
-      header: '## Prepended Block',
-      content: 'Prepended Block Content'
-    }, prependedBlock);
+    const blockToPrependTo = readme.getSection(LITERALS.REGULAR_HEADER);
+    readme.prependBlock(
+      {
+        header: LITERALS.PREPENDED_HEADER,
+        content: LITERALS.PREPENDED_CONTENT,
+      },
+      blockToPrependTo,
+    );
 
     expect(readme.blocks.length).to.equal(initialBlockCount + 2);
-    expect(readme.blocks[1].header).to.equal('## Prepended Block');
-    expect(readme.blocks[1].content).to.equal('Prepended Block Content');
-
+    expect(readme.blocks[1].content).to.equal(LITERALS.PREPENDED_CONTENT);
   });
   it('should prepend new block to readme content blocks if its target is INvalid', () => {
     const readme = new Readme('');
     const initialBlockCount = readme.blocks.length;
     readme.appendBlock({
       header: '## Block',
-      content: 'Block Content'
+      content: 'Block Content',
     });
-    readme.prependBlock({
-      header: '## I should not be appended',
-      content: 'I should not be appended content',
-    }, new ReadmeBlock({ header: '## Prepend', content: 'Prepended Content' }));
+    readme.prependBlock(
+      {
+        header: '## I should not be appended',
+        content: 'I should not be appended content',
+      },
+      new ReadmeBlock({ header: '## Prepend', content: 'Prepended Content' }),
+    );
 
     expect(readme.blocks.length).to.equal(initialBlockCount + 1);
     expect(readme.blocks[1].header).to.equal('## Block');
     expect(readme.blocks[1].content).to.equal('Block Content');
-
   });
 });
 

@@ -51,7 +51,6 @@ const formatScriptDocs = (docs: ScriptDocs): ReadmeBlock => {
     header,
     content,
   });
-
 };
 
 /*
@@ -121,7 +120,7 @@ function buildDocumentationLinksBlock({
     })
     .join('\n');
 
-  const content = `${introduction ? introduction + '\n\n' : ''}${docLinksContent}`;
+  const content = `${introduction ? `${introduction}\n\n` : ''}${docLinksContent}`;
 
   return new ReadmeBlock({ header, content });
 }
@@ -135,7 +134,6 @@ function buildDocumentationLinksBlock({
  */
 
 function standardize(content: string, scriptDocs: ScriptDocs, repoRoot: string, repoName: string): string {
-
   /*
    * Check for the presence of standard sections.
    * If they exist, update them. If not, append them.
@@ -149,9 +147,9 @@ function standardize(content: string, scriptDocs: ScriptDocs, repoRoot: string, 
 
   const readme = new Readme(content);
   let mainHeader = readme.getSection(/^ *# /);
-  let tocSection = readme.getSection(HEADERS.TOC.RE);
-  let gettingStartedSection = readme.getSection(HEADERS.GETTING_STARTED.RE);
-  let scriptDocsSection = readme.getSection(HEADERS.SCRIPTS.RE);
+  const tocSection = readme.getSection(HEADERS.TOC.RE);
+  const gettingStartedSection = readme.getSection(HEADERS.GETTING_STARTED.RE);
+  const scriptDocsSection = readme.getSection(HEADERS.SCRIPTS.RE);
   const docLinksBlock = buildDocumentationLinksBlock({
     header: HEADERS.GETTING_STARTED.STRING,
     introduction: 'To get started, take a look at the documentation listed below:\n',
@@ -218,7 +216,6 @@ async function main(): Promise<void> {
   const repoName = (packageJsonContent.name || 'README').trim();
 
   writeFileSync(readmePath, standardize(readmeContent, scriptDocs, repoRoot, repoName));
-
 }
 
 if (__filename === process?.mainModule?.filename) {

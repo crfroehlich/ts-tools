@@ -370,9 +370,9 @@ export class Readme {
    */
   appendBlock(block: ReadmeBlock, target: ReadmeBlock | null = null): void {
     if (target) {
-      const targetIndex = this.blocks.findIndex(b => b === target);
+      const targetIndex = this.blocks.findIndex((b) => b === target);
       if (targetIndex >= 0) {
-        this.blocks.splice(targetIndex + 1, 0, block); 
+        this.blocks.splice(targetIndex + 1, 0, block);
         this.index();
       }
     } else {
@@ -388,11 +388,10 @@ export class Readme {
    * @param target - optional target block to prepend the new block before.
    */
   prependBlock(block: ReadmeBlock, target: ReadmeBlock | null = null): void {
-
     if (target) {
-      const targetIndex = this.blocks.findIndex(b => b === target);
+      const targetIndex = this.blocks.findIndex((b) => b === target);
       if (targetIndex >= 0) {
-        this.blocks.splice(targetIndex, 0, block); 
+        this.blocks.splice(targetIndex, 0, block);
         this.index();
       }
     } else {
