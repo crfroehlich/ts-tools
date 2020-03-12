@@ -6,7 +6,7 @@ image_resource:
   source: { repository: node, tag: "12" }
 
 inputs:
-  - name: protect-tools-js-repo
+  - name: protect-tools-js
 
 run:
   path: /bin/sh
@@ -15,8 +15,8 @@ run:
     - |
 
       echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-      
-      cd protect-tools-js-repo
+
+      cd protect-tools-js
       if ! yarn install
       then
         echo "ERROR: yarn install failed"

@@ -1,6 +1,7 @@
 # @ns8/protect-tools-js
 
-
+[![CI](https://concourse.ns8-infrastructure.com/api/v1/teams/main/pipelines/generator-protect-integration/jobs/test/badge)](https://concourse.ns8-infrastructure.com/api/v1/teams/main/pipelines/generator-protect-integration/jobs/test/badge)
+[![CI](https://concourse.ns8-infrastructure.com/api/v1/teams/main/pipelines/protect-tools-js/jobs/test/badge?title=tests)](https://concourse.ns8-infrastructure.com/api/v1/teams/main/pipelines/protect-tools-js/jobs/test/badge?title=tests)
 
 ## Table of Contents
 
