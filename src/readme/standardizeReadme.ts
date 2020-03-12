@@ -36,15 +36,22 @@ const STANDARD_DOCS_PATH = 'public/en/platform/protect-tools-js';
  * @param docs - a {@link ScriptDocs} object containing documentation objects describing
  * package.json scripts.
  *
- * @returns a string composed of formatted {@link ScriptDocs} joined together.
+ * @returns a {@link ReadmeBlock} whose content is a formatted {@link ScriptDocs}.
  */
-const formatScriptDocs = (docs: ScriptDocs): string => {
-  return Object.keys(docs)
+const formatScriptDocs = (docs: ScriptDocs): ReadmeBlock => {
+  const header = HEADERS.SCRIPTS.STRING;
+  const content = Object.keys(docs)
     .map((scriptName): string => {
       const { description } = docs[scriptName];
       return `\`yarn ${scriptName}\`\n- ${description}\n`;
     })
     .join('\n');
+
+  return new ReadmeBlock({
+    header,
+    content,
+  });
+
 };
 
 /*
@@ -89,7 +96,7 @@ function buildDocumentationLinksBlock({
     .map((filename) => join(relativePath, filename))
     .filter((fullpath) => fullpath.endsWith('.md') && statSync(fullpath).isFile());
 
-  const docLinkContent = docFilepaths
+  const docLinksContent = docFilepaths
     .map((filepath) => {
       let content;
 
@@ -114,7 +121,7 @@ function buildDocumentationLinksBlock({
     })
     .join('\n');
 
-  const content = `${introduction}\n\n${docLinkContent}`;
+  const content = `${introduction ? introduction + '\n\n' : ''}${docLinksContent}`;
 
   return new ReadmeBlock({ header, content });
 }
@@ -128,54 +135,59 @@ function buildDocumentationLinksBlock({
  */
 
 function standardize(content: string, scriptDocs: ScriptDocs, repoRoot: string, repoName: string): string {
+
+  /*
+   * Check for the presence of standard sections.
+   * If they exist, update them. If not, append them.
+   * Order of appends should be:
+   *   main repo header
+   *   links to standard docs / 'Getting Started'
+   *   yarn script documentation
+   *   license
+   *   table of contents
+   */
+
   const readme = new Readme(content);
+  let mainHeader = readme.getSection(/^ *# /);
+  let tocSection = readme.getSection(HEADERS.TOC.RE);
+  let gettingStartedSection = readme.getSection(HEADERS.GETTING_STARTED.RE);
+  let scriptDocsSection = readme.getSection(HEADERS.SCRIPTS.RE);
   const docLinksBlock = buildDocumentationLinksBlock({
     header: HEADERS.GETTING_STARTED.STRING,
     introduction: 'To get started, take a look at the documentation listed below:\n',
     repoRoot,
   });
+  const licenseSection = readme.getSection(HEADERS.LICENSE.RE);
 
-  // Update links to documentation
-  const gettingStartedSection = readme.getSection(HEADERS.GETTING_STARTED.RE);
+  if (!mainHeader) {
+    mainHeader = new ReadmeBlock({
+      header: `# ${repoName}`,
+    });
+    readme.prependBlock(mainHeader);
+  }
+
   if (gettingStartedSection) {
     gettingStartedSection.content = docLinksBlock.content;
   } else {
-    readme.appendBlock(docLinksBlock);
+    readme.appendBlock(docLinksBlock, mainHeader);
   }
 
-  // Update script documentation
-  const scriptDocsSection = readme.getSection(HEADERS.SCRIPTS.RE);
   if (scriptDocsSection) {
-    scriptDocsSection.content = formatScriptDocs(scriptDocs);
+    scriptDocsSection.content = formatScriptDocs(scriptDocs).content;
   } else {
-    readme.appendBlock({
-      header: HEADERS.SCRIPTS.STRING,
-      content: formatScriptDocs(scriptDocs),
-    });
+    const scriptDocsBlock = formatScriptDocs(scriptDocs);
+    readme.appendBlock(scriptDocsBlock, gettingStartedSection);
   }
 
-  // Update License block
-  const licenseSection = readme.getSection(HEADERS.LICENSE.RE);
-  if (licenseSection) {
-    licenseSection.content = Readme.getLicenseBlock().content;
-  } else {
+  if (!licenseSection) {
     readme.appendBlock(Readme.getLicenseBlock());
   }
 
-  // either update the toc content or figure out where to insert it
-  const tocSection = readme.getSection(HEADERS.TOC.RE);
-  const tocBlock = readme.getTocBlock();
-  const h1 = readme.getSection(/^ *# /);
-
+  // TOC goes last since it depends on the rest of the readme.
   if (tocSection) {
-    tocSection.content = tocBlock.content;
-  } else if (h1) {
-    readme.insertAfter(h1.header, tocBlock);
+    tocSection.content = readme.getTocBlock().content;
   } else {
-    readme.appendBlock({
-      header: `# ${repoName}`,
-      content: `${tocBlock}`,
-    });
+    readme.appendBlock(readme.getTocBlock(), mainHeader);
   }
 
   return readme.export();
@@ -203,9 +215,10 @@ async function main(): Promise<void> {
   }
   const packageJsonContent = JSON.parse(readFileSync(join(resolvedRepoRoot, 'package.json'), 'utf8'));
   const scriptDocs = packageJsonContent.scriptsDocumentation || {};
-  const repoName = packageJsonContent.name || 'README';
+  const repoName = (packageJsonContent.name || 'README').trim();
 
   writeFileSync(readmePath, standardize(readmeContent, scriptDocs, repoRoot, repoName));
+
 }
 
 if (__filename === process?.mainModule?.filename) {

@@ -1,12 +1,15 @@
 # @ns8/protect-tools-js
 
 
+
 ## Table of Contents
+
   + [Getting Started](#getting-started)
   + [`package.json` scripts](#packagejson-scripts)
   + [License](#license)
 
 ## Getting Started
+
 To get started, take a look at the documentation listed below:
 
 
@@ -14,6 +17,7 @@ To get started, take a look at the documentation listed below:
 - [Readme Tool](public/en/platform/protect-tools-js/readme.md)
 
 ## `package.json` scripts
+
 `yarn beautify`
 - Performs aesthetic operations to make the project files easier to navigate and read
 
@@ -57,6 +61,7 @@ To get started, take a look at the documentation listed below:
 - Re-runs tests as you develop
 
 ## License
+
 See [License](./LICENSE)
 
 © [ns8inc](https://ns8.com)

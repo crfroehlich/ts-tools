@@ -254,7 +254,6 @@ export class Readme {
         const linkedHeader = Readme.makeLink(...text);
         return `${Readme.repeat(indent, indentCount)}+ ${linkedHeader}`;
       })
-      .concat(['\n'])
       .join('\n');
 
     return new ReadmeBlock({ header: '## Table of Contents', content });
