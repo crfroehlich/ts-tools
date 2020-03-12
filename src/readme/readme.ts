@@ -1,7 +1,9 @@
 /* eslint-disable sonarjs/no-duplicated-branches */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-lonely-if */
-import { Block, IndexedBlocks, Query } from './types';
+import { Block, Query } from './types';
+
+export type IndexedBlocks = Map<string, ReadmeBlock[]>;
 
 /*
  * The ReadmeBlock represents the header and the content of a Readme section.
@@ -23,8 +25,8 @@ export class ReadmeBlock {
    * @param block - an object conforming to the {@link Block} interface
    */
   constructor(block: Block) {
-    this.header = block.header;
-    this.content = block.content;
+    this.header = block.header || '';
+    this.content = block.content || '';
   }
 
   /*
@@ -268,7 +270,7 @@ export class Readme {
 
     for (const block of this.blocks) {
       if (!Readme.isRootNode(block)) {
-        output += `${block.header.trim()}\n`;
+        output += `${block.header.trim()}\n\n`;
       }
       output += `${block.content.trimRight()}\n\n`;
     }
@@ -308,7 +310,7 @@ export class Readme {
    *
    * @returns a single {@link Block } object if a section is matched, or null.
    */
-  getSection(target: Query, strict = false): Block | null {
+  getSection(target: Query, strict = false): ReadmeBlock | null {
     return this.getSections(target, strict)[0] || null;
   }
 
@@ -320,8 +322,8 @@ export class Readme {
    *
    * @returns a list of matched content {@link Block}s.
    */
-  getSections(target: Query, strict = false): Block[] {
-    const blocks = [];
+  getSections(target: Query, strict = false): ReadmeBlock[] {
+    const blocks: ReadmeBlock[] = [];
 
     if (typeof target === 'string') {
       for (const [key, contentBlocks] of this.indexedBlocks.entries()) {
@@ -407,7 +409,7 @@ export class Readme {
    * @param content - a {@link Block} object to insert after a matched content header.
    * @param strict - boolean indicating whether to perform a strict match or not against a content header.
    */
-  insertAfter(target: Query, newBlock: Block, strict = false): void {
+  insertAfter(target: Query, newBlock: ReadmeBlock, strict = false): void {
     const index = this.blocks.findIndex((block) => {
       return Readme.headerFound(block.header, target, strict);
     });
@@ -426,7 +428,7 @@ export class Readme {
    * @param content - a {@link Block} object to insert before a matched content header.
    * @param strict - whether to perform a strict string match or not against a content header.
    */
-  insertBefore(target: Query, newBlock: Block, strict = false): void {
+  insertBefore(target: Query, newBlock: ReadmeBlock, strict = false): void {
     const index = this.blocks.findIndex((block) => {
       return Readme.headerFound(block.header, target, strict);
     });

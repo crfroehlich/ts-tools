@@ -5,7 +5,6 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 import 'mocha';
 import { Readme, ReadmeBlock } from './readme';
-import { Block } from './types';
 
 const TEST_FILES = {
   EMPTY: readFileSync(join(__dirname, 'test-data/empty.md'), 'utf8'),
@@ -251,7 +250,7 @@ describe('readme.insertBefore()', () => {
     readme.insertBefore('# Purpose', newBlock);
     expect(readme.blocks.length).to.equal(previousLength + 1);
 
-    const foundIndex = readme.blocks.findIndex((block: Block) => {
+    const foundIndex = readme.blocks.findIndex((block: ReadmeBlock) => {
       return Readme.headerFound(block.header, '# Purpose');
     });
     expect(foundIndex).to.be.greaterThan(0);
@@ -403,8 +402,8 @@ describe('readme.appendBlock()', () => {
       header: '## Appended Block',
       content: 'Appended Block Content',
     }, new ReadmeBlock({
-      header: '# Not in Readme',
-      content: 'Not in Readme'
+      header: null,
+      content: null
     }));
     const finalBlock = readme.blocks[readme.blocks.length - 1];
 
