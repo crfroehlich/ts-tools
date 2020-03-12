@@ -93,10 +93,3 @@ describe('update script docs in readme without an existing script docs section',
   expect(updatedReadme).to.include(expectedScriptDocs);
   expect(updatedReadme).to.include(SCRIPT_DOCS_HEADER);
 });
-
-describe('update script docs in readme without an existing script docs section', () => {
-  const updatedReadme = updateScriptDocs(parsedPackageJson.scriptsDocumentation, TEST_READMES.EXISTING_SCRIPT_DOCS);
-
-  expect(updatedReadme).to.include(expectedScriptDocs);
-  expect(updatedReadme).to.include(SCRIPT_DOCS_HEADER);
-});

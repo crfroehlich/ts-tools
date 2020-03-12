@@ -7,6 +7,14 @@ import 'mocha';
 import { Readme } from './readme';
 import { Block } from './types';
 
+const INSERT_AFTER_HEADER = '## Insert After';
+const INSERT_BEFORE_HEADER = '## Insert Before';
+const MIT_LICENSE = 'MIT License';
+const NEWLY_INSERTED_BLOCK_CONTENT = 'Newly Inserted block content';
+const PROPRIETARY_LICENSE = 'NS8 Proprietary 1.0 License';
+const REPLACED_CONTENT = 'REPLACED CONTENT';
+const TABLE_OF_CONTENTS = 'Table of Contents';
+
 const TEST_FILES = {
   EMPTY: join(__dirname, 'test-data/empty.md'),
   DUPLICATE_HEADERS: join(__dirname, 'test-data/duplicateHeaders.md'),
@@ -65,14 +73,14 @@ describe('getSection', () => {
   it('should return null when a query doesnt match any heading', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
-    readme.setSection('Table of Contents', 'REPLACED CONTENT');
+    readme.setSection(TABLE_OF_CONTENTS, REPLACED_CONTENT);
     expect(readme.getSection('Non-existent Heading')).to.be.null;
   });
 
   it('should return null for any getSection call with an emtpy file', () => {
     const emptyContent = readFileSync(TEST_FILES.EMPTY, 'utf8');
     const readme = new Readme(emptyContent).parse();
-    const nonExistentSection = readme.getSection('Table of Contents');
+    const nonExistentSection = readme.getSection(TABLE_OF_CONTENTS);
     expect(nonExistentSection).to.equal(null);
   });
 
@@ -106,8 +114,8 @@ describe('getSectionAt', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
     const newBlock = {
-      header: '## Insert Before',
-      content: ['Newly Inserted block content', ''],
+      header: INSERT_BEFORE_HEADER,
+      content: [NEWLY_INSERTED_BLOCK_CONTENT, ''],
     };
     readme.append(newBlock);
     const blockCount = readme.blocks.length;
@@ -120,7 +128,7 @@ describe('getSections', () => {
   it('should return any emtpy array for any getSections call where there are no matches.', () => {
     const headersOnlyContent = readFileSync(TEST_FILES.HEADERS_ONLY, 'utf8');
     const readme = new Readme(headersOnlyContent).parse();
-    const sections = readme.getSections('Table of Contents');
+    const sections = readme.getSections(TABLE_OF_CONTENTS);
     expect(sections.length).to.equal(3);
   });
 
@@ -169,9 +177,9 @@ describe('getSections', () => {
   it('should return value for an existing section using a RegExp', () => {
     const headersOnlyContent = readFileSync(TEST_FILES.HEADERS_ONLY, 'utf8');
     const readme = new Readme(headersOnlyContent).parse();
-    const sections = readme.getSections('Table of Contents');
+    const sections = readme.getSections(TABLE_OF_CONTENTS);
     expect(sections.length).to.equal(3);
-    expect(sections.every(({ header }) => header.includes('Table of Contents')));
+    expect(sections.every(({ header }) => header.includes(TABLE_OF_CONTENTS)));
     expect(sections.every(({ content }) => content.filter(Boolean).length === 0));
   });
 });
@@ -181,8 +189,8 @@ describe('export', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
     const noModificationExport = readme.export();
-    readme.setSection('Table of Contents', 'REPLACED CONTENT');
-    expect(readme.getSection('Table of Contents')?.content.join('\n')).to.equal('REPLACED CONTENT');
+    readme.setSection(TABLE_OF_CONTENTS, REPLACED_CONTENT);
+    expect(readme.getSection(TABLE_OF_CONTENTS)?.content.join('\n')).to.equal(REPLACED_CONTENT);
 
     const modificationExport = readme.export();
     expect(noModificationExport).not.to.equal(modificationExport);
@@ -257,8 +265,8 @@ describe('insertBefore', () => {
     const readme = new Readme(standardContent).parse();
     const previousLength = readme.blocks.length;
     const newBlock = {
-      header: '## Insert Before',
-      content: ['Newly Inserted block content', ''],
+      header: INSERT_BEFORE_HEADER,
+      content: [NEWLY_INSERTED_BLOCK_CONTENT, ''],
     };
     readme.insertBefore('# Purpose', newBlock);
     expect(readme.blocks.length).to.equal(previousLength + 1);
@@ -268,25 +276,25 @@ describe('insertBefore', () => {
     });
     expect(foundIndex).to.be.greaterThan(0);
     const blockBeforeTarget = readme.blocks[foundIndex - 1];
-    expect(blockBeforeTarget.header).to.equal('## Insert Before');
+    expect(blockBeforeTarget.header).to.equal(INSERT_BEFORE_HEADER);
 
     const foundBlock = readme.blocks.find((block) => {
-      return Readme.headerFound(block.header, '## Insert Before');
+      return Readme.headerFound(block.header, INSERT_BEFORE_HEADER);
     });
     expect(foundBlock).not.to.be.undefined;
     expect(foundBlock).to.have.property('header');
     expect(foundBlock).to.have.property('content');
     expect(foundBlock)
       .property('content')
-      .to.deep.equal(['Newly Inserted block content', '']);
+      .to.deep.equal([NEWLY_INSERTED_BLOCK_CONTENT, '']);
   });
 
   it('should not add a block before the matched content block, when the query target is an invalid match', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
     const block = {
-      header: '## Insert Before',
-      content: ['Newly Inserted block content', ''],
+      header: INSERT_BEFORE_HEADER,
+      content: [NEWLY_INSERTED_BLOCK_CONTENT, ''],
     };
 
     const previousLength = readme.blocks.length;
@@ -294,7 +302,7 @@ describe('insertBefore', () => {
     expect(readme.blocks.length).to.equal(previousLength);
 
     const foundBlock = readme.blocks.find(({ header }) => {
-      return Readme.headerFound(header, '## Insert Before');
+      return Readme.headerFound(header, INSERT_BEFORE_HEADER);
     });
     expect(foundBlock).to.be.undefined;
   });
@@ -306,8 +314,8 @@ describe('insertAfter', () => {
     const readme = new Readme(standardContent).parse();
     const previousLength = readme.blocks.length;
     const newBlock = {
-      header: '## Insert After',
-      content: ['Newly Inserted block content', ''],
+      header: INSERT_AFTER_HEADER,
+      content: [NEWLY_INSERTED_BLOCK_CONTENT, ''],
     };
     readme.insertAfter('# Purpose', newBlock);
     expect(readme.blocks.length).to.equal(previousLength + 1);
@@ -316,7 +324,7 @@ describe('insertAfter', () => {
     expect(readme.blocks.length).to.equal(previousLength + 2);
 
     const foundBlock = readme.blocks.find((block) => {
-      return Readme.headerFound(block.header, '## Insert After');
+      return Readme.headerFound(block.header, INSERT_AFTER_HEADER);
     });
 
     const foundIndex = readme.blocks.findIndex((block) => {
@@ -324,52 +332,34 @@ describe('insertAfter', () => {
     });
     expect(foundIndex).to.be.greaterThan(0);
     const blockAfterTarget = readme.blocks[foundIndex + 1];
-    expect(blockAfterTarget.header).to.equal('## Insert After');
+    expect(blockAfterTarget.header).to.equal(INSERT_AFTER_HEADER);
 
     expect(foundBlock).not.to.be.undefined;
     expect(foundBlock).to.have.property('header');
     expect(foundBlock).to.have.property('content');
     expect(foundBlock)
       .property('content')
-      .to.deep.equal(['Newly Inserted block content', '']);
+      .to.deep.equal([NEWLY_INSERTED_BLOCK_CONTENT, '']);
   });
 
   it('should fail if strict matching is enabled and the match is not an exact header match', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
     const block = {
-      header: '## Insert Before',
-      content: ['Newly Inserted block content', ''],
+      header: INSERT_BEFORE_HEADER,
+      content: [NEWLY_INSERTED_BLOCK_CONTENT, ''],
     };
     const previousLength = readme.blocks.length;
     readme.insertAfter('authors', block, true);
     expect(readme.blocks.length).to.equal(previousLength);
   });
 
-  it('should not add a block before the matched content block, when the query target is an invalid match', () => {
-    const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
-    const readme = new Readme(standardContent).parse();
-    const block = {
-      header: '## Insert Before',
-      content: ['Newly Inserted block content', ''],
-    };
-
-    const previousLength = readme.blocks.length;
-    readme.insertBefore('# Non-existent Section', block);
-    expect(readme.blocks.length).to.equal(previousLength);
-
-    const foundBlock = readme.blocks.find(({ header }) => {
-      return Readme.headerFound(header, '## Insert Before');
-    });
-    expect(foundBlock).to.be.undefined;
-  });
-
   it('should fail if strict matching is enabled and the match is not an exact header match', () => {
     const standardContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(standardContent).parse();
     const block = {
-      header: '## Insert Before',
-      content: ['Newly Inserted block content', ''],
+      header: INSERT_BEFORE_HEADER,
+      content: [NEWLY_INSERTED_BLOCK_CONTENT, ''],
     };
     const previousLength = readme.blocks.length;
 
@@ -426,15 +416,15 @@ describe('setSection', () => {
     const readme = new Readme(standardContent).parse();
     const privateLicenseBlockIndex = 5; // index includes + 1 for _root block, whereas setSectionAt doesn't.
 
-    readme.setSection('License', 'MIT License');
-    expect(readme.blocks[privateLicenseBlockIndex].content[0]).to.equal('MIT License');
+    readme.setSection('License', MIT_LICENSE);
+    expect(readme.blocks[privateLicenseBlockIndex].content[0]).to.equal(MIT_LICENSE);
 
-    readme.setSection(/^## License/, 'NS8 Proprietary 1.0 License');
-    expect(readme.blocks[privateLicenseBlockIndex].content[0]).to.equal('NS8 Proprietary 1.0 License');
+    readme.setSection(/^## License/, PROPRIETARY_LICENSE);
+    expect(readme.blocks[privateLicenseBlockIndex].content[0]).to.equal(PROPRIETARY_LICENSE);
 
     const updatedSection = readme.getSection(/^## License/);
     expect(updatedSection).not.to.be.null;
-    expect(updatedSection?.content[0]).to.equal('NS8 Proprietary 1.0 License');
+    expect(updatedSection?.content[0]).to.equal(PROPRIETARY_LICENSE);
   });
 
   it('setSection with no match should do nothing', () => {
@@ -476,11 +466,10 @@ describe('setSectionAt', () => {
     const readme = new Readme(standardContent).parse();
     const licenseBlockIndexPublic = 4;
     const preUpdateLicense = 'This project is licensed with an NS8 1.0 proprietary license.';
-    const postUpdateLicense = 'MIT License';
 
     expect(readme.getSection(/^## License/)?.content[0]).to.equal(preUpdateLicense);
-    readme.setSectionAt(licenseBlockIndexPublic, postUpdateLicense);
-    expect(readme.getSection(/^## License/)?.content[0]).to.equal(postUpdateLicense);
+    readme.setSectionAt(licenseBlockIndexPublic, MIT_LICENSE);
+    expect(readme.getSection(/^## License/)?.content[0]).to.equal(MIT_LICENSE);
   });
 
   it('Should throw when the index is out of range', () => {
