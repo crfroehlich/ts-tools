@@ -125,7 +125,7 @@ describe('getSectionAt', () => {
 });
 
 describe('getSections', () => {
-  it('should return any emtpy array for any getSections call where there are no matches.', () => {
+  it('should return any empty array for any getSections call where there are no matches.', () => {
     const headersOnlyContent = readFileSync(TEST_FILES.HEADERS_ONLY, 'utf8');
     const readme = new Readme(headersOnlyContent).parse();
     const sections = readme.getSections(TABLE_OF_CONTENTS);
@@ -153,18 +153,11 @@ describe('getSections', () => {
     expect(sections.length).to.equal(0);
   });
 
-  it('should return two entries for a duplicate header.', () => {
-    const duplicateHeadersContent = readFileSync(TEST_FILES.DUPLICATE_HEADERS, 'utf8');
+  it('Strict matching.', () => {
+    const duplicateHeadersContent = readFileSync(TEST_FILES.STANDARD, 'utf8');
     const readme = new Readme(duplicateHeadersContent).parse();
-
-    const sectionsStrictNoMatch = readme.getSections('Purpose', true);
-    expect(sectionsStrictNoMatch.length).to.equal(0);
-
-    const sectionsStrictMatchRegExp = readme.getSections(/Purpose/, true);
-    expect(sectionsStrictMatchRegExp.length).to.equal(2);
-
-    const sectionsStrictMatchString = readme.getSections('## Purpose', true);
-    expect(sectionsStrictMatchString.length).to.equal(2);
+    const sections = readme.getSections('## Purpose', true);
+    expect(sections.length).to.equal(1);
   });
 
   it('should ignore content inside of code blocks', () => {
