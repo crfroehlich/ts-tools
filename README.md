@@ -64,5 +64,4 @@ To get started, take a look at the documentation listed below:
 ## License
 
 See [License](./LICENSE)
-
 © [ns8inc](https://ns8.com)
