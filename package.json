@@ -1,7 +1,7 @@
 {
   "author": "ns8inc",
   "dependencies": {
-    "@ns8/protect-tools-bundle": "0.0.12",
+    "@ns8/protect-tools-bundle": "0.0.13",
     "cloc": "2.5.1",
     "concurrently": "5.1.0",
     "dotenv-extended": "2.7.1",
@@ -119,5 +119,5 @@
     }
   },
   "types": "dist/types/index.d.ts",
-  "version": "0.0.6"
+  "version": "0.0.7"
 }
