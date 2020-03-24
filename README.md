@@ -14,8 +14,8 @@
 To get started, take a look at the documentation listed below:
 
 
-- [Logging Client](public/en/platform/protect-tools-js/logger.md)
-- [Readme Tool](public/en/platform/protect-tools-js/readme.md)
+- [Logging Client](public\en\platform\protect-tools-js\logger.md)
+- [Readme Tool](public\en\platform\protect-tools-js\readme.md)
 
 ## `package.json` scripts
 

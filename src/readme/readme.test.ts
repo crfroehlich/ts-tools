@@ -267,9 +267,7 @@ describe('readme.insertBefore()', () => {
     expect(foundBlock).not.to.be.undefined;
     expect(foundBlock).to.have.property('header');
     expect(foundBlock).to.have.property('content');
-    expect(foundBlock)
-      .property('content')
-      .to.deep.equal(LITERALS.INSERT_BEFORE_CONTENT);
+    expect(foundBlock).property('content').to.deep.equal(LITERALS.INSERT_BEFORE_CONTENT);
   });
 
   it('should not add a block before the matched content block, when the query target is an invalid match', () => {
@@ -318,9 +316,7 @@ describe('readme.insertAfter()', () => {
     expect(foundBlock).not.to.be.undefined;
     expect(foundBlock).to.have.property('header');
     expect(foundBlock).to.have.property('content');
-    expect(foundBlock)
-      .property('content')
-      .to.equal(LITERALS.INSERT_AFTER_CONTENT);
+    expect(foundBlock).property('content').to.equal(LITERALS.INSERT_AFTER_CONTENT);
   });
 
   it('should fail if strict matching is enabled and the match is not an exact header match', () => {
@@ -480,21 +476,15 @@ describe('readme.setSection', () => {
 
     const updatedSection = readme.getSection(/^## License/);
     expect(updatedSection).not.to.be.null;
-    expect(updatedSection)
-      .property('content')
-      .to.equal(LITERALS.LICENSE_CONTENT);
+    expect(updatedSection).property('content').to.equal(LITERALS.LICENSE_CONTENT);
   });
 
   it('Should successfully return an updated section.', () => {
     const readme = new Readme(TEST_FILES.STANDARD);
     const noModificationExport = readme.export();
     readme.setSection(LITERALS.TOC_HEADER, LITERALS.REPLACED_CONTENT);
-    expect(readme.getSection(LITERALS.TOC_HEADER))
-      .property('content')
-      .to.equal(LITERALS.REPLACED_CONTENT);
-    expect(readme.getSectionAt(1))
-      .property('content')
-      .to.equal(LITERALS.REPLACED_CONTENT);
+    expect(readme.getSection(LITERALS.TOC_HEADER)).property('content').to.equal(LITERALS.REPLACED_CONTENT);
+    expect(readme.getSectionAt(1)).property('content').to.equal(LITERALS.REPLACED_CONTENT);
 
     const modificationExport = readme.export();
     expect(noModificationExport).not.to.equal(modificationExport);
