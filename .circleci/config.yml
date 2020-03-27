@@ -1,0 +1,25 @@
+jobs:
+  test:
+    docker:
+      - image: node:12
+    steps:
+      - checkout
+      - run:
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          name: Configure NPM
+      - run:
+          command: yarn
+          name: Install Dependencies
+      - run:
+          command: yarn lint
+          name: Lint
+      - run:
+          command: yarn test
+          name: Run Tests
+
+version: 2.1
+
+workflows:
+  test:
+    jobs:
+      - test
