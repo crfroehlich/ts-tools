@@ -1,9 +1,57 @@
 jobs:
+  deploy:
+    docker:
+      - image: node:12
+    steps:
+      - checkout
+      - run:
+          command: |
+            set +eo pipefail
+            if git log | head -n 2 | tail -n 1 | grep 'Author: CircleCI'; then
+              circleci step halt
+            fi
+          name: Skip if CI Made the Last Commit
+      - run:
+          command: |
+            git config user.email noreply@ns8.com
+            git config user.name 'CircleCI'
+          name: Setup Git
+      - run:
+          command: |
+            yarn config set version-tag-prefix ''
+            yarn version --patch
+          name: Bump Version
+      - run:
+          command: |
+            if ! git push --follow-tags; then
+              echo "Push failed. Please delete and re-add this CircleCI deploy key to your repo with write access:"
+              ssh-keygen -y -f ~/.ssh/id_rsa
+              exit 1
+            fi
+          name: Tag Release in GitHub
+  publish:
+    docker:
+      - image: node:12
+    steps:
+      - checkout
+      - run:
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          name: Configure NPM
+      - run:
+          name: Publish
+          command: npm publish
   test:
     docker:
       - image: node:12
     steps:
       - checkout
+      - run:
+          command: |
+            set +eo pipefail
+            if git log | head -n 2 | tail -n 1 | grep 'Author: CircleCI'; then
+              circleci step halt
+            fi
+          name: Skip if CI Made the Last Commit
       - run:
           command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           name: Configure NPM
@@ -20,6 +68,20 @@ jobs:
 version: 2.1
 
 workflows:
-  test:
+  publish:
+    jobs:
+      - publish:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+  test_and_deploy:
     jobs:
       - test
+      - deploy:
+          filters:
+            branches:
+              only: master
+          requires:
+            - test
