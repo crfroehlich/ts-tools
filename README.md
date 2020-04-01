@@ -1,18 +1,17 @@
 # @ns8/protect-tools-js
 
-[![CI](https://concourse.ns8-infrastructure.com/api/v1/teams/main/pipelines/generator-protect-integration/jobs/test/badge)](https://concourse.ns8-infrastructure.com/api/v1/teams/main/pipelines/generator-protect-integration/jobs/test/badge)
-[![CI](https://concourse.ns8-infrastructure.com/api/v1/teams/main/pipelines/protect-tools-js/jobs/test/badge?title=tests)](https://concourse.ns8-infrastructure.com/api/v1/teams/main/pipelines/protect-tools-js/jobs/test/badge?title=tests)
+[![CircleCI](https://circleci.com/gh/ns8inc/protect-tools-js.svg?style=svg&circle-token=6b0a7fe464a53289ee8ddea14f3a84b1996b5619)](https://app.circleci.com/pipelines/github/ns8inc/protect-tools-js)
 
 ## Table of Contents
 
-  + [Getting Started](#getting-started)
-  + [`package.json` scripts](#packagejson-scripts)
-  + [License](#license)
+- [Table of Contents](#table-of-contents)
+- [Getting Started](#getting-started)
+- [`package.json` scripts](#packagejson-scripts)
+- [License](#license)
 
 ## Getting Started
 
 To get started, take a look at the documentation listed below:
-
 
 - [Logging Client](public\en\platform\protect-tools-js\logger.md)
 - [Readme Tool](public\en\platform\protect-tools-js\readme.md)
