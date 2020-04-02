@@ -240,7 +240,7 @@ export class Readme {
    *
    * @returns a table of contents in string form.
    */
-  public getTocBlock(startAt = 1, indent = ''): ReadmeBlock {
+  public getTocBlock(startAt = 1, indent = '  '): ReadmeBlock {
     if (startAt < 0) {
       throw new Error(`Table of Contents insertionPoint invalid: ${startAt}`);
     }
