@@ -1,12 +1,11 @@
-# @ns8/protect-tools-js
+# General Purpose Build Tools for Protect Projects
 
 [![CircleCI](https://circleci.com/gh/ns8inc/protect-tools-js.svg?style=svg&circle-token=6b0a7fe464a53289ee8ddea14f3a84b1996b5619)](https://app.circleci.com/pipelines/github/ns8inc/protect-tools-js)
 
 ## Table of Contents
 
-- [@ns8/protect-tools-js](#ns8protect-tools-js)
+- [General Purpose Build Tools for Protect Projects](#general-purpose-build-tools-for-protect-projects)
   - [Getting Started](#getting-started)
-    - [Sub](#sub)
   - [`package.json` scripts](#packagejson-scripts)
   - [License](#license)
 
@@ -16,10 +15,6 @@ To get started, take a look at the documentation listed below:
 
 - [Logging Client](public/en/platform/protect-tools-js/logger.md)
 - [Readme Tool](public/en/platform/protect-tools-js/readme.md)
-
-### Sub
-
-This is a sub
 
 ## `package.json` scripts
 
