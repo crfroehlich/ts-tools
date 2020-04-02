@@ -30,7 +30,7 @@ const HEADERS = {
   },
 };
 
-const STANDARD_DOCS_PATH = 'public/en/platform/protect-tools-js';
+const STANDARD_DOCS_PATH = 'docs';
 
 /*
  * @param docs - a {@link ScriptDocs} object containing documentation objects describing

@@ -42,7 +42,7 @@ export class ReadmeBlock {
  */
 
 export class Readme {
-  STANDARD_DOCS_PATH = 'public/en/platform/protect-tools-js';
+  STANDARD_DOCS_PATH = 'docs';
 
   /*
    * @param line - string representing a single line from a readme content.
