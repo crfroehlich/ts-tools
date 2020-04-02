@@ -23,7 +23,7 @@ jobs:
           name: Bump Version
       - run:
           command: |
-            if ! git push --follow-tags; then
+            if ! git push -u origin master --follow-tags; then
               echo "Push failed. Please delete and re-add this CircleCI deploy key to your repo with write access:"
               ssh-keygen -y -f ~/.ssh/id_rsa
               exit 1
