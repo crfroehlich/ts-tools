@@ -63,6 +63,5 @@ dist
 .idea/
 
 # Documentation
-docs/
 .scannerwork/
 *.bak
