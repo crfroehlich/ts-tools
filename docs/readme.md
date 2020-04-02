@@ -24,7 +24,7 @@ Please submit a pull request.
 
 // read in and parse the readme into content blocks
 const readme = new Readme(content);
-const prLink= ='';
+const prLink = '';
 
 // Add a contributing block if it doesn't exist
 if (!readme.getSection(/^ *#* Contributing/)) {
