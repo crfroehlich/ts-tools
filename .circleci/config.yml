@@ -38,8 +38,14 @@ jobs:
           command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           name: Configure NPM
       - run:
-          name: Publish
+          command: yarn
+          name: Install Dependencies
+      - run:
+          command: yarn build
+          name: Build
+      - run:
           command: npm publish
+          name: Publish
   test:
     docker:
       - image: node:12
