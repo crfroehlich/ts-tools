@@ -4,9 +4,11 @@
 
 ## Table of Contents
 
-- [Getting Started](#getting-started)
-- [`package.json` scripts](#packagejson-scripts)
-- [License](#license)
+- [@ns8/protect-tools-js](#ns8protect-tools-js)
+  - [Getting Started](#getting-started)
+    - [Sub](#sub)
+  - [`package.json` scripts](#packagejson-scripts)
+  - [License](#license)
 
 ## Getting Started
 
@@ -14,6 +16,10 @@ To get started, take a look at the documentation listed below:
 
 - [Logging Client](public/en/platform/protect-tools-js/logger.md)
 - [Readme Tool](public/en/platform/protect-tools-js/readme.md)
+
+### Sub
+
+This is a sub
 
 ## `package.json` scripts
 

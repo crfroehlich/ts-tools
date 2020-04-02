@@ -209,13 +209,13 @@ describe('readme.getTocBlock()', () => {
     const toc = readme.getTocBlock();
     expect(toc.header).to.equal(`## ${LITERALS.TOC_HEADER}`);
     expect(toc.content).to.equal(
-      '  + [Header with a `tag in it`](#header-with-a-tag-in-it)\n' +
-        '  + [Sub-purpose section](#sub-purpose-section)\n' +
-        '    + [Sub-sub purpose section](#sub-sub-purpose-section)\n' +
-        '      + [`yarn` scripts](#yarn-scripts)\n' +
-        '  + [Authors](#authors)\n' +
-        '  + [Contributing](#contributing)\n' +
-        '  + [License](#license)',
+      '  - [Header with a `tag in it`](#header-with-a-tag-in-it)\n' +
+        '  - [Sub-purpose section](#sub-purpose-section)\n' +
+        '    - [Sub-sub purpose section](#sub-sub-purpose-section)\n' +
+        '      - [`yarn` scripts](#yarn-scripts)\n' +
+        '  - [Authors](#authors)\n' +
+        '  - [Contributing](#contributing)\n' +
+        '  - [License](#license)',
     );
   });
 
@@ -224,14 +224,14 @@ describe('readme.getTocBlock()', () => {
     const toc = readme.getTocBlock(0);
     expect(toc.header).to.equal(`## ${LITERALS.TOC_HEADER}`);
     expect(toc.content).to.equal(
-      '+ [Demo Repo](#demo-repo)\n' +
-        '  + [Header with a `tag in it`](#header-with-a-tag-in-it)\n' +
-        '  + [Sub-purpose section](#sub-purpose-section)\n' +
-        '    + [Sub-sub purpose section](#sub-sub-purpose-section)\n' +
-        '      + [`yarn` scripts](#yarn-scripts)\n' +
-        '  + [Authors](#authors)\n' +
-        '  + [Contributing](#contributing)\n' +
-        '  + [License](#license)',
+      '- [Demo Repo](#demo-repo)\n' +
+        '  - [Header with a `tag in it`](#header-with-a-tag-in-it)\n' +
+        '  - [Sub-purpose section](#sub-purpose-section)\n' +
+        '    - [Sub-sub purpose section](#sub-sub-purpose-section)\n' +
+        '      - [`yarn` scripts](#yarn-scripts)\n' +
+        '  - [Authors](#authors)\n' +
+        '  - [Contributing](#contributing)\n' +
+        '  - [License](#license)',
     );
   });
 

@@ -1,6 +1,6 @@
 # Readme Tool
 
-## Purpose of the `readme` Tool 
+## Purpose of the `readme` Tool
 
 The `readme` package is meant to facilitate automated creation and updates for readme files.  It's a useful tool to call via a `yarn` script, for example.
 
@@ -8,7 +8,7 @@ The `readme` package is meant to facilitate automated creation and updates for r
 
 ### Modifying an Existing Readme
 
-```javascript
+```typescript
 
 import { Readme } from './src/readme/readme';
 
@@ -24,13 +24,13 @@ Please submit a pull request.
 
 // read in and parse the readme into content blocks
 const readme = new Readme(content);
-const prLink = ``;
+const prLink= ='';
 
 // Add a contributing block if it doesn't exist
 if (!readme.getSection(/^ *#* Contributing/)) {
   readme.setSection(
     '## Contributing',
-    'Please submit a pull request <a href="https://github.com/ns8inc/protect-tools-js/pulls">here</a>.'
+    'Please submit a pull request <a href="https://github.com/ns8inc/protect-tools-js/pulls">here</a>.',
   );
 }
 
@@ -40,7 +40,7 @@ if (!readme.getSection(/^# License/)) {
 }
 
 // Generate a Table of Contents from the existing readme and insert it the title.
-if (!readme.getSection(/^ *#* Table of Contents/) {
+if (!readme.getSection(/^ *#* Table of Contents/)) {
   readme.insertAfter(/# Test Readme/, readme.getTocBlock());
 }
 

@@ -183,7 +183,7 @@ function standardize(content: string, scriptDocs: ScriptDocs, repoRoot: string, 
 
   // TOC goes last since it depends on the rest of the readme.
   if (tocSection) {
-    tocSection.content = readme.getTocBlock().content;
+    tocSection.content = readme.getTocBlock(0, '  ').content;
   } else {
     readme.appendBlock(readme.getTocBlock(), mainHeader);
   }
