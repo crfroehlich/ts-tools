@@ -43,7 +43,7 @@ const formatScriptDocs = (docs: ScriptDocs): ReadmeBlock => {
   const content = Object.keys(docs)
     .map((scriptName): string => {
       const { description } = docs[scriptName];
-      return `\`yarn ${scriptName}\`\n- ${description}\n`;
+      return `\`yarn ${scriptName}\`\n\n- ${description}\n`;
     })
     .join('\n');
 
@@ -120,7 +120,7 @@ function buildDocumentationLinksBlock({
     })
     .join('\n');
 
-  const content = `${introduction ? `${introduction}\n\n` : ''}${docLinksContent}`;
+  const content = `${introduction ? `${introduction}\n` : ''}${docLinksContent}`;
 
   return new ReadmeBlock({ header, content });
 }
