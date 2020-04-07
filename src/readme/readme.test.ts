@@ -200,7 +200,9 @@ describe('readme.toString()', () => {
 describe('readme.export()', () => {
   it('Export should be the same as the file content if it is not transformed.', () => {
     expect(new Readme(TEST_FILES.STANDARD).export()).to.equal(format(TEST_FILES.STANDARD, { parser: 'markdown' }));
-    expect(new Readme(TEST_FILES.EMPTY).export().length).to.equal(format(TEST_FILES.EMPTY, { parser: 'markdown' }).length);
+    expect(new Readme(TEST_FILES.EMPTY).export().length).to.equal(
+      format(TEST_FILES.EMPTY, { parser: 'markdown' }).length,
+    );
   });
 });
 
