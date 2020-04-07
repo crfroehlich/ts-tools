@@ -18,57 +18,19 @@ To get started, take a look at the documentation listed below:
 
 ## `package.json` scripts
 
-`yarn beautify`
-
-- Performs aesthetic operations to make the project files easier to navigate and read
-
-`yarn build`
-
-- Assembles build scripts into a single js module with type definitions
-
-`yarn build:watch`
-
-- Builds and tests concurrently while you develop
-
-`yarn clean`
-
-- Purges all temporary folders
-
-`yarn count`
-
-- Counts lines of source code
-
-`yarn docs:sync-readme`
-
-- Creates or updates a new readme with a standard set of readme sections, including a toc, yarn script documention, links to repo documentation files and an NS8 license
-
-`yarn generate:exports`
-
-- Generates index.ts files for all exports recursively in the 'src' folder
-
-`yarn lint`
-
-- Lints the codebase
-
-`yarn lint:docs`
-
-- Lints the code documentation
-
-`yarn lint:fix`
-
-- Lints the codebase and automatically fixes what it can
-
-`yarn test`
-
-- Runs tests and calculates test coverage
-
-`yarn test:fast`
-
-- Runs tests in parallel and calculates test coverage
-
-`yarn test:watch`
-
-- Re-runs tests as you develop
+- `yarn beautify`: Performs aesthetic operations to make the project files easier to navigate and read
+- `yarn build`: Assembles build scripts into a single js module with type definitions
+- `yarn build:watch`: Builds and tests concurrently while you develop
+- `yarn clean`: Purges all temporary folders
+- `yarn count`: Counts lines of source code
+- `yarn docs:sync-readme`: Creates or updates a new readme with a standard set of readme sections, including a toc, yarn script documention, links to repo documentation files and an NS8 license
+- `yarn generate:exports`: Generates index.ts files for all exports recursively in the 'src' folder
+- `yarn lint`: Lints the codebase
+- `yarn lint:docs`: Lints the code documentation
+- `yarn lint:fix`: Lints the codebase and automatically fixes what it can
+- `yarn test`: Runs tests and calculates test coverage
+- `yarn test:fast`: Runs tests in parallel and calculates test coverage
+- `yarn test:watch`: Re-runs tests as you develop
 
 ## License
 

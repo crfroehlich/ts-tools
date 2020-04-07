@@ -1,6 +1,7 @@
 /* eslint-disable sonarjs/no-duplicated-branches */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-lonely-if */
+import { format } from 'prettier';
 import { Block, Query } from './types';
 
 export type IndexedBlocks = Map<string, ReadmeBlock[]>;
@@ -275,7 +276,8 @@ export class Readme {
     }
 
     const justRootBlock = this.blocks.length === 1;
-    return justRootBlock ? this.blocks[0].content : `${output.trim()}\n`;
+    const ret = justRootBlock ? this.blocks[0].content : `${output.trim()}\n`;
+    return format(ret, { parser: 'markdown' });
   }
 
   /* Implements toString method so that the readme is coerced properly

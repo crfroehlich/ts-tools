@@ -1,14 +1,24 @@
-import { readFileSync, readdirSync, statSync, writeFileSync } from 'fs';
-import { isAbsolute, join, relative, resolve } from 'path';
-import * as stdio from 'stdio';
+import { readFileSync, writeFileSync } from 'fs';
+import glob from 'glob';
+import { isAbsolute, join, resolve } from 'path';
 import { Readme, ReadmeBlock } from './readme';
 import { DocLinksParams, ScriptDocs } from './types';
+import { GLOB_OPTIONS } from '../env/files';
+import { LogLevel, LogOutput, getLogger } from '../logger';
 
+const log = getLogger(
+  {
+    logLevel: LogLevel.INFO,
+    serviceName: 'js-tools/standardize-readme',
+    transports: [LogOutput.CONSOLE],
+  },
+  true,
+);
 /*
  * string field is for inserting new sections.
  * regex field is for matching sections.
  */
-const HEADERS = {
+export const HEADERS = {
   FIRST: {
     RE: /^ *#* /,
   },
@@ -30,20 +40,18 @@ const HEADERS = {
   },
 };
 
-const STANDARD_DOCS_PATH = 'docs';
-
 /*
  * @param docs - a {@link ScriptDocs} object containing documentation objects describing
  * package.json scripts.
  *
  * @returns a {@link ReadmeBlock} whose content is a formatted {@link ScriptDocs}.
  */
-const formatScriptDocs = (docs: ScriptDocs): ReadmeBlock => {
+export const formatScriptDocs = (docs: ScriptDocs): ReadmeBlock => {
   const header = HEADERS.SCRIPTS.STRING;
   const content = Object.keys(docs)
     .map((scriptName): string => {
       const { description } = docs[scriptName];
-      return `\`yarn ${scriptName}\`\n\n- ${description}\n`;
+      return `- \`yarn ${scriptName}\`: ${description}`;
     })
     .join('\n');
 
@@ -54,74 +62,47 @@ const formatScriptDocs = (docs: ScriptDocs): ReadmeBlock => {
 };
 
 /*
- * @returns a string path to the repository root, which is used in building links to documentation
- * and referencing the standard package.json and README.md locations.
- */
-
-function getRepoRoot(): string {
-  const argsDef = {
-    'repo-root': {
-      key: 'r',
-      description: 'root path for your repository (used to find the standard documentation directory)',
-      required: true,
-      multiple: true,
-    },
-  };
-
-  const args = stdio.getopt(argsDef);
-
-  if (!args || !args['repo-root'] || typeof args['repo-root'] !== 'string') {
-    throw new Error('Required argument: -r, --repo-root');
-  }
-
-  return args['repo-root'];
-}
-
-/*
  * @params {@link DocLinksParams} - a doc links section header, an introductory paragraph, and a path to the repository.
  * @returns a {@link ReadmeBlock} of relative links to the documents in the standardized documentation path
  */
-function buildDocumentationLinksBlock({
+export function buildDocumentationLinksBlock({
   header = '## Getting Started',
   introduction = '',
-  repoRoot = null,
 }: DocLinksParams): ReadmeBlock {
-  if (!repoRoot) {
-    throw new Error('null repo root!');
-  }
-
-  const relativePath = relative(repoRoot, STANDARD_DOCS_PATH);
-  const docFilepaths = readdirSync(relativePath, 'utf8')
-    .map((filename) => join(relativePath, filename))
-    .filter((fullpath) => fullpath.endsWith('.md') && statSync(fullpath).isFile());
-
-  const docLinksContent = docFilepaths
-    .map((filepath) => {
-      let content;
-
-      try {
-        content = readFileSync(filepath, 'utf8');
-      } catch (e) {
-        throw new Error(`Error reading file: ${filepath}: \n${e}`);
-      }
-
+  const docLinksContent: string[] = [];
+  const files = glob.sync('**/*.md', GLOB_OPTIONS);
+  files.forEach((fileName) => {
+    try {
+      const content = readFileSync(fileName, 'utf-8');
       const lines = content.split('\n');
       const firstHeader = lines.find((line) => /^ *#/.test(line)) || '';
-
-      return {
-        firstHeader: firstHeader.trim(),
-        filepath,
-      };
-    })
-    .filter((fileData) => fileData.firstHeader.length > 0)
-    .map(({ filepath, firstHeader }) => {
       const titleParts = firstHeader.split(' ').slice(1);
-      return `- [${titleParts.join(' ')}](${filepath})`;
-    })
-    .join('\n');
-
-  const content = `${introduction ? `${introduction}\n` : ''}${docLinksContent}`;
-
+      if (fileName.toLowerCase() !== 'readme.md') {
+        const depth = fileName.split('/').length;
+        let link = `- [${titleParts.join(' ')}](${fileName})`;
+        switch (depth) {
+          case 2:
+            link = link.padStart(2);
+            break;
+          case 3:
+            link = link.padStart(4);
+            break;
+          case 4:
+            link = link.padStart(6);
+            break;
+          case 5:
+            link = link.padStart(8);
+            break;
+          default:
+            break;
+        }
+        docLinksContent.push(link);
+      }
+    } catch (e) {
+      log.error(e.toString());
+    }
+  });
+  const content = `${introduction ? `${introduction}\n` : ''}${docLinksContent.join('\n')}`;
   return new ReadmeBlock({ header, content });
 }
 
@@ -132,8 +113,8 @@ function buildDocumentationLinksBlock({
  *
  * @returns an exported {@link Readme} instance.
  */
-
-function standardize(content: string, scriptDocs: ScriptDocs, repoRoot: string, repoName: string): string {
+/* eslint-disable sonarjs/cognitive-complexity */
+export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, repoRoot?: string): string {
   /*
    * Check for the presence of standard sections.
    * If they exist, update them. If not, append them.
@@ -144,41 +125,43 @@ function standardize(content: string, scriptDocs: ScriptDocs, repoRoot: string, 
    *   license
    *   table of contents
    */
-
   const readme = new Readme(content);
   let mainHeader = readme.getSection(/^ *# /);
   const tocSection = readme.getSection(HEADERS.TOC.RE);
-  const gettingStartedSection = readme.getSection(HEADERS.GETTING_STARTED.RE);
-  const scriptDocsSection = readme.getSection(HEADERS.SCRIPTS.RE);
-  const docLinksBlock = buildDocumentationLinksBlock({
-    header: HEADERS.GETTING_STARTED.STRING,
-    introduction: 'To get started, take a look at the documentation listed below:\n',
-    repoRoot,
-  });
-  const licenseSection = readme.getSection(HEADERS.LICENSE.RE);
-
-  if (!mainHeader) {
-    mainHeader = new ReadmeBlock({
-      header: `# ${repoName}`,
+  if (repoRoot) {
+    const gettingStartedSection = readme.getSection(HEADERS.GETTING_STARTED.RE);
+    const scriptDocsSection = readme.getSection(HEADERS.SCRIPTS.RE);
+    const docLinksBlock = buildDocumentationLinksBlock({
+      header: HEADERS.GETTING_STARTED.STRING,
+      introduction: 'To get started, take a look at the documentation listed below:\n',
+      repoRoot,
     });
-    readme.prependBlock(mainHeader);
-  }
+    const licenseSection = readme.getSection(HEADERS.LICENSE.RE);
 
-  if (gettingStartedSection) {
-    gettingStartedSection.content = docLinksBlock.content;
-  } else {
-    readme.appendBlock(docLinksBlock, mainHeader);
-  }
+    if (!mainHeader) {
+      mainHeader = new ReadmeBlock({
+        header: `# ${title}`,
+      });
+      readme.prependBlock(mainHeader);
+    }
 
-  if (scriptDocsSection) {
-    scriptDocsSection.content = formatScriptDocs(scriptDocs).content;
-  } else {
-    const scriptDocsBlock = formatScriptDocs(scriptDocs);
-    readme.appendBlock(scriptDocsBlock, gettingStartedSection);
-  }
+    if (gettingStartedSection) {
+      gettingStartedSection.content = docLinksBlock.content;
+    } else {
+      readme.appendBlock(docLinksBlock, mainHeader);
+    }
+    if (scriptDocs) {
+      if (scriptDocsSection) {
+        scriptDocsSection.content = formatScriptDocs(scriptDocs).content;
+      } else {
+        const scriptDocsBlock = formatScriptDocs(scriptDocs);
+        readme.appendBlock(scriptDocsBlock, gettingStartedSection);
+      }
+    }
 
-  if (!licenseSection) {
-    readme.appendBlock(Readme.getLicenseBlock());
+    if (!licenseSection) {
+      readme.appendBlock(Readme.getLicenseBlock());
+    }
   }
 
   // TOC goes last since it depends on the rest of the readme.
@@ -194,28 +177,31 @@ function standardize(content: string, scriptDocs: ScriptDocs, repoRoot: string, 
 /*
  * Reads the package.json and README.md files, and generates a standardized {@link Readme}, exports it and writes to disk.
  */
-async function main(): Promise<void> {
-  /*
-   * Assumption: README.md and package.json are located in the ${repoRoot} directory
-   */
-  const repoRoot = getRepoRoot();
+export async function main(): Promise<void> {
+  const repoRoot = __dirname;
   const resolvedRepoRoot = isAbsolute(repoRoot) ? repoRoot : resolve(join(process.cwd(), repoRoot));
-  const readmePath = join(resolvedRepoRoot, 'README.md');
-  let readmeContent = '';
-  try {
-    readmeContent = readFileSync(readmePath, 'utf8');
-  } catch (e) {
-    if (e.code === 'ENOENT') {
-      readmeContent = '';
-    } else {
-      throw new Error(e);
-    }
-  }
-  const packageJsonContent = JSON.parse(readFileSync(join(resolvedRepoRoot, 'package.json'), 'utf8'));
+  const packageJsonContent = JSON.parse(readFileSync('package.json', 'utf8'));
   const scriptDocs = packageJsonContent.scriptsDocumentation || {};
   const repoName = (packageJsonContent.name || 'README').trim();
 
-  writeFileSync(readmePath, standardize(readmeContent, scriptDocs, repoRoot, repoName));
+  glob('**/*.md', GLOB_OPTIONS, (er: Error | null, files: string[]) => {
+    if (er) {
+      log.error(er.toString());
+    }
+    files.forEach((fileName) => {
+      log.info(`Standardized ${fileName}`);
+      try {
+        const readmeContent = readFileSync(fileName, 'utf-8');
+        if (fileName.toLowerCase() === 'readme.md') {
+          writeFileSync(fileName, standardize(readmeContent, repoName, scriptDocs, resolvedRepoRoot));
+        } else {
+          writeFileSync(fileName, standardize(readmeContent, fileName));
+        }
+      } catch (e) {
+        log.error(e.toString());
+      }
+    });
+  });
 }
 
 if (__filename === process?.mainModule?.filename) {
