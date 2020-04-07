@@ -116,5 +116,5 @@
     }
   },
   "types": "dist/types/index.d.ts",
-  "version": "0.0.9"
+  "version": "0.0.10"
 }
