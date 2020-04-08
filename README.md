@@ -23,7 +23,7 @@ To get started, take a look at the documentation listed below:
 - `yarn build:watch`: Builds and tests concurrently while you develop
 - `yarn clean`: Purges all temporary folders
 - `yarn count`: Counts lines of source code
-- `yarn docs:sync-readme`: Creates or updates a new readme with a standard set of readme sections, including a toc, yarn script documention, links to repo documentation files and an NS8 license
+- `yarn docs:standardize`: Creates or updates a new readme with a standard set of readme sections, including a toc, yarn script documention, links to repo documentation files and an NS8 license
 - `yarn generate:exports`: Generates index.ts files for all exports recursively in the 'src' folder
 - `yarn lint`: Lints the codebase
 - `yarn lint:docs`: Lints the code documentation
