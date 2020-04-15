@@ -169,7 +169,7 @@ export class Readme {
    *
    * @returns a {@link Readme} instance.
    */
-
+  /* eslint-disable-next-line complexity */
   public static parse(content = ''): ReadmeBlock[] {
     const lines = content.split('\n').filter(Boolean);
     const blocks: ReadmeBlock[] = [];
@@ -323,6 +323,7 @@ export class Readme {
    *
    * @returns a list of matched content {@link Block}s.
    */
+  /* eslint-disable-next-line complexity */
   getSections(target: Query, strict = false): ReadmeBlock[] {
     const blocks: ReadmeBlock[] = [];
 

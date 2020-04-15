@@ -71,6 +71,7 @@ export function buildDocumentationLinksBlock({
 }: DocLinksParams): ReadmeBlock {
   const docLinksContent: string[] = [];
   const files = glob.sync('**/*.md', GLOB_OPTIONS);
+  /* eslint-disable-next-line complexity */
   files.forEach((fileName) => {
     try {
       const content = readFileSync(fileName, 'utf-8');
@@ -113,7 +114,7 @@ export function buildDocumentationLinksBlock({
  *
  * @returns an exported {@link Readme} instance.
  */
-/* eslint-disable sonarjs/cognitive-complexity */
+/* eslint-disable-next-line complexity, sonarjs/cognitive-complexity */
 export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, repoRoot?: string): string {
   /*
    * Check for the presence of standard sections.
