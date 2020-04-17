@@ -71,6 +71,8 @@ export function buildDocumentationLinksBlock({
 }: DocLinksParams): ReadmeBlock {
   const docLinksContent: string[] = [];
   const files = glob.sync('**/*.md', GLOB_OPTIONS);
+
+  let lastPath = '';
   /* eslint-disable-next-line complexity */
   files.forEach((fileName) => {
     try {
@@ -79,24 +81,13 @@ export function buildDocumentationLinksBlock({
       const firstHeader = lines.find((line) => /^ *#/.test(line)) || '';
       const titleParts = firstHeader.split(' ').slice(1);
       if (fileName.toLowerCase() !== 'readme.md') {
-        const depth = fileName.split('/').length;
-        let link = `- [${titleParts.join(' ')}](${fileName})`;
-        switch (depth) {
-          case 2:
-            link = link.padStart(2);
-            break;
-          case 3:
-            link = link.padStart(4);
-            break;
-          case 4:
-            link = link.padStart(6);
-            break;
-          case 5:
-            link = link.padStart(8);
-            break;
-          default:
-            break;
+        const segments = fileName.split('/');
+        const path = segments.slice(0, segments.length - 1).join('/');
+        if (path !== lastPath) {
+          lastPath = path;
+          docLinksContent.push(`- ${lastPath}`);
         }
+        let link = `  - [${titleParts.join(' ')}](${fileName})`;
         docLinksContent.push(link);
       }
     } catch (e) {
@@ -167,9 +158,15 @@ export function standardize(content: string, title: string, scriptDocs?: ScriptD
 
   // TOC goes last since it depends on the rest of the readme.
   if (tocSection) {
-    tocSection.content = readme.getTocBlock(0, '  ').content;
+    const toc = readme.getTocBlock(0, '  ');
+    if (toc) {
+      tocSection.content = toc.content;
+    }
   } else {
-    readme.appendBlock(readme.getTocBlock(), mainHeader);
+    const toc = readme.getTocBlock();
+    if (toc) {
+      readme.appendBlock(toc, mainHeader);
+    }
   }
 
   return readme.export();

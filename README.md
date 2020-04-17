@@ -13,8 +13,9 @@
 
 To get started, take a look at the documentation listed below:
 
-- [Logging Client](docs/logger.md)
-- [Readme Tool](docs/readme.md)
+- docs
+  - [Logging Client](docs/logger.md)
+  - [Readme Tool](docs/readme.md)
 
 ## `package.json` scripts
 

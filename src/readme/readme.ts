@@ -241,7 +241,7 @@ export class Readme {
    *
    * @returns a table of contents in string form.
    */
-  public getTocBlock(startAt = 1, indent = '  '): ReadmeBlock {
+  public getTocBlock(startAt = 1, indent = '  '): ReadmeBlock | undefined {
     if (startAt < 0) {
       throw new Error(`Table of Contents insertionPoint invalid: ${startAt}`);
     }
@@ -256,8 +256,9 @@ export class Readme {
         return `${Readme.repeat(indent, indentCount)}- ${linkedHeader}`;
       })
       .join('\n');
-
-    return new ReadmeBlock({ header: '## Table of Contents', content });
+    if (content?.length > 1) {
+      return new ReadmeBlock({ header: '## Table of Contents', content });
+    }
   }
 
   /*
