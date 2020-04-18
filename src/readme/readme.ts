@@ -1,28 +1,41 @@
 /* eslint-disable sonarjs/no-duplicated-branches */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-lonely-if */
-import { format } from 'prettier';
+import { format, Options, } from 'prettier';
 import { Block, Query } from './types';
 
+/**
+ * @public
+ */
 export type IndexedBlocks = Map<string, ReadmeBlock[]>;
 
-/*
+const prettierConfig: Options = {
+  parser: 'markdown',
+  singleQuote: true,
+  trailingComma: 'all',
+  printWidth: 120,
+  arrowParens: 'always',
+  useTabs: false,
+};
+
+/**
  * The ReadmeBlock represents the header and the content of a Readme section.
  * It exists to provide a way for the user to use methods returning {@link ReadmeBlock}
  * with the {@link Readme} instance.
+ * @public
  */
 export class ReadmeBlock {
-  /*
+  /**
    * A parsed Markdown header.
    */
   header: string;
 
-  /*
+  /**
    * A parsed Markdown section.
    */
   content: string;
 
-  /*
+  /**
    * @param block - an object conforming to the {@link Block} interface
    */
   constructor(block: Block) {
@@ -30,7 +43,7 @@ export class ReadmeBlock {
     this.content = block.content || '';
   }
 
-  /*
+  /**
    * @returns a string formatting the combination of the header and the content lines.
    */
   toString(): string {
@@ -40,19 +53,19 @@ export class ReadmeBlock {
 
 /**
  * The Readme class represents a markdown README and provides an API for programmatic transformations of it.
+ * @public
  */
-
 export class Readme {
   STANDARD_DOCS_PATH = 'docs';
 
-  /*
+  /**
    * @param line - string representing a single line from a readme content.
    *
    * @returns a boolean indicating whether the readme line is a header
    */
   public static isHeader = (line: string): boolean => /^ *#+ /.test(line);
 
-  /*
+  /**
    * @param line - string representing a single line from a readme content.
    *
    * @returns a boolean indicating whether the readme line is a code start tag.
@@ -66,7 +79,7 @@ export class Readme {
    */
   public static isCodeEndTag = (line: string): boolean => /^ *``` *$/.test(line);
 
-  /*
+  /**
    * @param block - a {@link Block} object representing a content block in a parsed readme file.
    *
    * @returns a boolean indicating whether the readme line is a code end tag.
@@ -80,7 +93,7 @@ export class Readme {
    */
   public static sanitize = (line: string): string => line.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/g, ''); // ascii-centric
 
-  /*
+  /**
    * @param s - a string to be repeated
    * @param count - the number of times a string should be repeated.
    *
@@ -88,7 +101,7 @@ export class Readme {
    */
   public static repeat = (s: string, count: number): string => [...Array(count).keys()].map(() => s).join('');
 
-  /*
+  /**
    * @param header - a string representing a readme content section header.
    * @param query - a {@link Query} object
    * @param strict - a boolean flag to enable strict string matching.
@@ -109,7 +122,7 @@ export class Readme {
     return false;
   }
 
-  /*
+  /**
    * @param textParts - a list of strings that are used to build a table of contents entry that links to a content section
    *
    * @returns a string representing a markdown anchor tag to a link in the same document.
@@ -118,7 +131,7 @@ export class Readme {
     return `[${textParts.join(' ')}](#${Readme.sanitize(textParts.join('-')).toLowerCase()})`;
   };
 
-  /*
+  /**
    * Generates a content block with an NS8 proprietary license.
    * @param heading - type of heading to use for the license block.
    * @returns a {@link ReadmeBlock}
@@ -130,7 +143,7 @@ export class Readme {
     });
   }
 
-  /*
+  /**
    * @param content - a string representing an unparsed section
    * @returns a parsed readme section as a {@link ReadmeBlock}
    */
@@ -140,7 +153,7 @@ export class Readme {
     return blocks[1];
   }
 
-  /*
+  /**
    * readme content
    */
   content = '';
@@ -150,12 +163,12 @@ export class Readme {
    */
   blocks: ReadmeBlock[] = [];
 
-  /*
+  /**
    * A map of {@link Content} blocks.
    */
   indexedBlocks: IndexedBlocks = new Map();
 
-  /*
+  /**
    * @param content - readme content as a string.
    */
   constructor(content = '') {
@@ -163,10 +176,10 @@ export class Readme {
     this.index();
   }
 
-  /*
+  /**
    * @param content - readme content as string, to be parsed into {@link ReadmeBlock}s.
    * Parses the readme content and returns a Readme instance for chaining.
-   *
+   * @public
    * @returns a {@link Readme} instance.
    */
   /* eslint-disable-next-line complexity */
@@ -212,10 +225,10 @@ export class Readme {
     return blocks;
   }
 
-  /*
+  /**
    * Indexes {@link Block}s by header to support efficient querying.
+   * @public
    */
-
   public index(): void {
     const indexed: IndexedBlocks = new Map();
 
@@ -232,10 +245,10 @@ export class Readme {
     this.indexedBlocks = indexed;
   }
 
-  /*
+  /**
    * Generates a table of contents for a specified subset of sections, to avoid
    * including the readme top level sections, and to provide greater user control.
-   *
+   * @public
    * @param startAt - the index of blocks to start parsing for the table of contents
    * @param indent - a string used to pad indentations for the list indentations.
    *
@@ -278,10 +291,10 @@ export class Readme {
 
     const justRootBlock = this.blocks.length === 1;
     const ret = justRootBlock ? this.blocks[0].content : `${output.trim()}\n`;
-    return format(ret, { parser: 'markdown' });
+    return format(ret, prettierConfig);
   }
 
-  /* Implements toString method so that the readme is coerced properly
+  /** Implements toString method so that the readme is coerced properly
    * when stringified.
    *
    * @returns a string representing the entire readme, post any transformations.
@@ -290,7 +303,7 @@ export class Readme {
     return this.export();
   }
 
-  /*
+  /**
    * Get a content parsed block by index.
    *
    * @param index - index of block in list of parsed content blocks.
@@ -304,7 +317,7 @@ export class Readme {
     return this.blocks[index];
   }
 
-  /*
+  /**
    * Find a single content (non-code) block by header.
    *
    * @param content - a {@link Block} object to insert before a matched content header.
@@ -316,7 +329,7 @@ export class Readme {
     return this.getSections(target, strict)[0] || null;
   }
 
-  /*
+  /**
    * Find content blocks by header.
    *
    * @param content - a {@link Block} object to insert before a matched content header.
@@ -345,8 +358,7 @@ export class Readme {
     return blocks;
   }
 
-  /*
-  /*
+  /**
    * Parses content and adds it as a block to the end of the readme.
    * @param content - a string representing an unparsed readme section
    */
@@ -356,7 +368,7 @@ export class Readme {
     this.index();
   }
 
-  /*
+  /**
    * Parses content and adds it as a block to the beginning of the readme.
    * @param content - a string representing an unparsed readme section
    */
@@ -366,7 +378,7 @@ export class Readme {
     this.index();
   }
 
-  /*
+  /**
    * Appends content at end of the readme content list.
    *
    * @param block - a {@link Block} object to insert before a matched content header.
@@ -385,7 +397,7 @@ export class Readme {
     }
   }
 
-  /*
+  /**
    * Prepends content to the beginning of the readme content list.
    *
    * @param block - a {@link Block} object to insert before a matched content header.
@@ -404,7 +416,7 @@ export class Readme {
     }
   }
 
-  /*
+  /**
    * Inserts the content after a matching content block.
    *
    * @param target - a {@link Query} object to match a content section.
@@ -423,7 +435,7 @@ export class Readme {
     this.index();
   }
 
-  /*
+  /**
    * Inserts the content after a matching content block.
    *
    * @param target - a {@link Query} object to match a content section.
@@ -442,7 +454,7 @@ export class Readme {
     this.index();
   }
 
-  /*
+  /**
    * Set the first found section (targeted by string/regex) to the supplied content
    *
    * @param target - a {@link Query} object to match a content section for replacement.
@@ -457,7 +469,7 @@ export class Readme {
     }
   }
 
-  /*
+  /**
    * Set the section content at the supplied index. If the index is out of range, throw an error.
    *
    * @param index - index at which to set a section's content.

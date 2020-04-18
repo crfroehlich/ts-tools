@@ -1,11 +1,17 @@
 {
   "author": "ns8inc",
   "dependencies": {
+    "@microsoft/api-documenter": "7.7.18",
+    "@microsoft/api-extractor": "7.7.13",
+    "@ns8/protect-tools-lint": "0.0.7",
     "cloc": "2.5.1",
     "concurrently": "5.1.0",
+    "create-ts-index": "1.13.2",
     "dotenv-extended": "2.8.0",
+    "eslint-plugin-prettier": "3.1.3",
     "mocha-parallel-tests": "2.3.0",
     "prettier": "2.0.4",
+    "prompts": "2.3.2",
     "sorted-json": "0.2.6",
     "stdio": "^2.1.1",
     "ts-node": "8.8.2",
@@ -14,7 +20,6 @@
   },
   "description": "NS8 Protect JavaScript project providing build tooling",
   "devDependencies": {
-    "@ns8/protect-tools-lint": "0.0.7",
     "@types/chai": "4.2.11",
     "@types/chai-as-promised": "7.1.2",
     "@types/format-util": "1.0.1",
@@ -25,15 +30,11 @@
     "@types/winston": "2.4.4",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
-    "create-ts-index": "1.13.2",
-    "eslint-plugin-prettier": "3.1.3",
     "husky": "4.2.5",
     "markdownlint-cli": "^0.22.0",
     "mocha": "7.1.1",
     "nyc": "15.0.1",
-    "ts-mocha": "7.0.0",
-    "typedoc": "0.17.4",
-    "typedoc-plugin-markdown": "2.2.17"
+    "ts-mocha": "7.0.0"
   },
   "files": [
     "dist"
@@ -48,16 +49,19 @@
   },
   "scripts": {
     "beautify": "ts-node ./src/sortJson/sortJson.ts",
-    "build": "yarn clean && yarn generate:exports && yarn beautify && yarn docs:standardize && tsc -d --outDir dist",
+    "build": "yarn clean && yarn generate:exports && tsc -d --outDir dist && yarn beautify && yarn docs:all",
     "build:watch": "concurrently \"yarn build\" \"yarn test:watch\"",
-    "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp",
+    "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp temp api",
     "count": "cloc src/",
+    "docs:all": "yarn docs:standardize && yarn docs:api && yarn docs:api:markdown",
+    "docs:api": "ts-node ./src/docs/api.ts",
+    "docs:api:markdown": "ts-node ./src/docs/apiDocs.ts",
     "docs:standardize": "ts-node src/readme/standardizeReadme.ts",
     "generate:exports": "yarn cti create ./src -w",
     "lint": "yarn eslint -c node_modules/@ns8/protect-tools-lint/eslintrc.yml src/**/*.ts docs/**/*.md",
     "lint:docs": "markdownlint . --ignore node_modules/",
     "lint:fix": "yarn eslint -c node_modules/@ns8/protect-tools-lint/eslintrc.yml src/**/*.ts --fix",
-    "test": "nyc --nycrc-path node_modules/@ns8/protect-tools-lint/nycrc.yml mocha --reporter spec src/**/*.test.ts",
+    "test": "nyc --nycrc-path node_modules/@ns8/protect-tools-lint/nycrc.yml mocha --reporter spec src/**/*.test.ts && yarn count",
     "test:fast": "nyc --nycrc-path node_modules/@ns8/protect-tools-lint/nycrc.yml mocha-parallel-tests src/**/*.test.ts",
     "test:watch": "nodemon --exec nyc --nycrc-path node_modules/@ns8/protect-tools-lint/nycrc.yml mocha src/**/*.test.ts"
   },

@@ -15,6 +15,7 @@ To get started, take a look at the documentation listed below:
 
 - docs
   - [Logging Client](docs/logger.md)
+  - [API Report File for "@ns8/protect-tools-js"](docs/protect-tools-js.api.md)
   - [Readme Tool](docs/readme.md)
 
 ## `package.json` scripts

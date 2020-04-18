@@ -14,9 +14,10 @@ const log = getLogger(
   },
   true,
 );
-/*
+/**
  * string field is for inserting new sections.
  * regex field is for matching sections.
+ * @public
  */
 export const HEADERS = {
   FIRST: {
@@ -40,10 +41,10 @@ export const HEADERS = {
   },
 };
 
-/*
+/**
  * @param docs - a {@link ScriptDocs} object containing documentation objects describing
  * package.json scripts.
- *
+ * @public
  * @returns a {@link ReadmeBlock} whose content is a formatted {@link ScriptDocs}.
  */
 export const formatScriptDocs = (docs: ScriptDocs): ReadmeBlock => {
@@ -61,8 +62,9 @@ export const formatScriptDocs = (docs: ScriptDocs): ReadmeBlock => {
   });
 };
 
-/*
- * @params {@link DocLinksParams} - a doc links section header, an introductory paragraph, and a path to the repository.
+/**
+ * @param {@link DocLinksParams} - a doc links section header, an introductory paragraph, and a path to the repository.
+ * @public
  * @returns a {@link ReadmeBlock} of relative links to the documents in the standardized documentation path
  */
 export function buildDocumentationLinksBlock({
@@ -98,16 +100,16 @@ export function buildDocumentationLinksBlock({
   return new ReadmeBlock({ header, content });
 }
 
-/*
+/**
  * @param content - readme text content.
  * @param scriptDocs - a {@link ScriptDocs} object containing documentation on package.json scripts.
- * @ param repoName - the name of the repository, used as a fallback for the top-level readme header if it's missing.
- *
+ * @param repoName - the name of the repository, used as a fallback for the top-level readme header if it's missing.
+ * @public
  * @returns an exported {@link Readme} instance.
  */
 /* eslint-disable-next-line complexity, sonarjs/cognitive-complexity */
 export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, repoRoot?: string): string {
-  /*
+  /**
    * Check for the presence of standard sections.
    * If they exist, update them. If not, append them.
    * Order of appends should be:
@@ -172,8 +174,9 @@ export function standardize(content: string, title: string, scriptDocs?: ScriptD
   return readme.export();
 }
 
-/*
+/**
  * Reads the package.json and README.md files, and generates a standardized {@link Readme}, exports it and writes to disk.
+ * @public
  */
 export async function main(): Promise<void> {
   const repoRoot = __dirname;

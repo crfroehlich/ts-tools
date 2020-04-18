@@ -28,19 +28,20 @@ const defaultCallback = (er: Error | null, files: string[]): void => {
       try {
         json = JSON.parse(file);
       } catch (e) {
-        log.error(`Error: parsing ${file}.`);
-        throw new Error(e);
+        throw e;
       }
       const sorted = sortedJson.sortify(json);
       writeFileSync(fileName, JSON.stringify(sorted, null, 2));
       log.info(`Alpha-sorted ${fileName} JSON file`);
     } catch (err) {
-      log.error(`${fileName}: failed`);
-      log.error(err);
+      log.error(`Error: parsing ${fileName}. Message: ${err.message}`);
     }
   });
 };
 
+/**
+ * @public
+ */
 export const sortJson = (
   path: string = defaultPath,
   options: GlobOptions = GLOB_OPTIONS,
