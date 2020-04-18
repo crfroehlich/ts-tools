@@ -9,7 +9,7 @@ const extractorConfig: ExtractorConfig = ExtractorConfig.loadFileAndPrepare(apiE
 /**
  * Uses @microsoft/api-extractor to produce API documentation for this project
  * @remarks API Documentation generator
- * 
+ *
  * @public
  */
 export const generateApi = (): void => {
