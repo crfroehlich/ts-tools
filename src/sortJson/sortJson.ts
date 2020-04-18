@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { LogLevel, LogOutput, getLogger } from '../logger';
 import { GLOB_OPTIONS, GlobOptions, globCallback } from '../env/files';
 import { loadEnv } from '../env/loadEnv';
+
 const sortedJson = require('sorted-json');
 
 const log = getLogger(
@@ -19,6 +20,7 @@ const env = loadEnv();
 // Sort all the JSON files to improve readability and reduce conflicts
 const defaultPath = '**/*.json';
 
+/* eslint-disable-next-line complexity, sonarjs/cognitive-complexity */
 const defaultCallback = (er: Error | null, files: string[]): void => {
   if (er) {
     log.error(er.toString());
@@ -26,12 +28,7 @@ const defaultCallback = (er: Error | null, files: string[]): void => {
   files.forEach((fileName) => {
     try {
       const file = readFileSync(fileName, 'utf-8');
-      let json: any;
-      try {
-        json = JSON.parse(file);
-      } catch (e) {
-        throw e;
-      }
+      const json: any = JSON.parse(file);
       if (fileName === 'package.json') {
         if (json.scripts) {
           if (!json.scriptsDocumentation) {
@@ -42,8 +39,8 @@ const defaultCallback = (er: Error | null, files: string[]): void => {
             if (!json.scriptsDocumentation[key]) {
               json.scriptsDocumentation[key] = {
                 description: `Please document the <${key}> script.`,
-                dev: true
-              }
+                dev: true,
+              };
             }
           });
           const docKeys = Object.keys(json.scriptsDocumentation);
@@ -60,16 +57,16 @@ const defaultCallback = (er: Error | null, files: string[]): void => {
         envKeys.forEach((key) => {
           if (!json.envDocumentation[key]) {
             json.envDocumentation[key] = {
-              description: `Please document the <${key}> variable`
-            }
+              description: `Please document the <${key}> variable`,
+            };
           }
         });
         const envDocKeys = Object.keys(json.envDocumentation);
         envDocKeys.forEach((key) => {
-          if (!envKeys.find(k => k === key)) {
+          if (!envKeys.find((k) => k === key)) {
             delete json.envDocumentation[key];
           }
-        })
+        });
       }
 
       const sorted = sortedJson.sortify(json);

@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/no-duplicated-branches */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-lonely-if */
-import { format, Options, } from 'prettier';
+import { Options, format } from 'prettier';
 import { Block, Query } from './types';
 
 /**
@@ -272,6 +272,7 @@ export class Readme {
     if (content?.length > 1) {
       return new ReadmeBlock({ header: '## Table of Contents', content });
     }
+    return undefined;
   }
 
   /*

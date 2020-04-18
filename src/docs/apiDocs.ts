@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { execSync } from 'child_process';
+
 const prompts = require('prompts');
 const ghpages = require('gh-pages');
 
@@ -8,8 +9,7 @@ const ghpages = require('gh-pages');
  * @param params Optional list of command line params
  */
 export const generateApiDocs = async (params?: string): Promise<void> => {
-
-  let command = `api-documenter markdown --input-folder temp --output-folder api`;
+  let command = 'api-documenter markdown --input-folder temp --output-folder api';
   if (params) {
     command += ` ${params}`;
   }
@@ -28,14 +28,14 @@ export const generateApiDocs = async (params?: string): Promise<void> => {
         console.error(err);
       }
     });
-  }
+  };
 
   // If we're not in CI, allow the user to confirm before they deploy
   if (!process.env.CI) {
     const confirm = await prompts({
       type: 'confirm',
       name: 'yesno',
-      message: `You are about to to publish the API documentation to GitHub Pages'. Are you sure? Y/n`,
+      message: 'You are about to to publish the API documentation to GitHub Pages. Are you sure? Y/n',
     });
     if (confirm.yesno) {
       publishApiDocs();

@@ -114,7 +114,7 @@ export function buildDocumentationLinksBlock({
           lastPath = path;
           docLinksContent.push(`- ${lastPath}`);
         }
-        let link = `  - [${titleParts.join(' ')}](${fileName})`;
+        const link = `  - [${titleParts.join(' ')}](${fileName})`;
         docLinksContent.push(link);
       }
     } catch (e) {
@@ -135,7 +135,13 @@ export function buildDocumentationLinksBlock({
  * @returns an exported {@link Readme} instance.
  */
 /* eslint-disable-next-line complexity, sonarjs/cognitive-complexity */
-export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, envDocs?: ScriptDocs, repoRoot?: string): string {
+export function standardize(
+  content: string,
+  title: string,
+  scriptDocs?: ScriptDocs,
+  envDocs?: ScriptDocs,
+  repoRoot?: string,
+): string {
   /**
    * Check for the presence of standard sections.
    * If they exist, update them. If not, append them.
