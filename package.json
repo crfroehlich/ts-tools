@@ -137,6 +137,6 @@
       "dev": true
     }
   },
-  "types": "dist/types/index.d.ts",
+  "types": "dist/protect-tools-js.d.ts",
   "version": "0.0.9"
 }

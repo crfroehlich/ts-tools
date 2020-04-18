@@ -60,7 +60,7 @@
    * This would direct API Extractor to embed those types directly in the .d.ts rollup, as if they had been
    * local files for library1.
    */
-  "bundledPackages": [ ],
+  "bundledPackages": [],
 
   /**
    * Determines how the TypeScript compiler engine will be invoked by API Extractor.
@@ -122,7 +122,7 @@
      * SUPPORTED TOKENS: <packageName>, <unscopedPackageName>
      * DEFAULT VALUE: "<unscopedPackageName>.api.md"
      */
-    // "reportFileName": "<unscopedPackageName>.api.md",
+    "reportFileName": "project-api.md",
 
     /**
      * Specifies the folder where the API report file is written.  The file name portion is determined by
@@ -197,7 +197,7 @@
      * SUPPORTED TOKENS: <projectFolder>, <packageName>, <unscopedPackageName>
      * DEFAULT VALUE: "<projectFolder>/dist/<unscopedPackageName>.d.ts"
      */
-    // "untrimmedFilePath": "<projectFolder>/dist/<unscopedPackageName>.d.ts",
+    //"untrimmedFilePath": "<projectFolder>/dist/index.d.ts",
 
     /**
      * Specifies the output path for a .d.ts rollup file to be generated with trimming for a "beta" release.
@@ -270,7 +270,7 @@
    *
    * DEFAULT VALUE: "crlf"
    */
-  // "newlineKind": "crlf",
+  "newlineKind": "lf",
 
   /**
    * Configures how API Extractor reports error and warning messages produced during analysis.
