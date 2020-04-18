@@ -41,6 +41,11 @@ jobs:
     steps:
       - checkout
       - run:
+          command: |
+            git config user.email noreply@ns8.com
+            git config user.name 'CircleCI'
+          name: Setup Git
+      - run:
           command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           name: Configure NPM
       - run:
