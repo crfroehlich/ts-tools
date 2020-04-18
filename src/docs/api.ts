@@ -7,6 +7,9 @@ const apiExtractorJsonPath: string = path.join(__dirname, './api-extractor.json'
 const extractorConfig: ExtractorConfig = ExtractorConfig.loadFileAndPrepare(apiExtractorJsonPath);
 
 /**
+ * Uses @microsoft/api-extractor to produce API documentation for this project
+ * @remarks API Documentation generator
+ * 
  * @public
  */
 export const generateApi = (): void => {

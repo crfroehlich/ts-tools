@@ -269,9 +269,11 @@ export class Readme {
         return `${Readme.repeat(indent, indentCount)}- ${linkedHeader}`;
       })
       .join('\n');
+    /* istanbul ignore next */
     if (content?.length > 1) {
       return new ReadmeBlock({ header: '## Table of Contents', content });
     }
+    /* istanbul ignore next */
     return undefined;
   }
 

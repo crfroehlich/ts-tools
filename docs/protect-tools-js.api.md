@@ -69,7 +69,7 @@ export const formatEnvDocs: (docs: ScriptDocs) => ReadmeBlock;
 // @public (undocumented)
 export const formatScriptDocs: (docs: ScriptDocs) => ReadmeBlock;
 
-// @public (undocumented)
+// @public
 export const generateApi: () => void;
 
 // @public
