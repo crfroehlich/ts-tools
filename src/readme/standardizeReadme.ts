@@ -39,6 +39,10 @@ export const HEADERS = {
     STRING: '## `package.json` scripts',
     RE: /^ *#* *`package.json` scripts/,
   },
+  ENV: {
+    STRING: '## Environment Variables',
+    RE: /^ *#* *Environment Variables/,
+  },
 };
 
 /**
@@ -53,6 +57,27 @@ export const formatScriptDocs = (docs: ScriptDocs): ReadmeBlock => {
     .map((scriptName): string => {
       const { description } = docs[scriptName];
       return `- \`yarn ${scriptName}\`: ${description}`;
+    })
+    .join('\n');
+
+  return new ReadmeBlock({
+    header,
+    content,
+  });
+};
+
+/**
+ * @param docs - a {@link ScriptDocs} object containing documentation objects describing
+ * environment variables.
+ * @public
+ * @returns a {@link ReadmeBlock} whose content is a formatted {@link ScriptDocs}.
+ */
+export const formatEnvDocs = (docs: ScriptDocs): ReadmeBlock => {
+  const header = HEADERS.ENV.STRING;
+  const content = Object.keys(docs)
+    .map((envName): string => {
+      const { description } = docs[envName];
+      return `- \`${envName}\`: ${description}`;
     })
     .join('\n');
 
@@ -102,13 +127,15 @@ export function buildDocumentationLinksBlock({
 
 /**
  * @param content - readme text content.
+ * @param title - name of the H1 header
  * @param scriptDocs - a {@link ScriptDocs} object containing documentation on package.json scripts.
- * @param repoName - the name of the repository, used as a fallback for the top-level readme header if it's missing.
+ * @param envDocs - a {@link ScriptDocs} object containing documentation for environment variables
+ * @param repoRoot - the name of the repository, used as a fallback for the top-level readme header if it's missing.
  * @public
  * @returns an exported {@link Readme} instance.
  */
 /* eslint-disable-next-line complexity, sonarjs/cognitive-complexity */
-export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, repoRoot?: string): string {
+export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, envDocs?: ScriptDocs, repoRoot?: string): string {
   /**
    * Check for the presence of standard sections.
    * If they exist, update them. If not, append them.
@@ -125,6 +152,7 @@ export function standardize(content: string, title: string, scriptDocs?: ScriptD
   if (repoRoot) {
     const gettingStartedSection = readme.getSection(HEADERS.GETTING_STARTED.RE);
     const scriptDocsSection = readme.getSection(HEADERS.SCRIPTS.RE);
+    const envDocsSection = readme.getSection(HEADERS.ENV.RE);
     const docLinksBlock = buildDocumentationLinksBlock({
       header: HEADERS.GETTING_STARTED.STRING,
       introduction: 'To get started, take a look at the documentation listed below:\n',
@@ -150,6 +178,14 @@ export function standardize(content: string, title: string, scriptDocs?: ScriptD
       } else {
         const scriptDocsBlock = formatScriptDocs(scriptDocs);
         readme.appendBlock(scriptDocsBlock, gettingStartedSection);
+      }
+    }
+    if (envDocs) {
+      if (envDocsSection) {
+        envDocsSection.content = formatEnvDocs(envDocs).content;
+      } else {
+        const envDocsBlock = formatEnvDocs(envDocs);
+        readme.appendBlock(envDocsBlock, gettingStartedSection);
       }
     }
 
@@ -182,7 +218,8 @@ export async function main(): Promise<void> {
   const repoRoot = __dirname;
   const resolvedRepoRoot = isAbsolute(repoRoot) ? repoRoot : resolve(join(process.cwd(), repoRoot));
   const packageJsonContent = JSON.parse(readFileSync('package.json', 'utf8'));
-  const scriptDocs = packageJsonContent.scriptsDocumentation || {};
+  const scriptDocs = packageJsonContent.scriptsDocumentation;
+  const envDocs = packageJsonContent.envDocumentation;
   const repoName = (packageJsonContent.name || 'README').trim();
 
   glob('**/*.md', GLOB_OPTIONS, (er: Error | null, files: string[]) => {
@@ -194,7 +231,7 @@ export async function main(): Promise<void> {
       try {
         const readmeContent = readFileSync(fileName, 'utf-8');
         if (fileName.toLowerCase() === 'readme.md') {
-          writeFileSync(fileName, standardize(readmeContent, repoName, scriptDocs, resolvedRepoRoot));
+          writeFileSync(fileName, standardize(readmeContent, repoName, scriptDocs, envDocs, resolvedRepoRoot));
         } else {
           writeFileSync(fileName, standardize(readmeContent, fileName));
         }

@@ -95,7 +95,10 @@ workflows:
               only: /^\d+\.\d+\.\d+$/
   test_and_deploy:
     jobs:
-      - test
+      - test:
+          filters:
+            branches:
+              ignore: gh-pages
       - deploy:
           filters:
             branches:

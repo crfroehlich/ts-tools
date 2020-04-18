@@ -64,6 +64,9 @@ export const EnvConfigDefaults: EnvConfig;
 export type errorMethod = (message: string, ...args: any[]) => void;
 
 // @public (undocumented)
+export const formatEnvDocs: (docs: ScriptDocs) => ReadmeBlock;
+
+// @public (undocumented)
 export const formatScriptDocs: (docs: ScriptDocs) => ReadmeBlock;
 
 // @public (undocumented)
@@ -116,6 +119,10 @@ export const HEADERS: {
         RE: RegExp;
     };
     SCRIPTS: {
+        STRING: string;
+        RE: RegExp;
+    };
+    ENV: {
         STRING: string;
         RE: RegExp;
     };
@@ -266,7 +273,7 @@ export interface ScriptDocs {
 export const sortJson: (path?: string, options?: GlobOptions, callback?: globCallback) => void;
 
 // @public (undocumented)
-export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, repoRoot?: string): string;
+export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, envDocs?: ScriptDocs, repoRoot?: string): string;
 
 
 // (No @packageDocumentation comment for this package)

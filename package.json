@@ -37,6 +37,11 @@
     "nyc": "15.0.1",
     "ts-mocha": "7.0.0"
   },
+  "envDocumentation": {
+    "NODE_ENV": {
+      "description": "The runtime environment, either `prod` or `dev`."
+    }
+  },
   "files": [
     "dist"
   ],
@@ -85,6 +90,18 @@
     },
     "count": {
       "description": "Counts lines of source code",
+      "dev": true
+    },
+    "docs:all": {
+      "description": "Runs all documentation commands",
+      "dev": true
+    },
+    "docs:api": {
+      "description": "Generates a single API doc based on the code in the project.",
+      "dev": true
+    },
+    "docs:api:markdown": {
+      "description": "Creates markdown documentation for the project and publishes to GitHub Pages.n",
       "dev": true
     },
     "docs:standardize": {
