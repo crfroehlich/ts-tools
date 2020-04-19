@@ -188,6 +188,7 @@ let staticLogger: LogInterface;
  */
 export const getLogger = (logOptions: LogOptions = DefaultLogOptions, reset = false): LogInterface => {
   if (reset) staticLogger = new Log(logOptions);
+  /* istanbul ignore next */
   staticLogger = staticLogger || new Log(logOptions);
   return staticLogger;
 };

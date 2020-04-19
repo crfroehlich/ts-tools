@@ -19,13 +19,15 @@ const tsLoader = require('ts-loader');
 if (!tsLoader) {
   throw new Error('Loaders missing');
 }
-const env = loadEnv();
 const log = getLogger();
 
 const license = `
 -------------------------- NS8 PROPRIETARY 1.0 --------------------------
+
 Copyright (c) 2020 NS8 Inc - All rights reserved
+
 Proprietary and confidential.
+
 All information contained herein is, and remains the property
 of NS8 Inc. The intellectual and technical concepts contained herein
 are proprietary to NS8 Inc and may be covered by U.S. and Foreign
@@ -36,6 +38,7 @@ obtained from NS8 Inc.  Access to the source code contained herein is
 hereby forbidden to anyone except current NS8 Inc employees, managers
 or contractors who have executed Confidentiality and Non-disclosure
 agreements explicitly covering such access.
+
 Unauthorized copy of this file, via any medium is strictly prohibited.
 `;
 
@@ -152,6 +155,7 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
     ${pkg.name}: ${pkg.version}
     ${license}
   `;
+
   const plugins: webpack.Plugin[] = [
     new HardSourceWebpackPlugin(),
     new webpack.BannerPlugin({
@@ -180,6 +184,7 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
   }
   const watch: boolean =
     hmr || (mode !== BundleMode.PRODUCTION && process.env.HMR?.toString().toLowerCase() === 'true');
+
   if (mode === BundleMode.PRODUCTION) {
     plugins.push(webpackFailPlugin);
   } else {
@@ -194,6 +199,7 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
     }
     plugins.push(new webpack.SourceMapDevToolPlugin());
   }
+
   let filename = fileName;
   if (!filename) {
     filename =
@@ -201,6 +207,7 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
         ? `${libraryName.toLowerCase().trim()}.min.js`
         : `${libraryName.toLowerCase().trim()}.js`;
   }
+
   const entry = sourceDirectory || './src/index.ts';
   const outputPath = path.resolve(distDirectory || './dist');
   log.info('Starting bundle', {
@@ -213,6 +220,7 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
     target: bundleTarget,
     watch,
   });
+
   return {
     entry,
     mode,

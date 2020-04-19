@@ -169,11 +169,7 @@ export const getLogger: (logOptions?: LogOptions, reset?: boolean) => LogInterfa
 export const getWebpackConfig: (config?: BundleConfig) => webpack.Configuration;
 
 // @public (undocumented)
-export const GLOB_OPTIONS: {
-    dot: boolean;
-    ignore: string[];
-    realPath: boolean;
-};
+export const GLOB_OPTIONS: GlobOptions;
 
 // @public (undocumented)
 export type globCallback = (err: Error | null, matches: string[]) => void;
@@ -284,6 +280,12 @@ export enum LogOutput {
 
 // @public
 export function main(): Promise<void>;
+
+// @public
+export const prettyMarkdown: (input: string) => string;
+
+// @public
+export const pritify: (path?: string, options?: GlobOptions, callback?: globCallback) => void;
 
 // @public
 export type Query = string | RegExp;

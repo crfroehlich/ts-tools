@@ -6,22 +6,13 @@
     sonarjs/cognitive-complexity,
     sonarjs/no-duplicated-branches,
 */
-import { Options, format } from 'prettier';
 import { Block, Query } from './types';
+import { prettyMarkdown } from '../lint/pretty';
 
 /**
  * @public
  */
 export type IndexedBlocks = Map<string, ReadmeBlock[]>;
-
-const prettierConfig: Options = {
-  parser: 'markdown',
-  singleQuote: true,
-  trailingComma: 'all',
-  printWidth: 120,
-  arrowParens: 'always',
-  useTabs: false,
-};
 
 /**
  * The ReadmeBlock represents the header and the content of a Readme section.
@@ -298,7 +289,7 @@ export class Readme {
 
     const justRootBlock = this.blocks.length === 1;
     const ret = justRootBlock ? this.blocks[0].content : `${output.trim()}\n`;
-    return format(ret, prettierConfig);
+    return prettyMarkdown(ret);
   }
 
   /** Implements toString method so that the readme is coerced properly
