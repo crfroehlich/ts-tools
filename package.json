@@ -76,6 +76,7 @@
   "scripts": {
     "beautify": "ts-node ./src/lint/sortJson.ts",
     "build": "yarn clean && yarn generate:exports && tsc -d --outDir dist && yarn beautify && yarn docs:all",
+    "build:prod": "yarn clean && tsc -d --outDir dist && yarn docs:api:markdown",
     "build:watch": "concurrently \"yarn build\" \"yarn test:watch\"",
     "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp temp api",
     "count": "cloc src/",
@@ -99,6 +100,10 @@
     "build": {
       "description": "Assembles build scripts into a single js module with type definitions.",
       "dev": false
+    },
+    "build:prod": {
+      "description": "Assembles the project for production.",
+      "dev": true
     },
     "build:watch": {
       "description": "Builds and tests concurrently while you develop.",
