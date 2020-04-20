@@ -52,11 +52,8 @@ jobs:
           command: yarn
           name: Install Dependencies
       - run:
-          command: yarn build
+          command: yarn build:prod
           name: Build
-      - run:
-          command: yarn docs:api:markdown
-          name: Publish Markdown Docs
       - run:
           command: npm publish
           name: Publish
@@ -84,10 +81,6 @@ jobs:
       - run:
           command: yarn test
           name: Run Tests
-      - store_artifacts:
-          path: coverage
-      - store_test_results:
-          path: coverage
 
 version: 2.1
 

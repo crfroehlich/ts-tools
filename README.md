@@ -30,6 +30,7 @@ To get started, take a look at the documentation listed below:
 
 - `yarn beautify`: Performs aesthetic operations to make the project files easier to navigate and read.
 - `yarn build`: Assembles build scripts into a single js module with type definitions.
+- `yarn build:prod`: Assembles the project for production.
 - `yarn build:watch`: Builds and tests concurrently while you develop.
 - `yarn clean`: Purges all temporary folders.
 - `yarn count`: Counts lines of source code.
