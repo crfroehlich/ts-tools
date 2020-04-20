@@ -3,16 +3,11 @@
 .env
 .env.defaults
 .env.schema
-.eslintignore
-.eslintrc.json
 .gitattributes
 .gitignore
-.huskyrc.json
 .npmignore
 .npmrc
 .nyc_output/
-.nycrc.json
-.prettierrc.json
 .vscode/
 *.log
 build/
@@ -23,6 +18,4 @@ docs/
 src/
 test/
 tsconfig.json
-typedoc.json
-webpack.config.ts
 yarn.lock

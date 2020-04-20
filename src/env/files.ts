@@ -1,12 +1,21 @@
+/**
+ * @public
+ */
 export type globCallback = (err: Error | null, matches: string[]) => void;
 
+/**
+ * @public
+ */
 export interface GlobOptions {
   dot?: boolean;
   ignore?: string[];
   realPath?: boolean;
 }
 
-export const GLOB_OPTIONS = {
+/**
+ * @public
+ */
+export const GLOB_OPTIONS: GlobOptions = {
   dot: true,
   ignore: [
     '.circleci/**',

@@ -1,3 +1,8 @@
+/*
+  eslint-disable
+    complexity,
+    sonarjs/cognitive-complexity,
+*/
 import { readFileSync, writeFileSync } from 'fs';
 import glob from 'glob';
 import { isAbsolute, join, resolve } from 'path';
@@ -14,9 +19,11 @@ const log = getLogger(
   },
   true,
 );
-/*
- * string field is for inserting new sections.
- * regex field is for matching sections.
+
+/**
+ * Defines known headers that we will parse
+ * @remarks `STRING` is for inserting new sections. `FIELD` is regex for matching sections.
+ * @public
  */
 export const HEADERS = {
   FIRST: {
@@ -38,12 +45,17 @@ export const HEADERS = {
     STRING: '## `package.json` scripts',
     RE: /^ *#* *`package.json` scripts/,
   },
+  ENV: {
+    STRING: '## Environment Variables',
+    RE: /^ *#* *Environment Variables/,
+  },
 };
 
-/*
+/**
+ * For each documented script in package.json, create documentation in README
  * @param docs - a {@link ScriptDocs} object containing documentation objects describing
  * package.json scripts.
- *
+ * @public
  * @returns a {@link ReadmeBlock} whose content is a formatted {@link ScriptDocs}.
  */
 export const formatScriptDocs = (docs: ScriptDocs): ReadmeBlock => {
@@ -61,8 +73,31 @@ export const formatScriptDocs = (docs: ScriptDocs): ReadmeBlock => {
   });
 };
 
-/*
- * @params {@link DocLinksParams} - a doc links section header, an introductory paragraph, and a path to the repository.
+/**
+ * For each documented environment variable in package.json, create documentation in README
+ * @param docs - a {@link ScriptDocs} object containing documentation objects describing environment variables.
+ * @public
+ * @returns a {@link ReadmeBlock} whose content is a formatted {@link ScriptDocs}.
+ */
+export const formatEnvDocs = (docs: ScriptDocs): ReadmeBlock => {
+  const header = HEADERS.ENV.STRING;
+  const content = Object.keys(docs)
+    .map((envName): string => {
+      const { description } = docs[envName];
+      return `- \`${envName}\`: ${description}`;
+    })
+    .join('\n');
+
+  return new ReadmeBlock({
+    header,
+    content,
+  });
+};
+
+/**
+ * Iterates over all the markdown files in the project to build a tree of links to each document
+ * @param params - {@link DocLinksParams} a doc links section header, an introductory paragraph, and a path to the repository.
+ * @public
  * @returns a {@link ReadmeBlock} of relative links to the documents in the standardized documentation path
  */
 export function buildDocumentationLinksBlock({
@@ -71,6 +106,9 @@ export function buildDocumentationLinksBlock({
 }: DocLinksParams): ReadmeBlock {
   const docLinksContent: string[] = [];
   const files = glob.sync('**/*.md', GLOB_OPTIONS);
+
+  let lastPath = '';
+  /* eslint-disable-next-line complexity */
   files.forEach((fileName) => {
     try {
       const content = readFileSync(fileName, 'utf-8');
@@ -78,24 +116,13 @@ export function buildDocumentationLinksBlock({
       const firstHeader = lines.find((line) => /^ *#/.test(line)) || '';
       const titleParts = firstHeader.split(' ').slice(1);
       if (fileName.toLowerCase() !== 'readme.md') {
-        const depth = fileName.split('/').length;
-        let link = `- [${titleParts.join(' ')}](${fileName})`;
-        switch (depth) {
-          case 2:
-            link = link.padStart(2);
-            break;
-          case 3:
-            link = link.padStart(4);
-            break;
-          case 4:
-            link = link.padStart(6);
-            break;
-          case 5:
-            link = link.padStart(8);
-            break;
-          default:
-            break;
+        const segments = fileName.split('/');
+        const path = segments.slice(0, segments.length - 1).join('/');
+        if (path !== lastPath) {
+          lastPath = path;
+          docLinksContent.push(`- ${lastPath}`);
         }
+        const link = `  - [${titleParts.join(' ')}](${fileName})`;
         docLinksContent.push(link);
       }
     } catch (e) {
@@ -106,16 +133,24 @@ export function buildDocumentationLinksBlock({
   return new ReadmeBlock({ header, content });
 }
 
-/*
+/**
+ * Normalizes all documentation in the project.
  * @param content - readme text content.
+ * @param title - name of the H1 header
  * @param scriptDocs - a {@link ScriptDocs} object containing documentation on package.json scripts.
- * @ param repoName - the name of the repository, used as a fallback for the top-level readme header if it's missing.
- *
+ * @param envDocs - a {@link ScriptDocs} object containing documentation for environment variables
+ * @param repoRoot - the name of the repository, used as a fallback for the top-level readme header if it's missing.
+ * @public
  * @returns an exported {@link Readme} instance.
  */
-/* eslint-disable sonarjs/cognitive-complexity */
-export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, repoRoot?: string): string {
-  /*
+export function standardize(
+  content: string,
+  title: string,
+  scriptDocs?: ScriptDocs,
+  envDocs?: ScriptDocs,
+  repoRoot?: string,
+): string {
+  /**
    * Check for the presence of standard sections.
    * If they exist, update them. If not, append them.
    * Order of appends should be:
@@ -131,6 +166,7 @@ export function standardize(content: string, title: string, scriptDocs?: ScriptD
   if (repoRoot) {
     const gettingStartedSection = readme.getSection(HEADERS.GETTING_STARTED.RE);
     const scriptDocsSection = readme.getSection(HEADERS.SCRIPTS.RE);
+    const envDocsSection = readme.getSection(HEADERS.ENV.RE);
     const docLinksBlock = buildDocumentationLinksBlock({
       header: HEADERS.GETTING_STARTED.STRING,
       introduction: 'To get started, take a look at the documentation listed below:\n',
@@ -158,6 +194,14 @@ export function standardize(content: string, title: string, scriptDocs?: ScriptD
         readme.appendBlock(scriptDocsBlock, gettingStartedSection);
       }
     }
+    if (envDocs) {
+      if (envDocsSection) {
+        envDocsSection.content = formatEnvDocs(envDocs).content;
+      } else {
+        const envDocsBlock = formatEnvDocs(envDocs);
+        readme.appendBlock(envDocsBlock, gettingStartedSection);
+      }
+    }
 
     if (!licenseSection) {
       readme.appendBlock(Readme.getLicenseBlock());
@@ -166,22 +210,30 @@ export function standardize(content: string, title: string, scriptDocs?: ScriptD
 
   // TOC goes last since it depends on the rest of the readme.
   if (tocSection) {
-    tocSection.content = readme.getTocBlock(0, '  ').content;
+    const toc = readme.getTocBlock(0, '  ');
+    if (toc) {
+      tocSection.content = toc.content;
+    }
   } else {
-    readme.appendBlock(readme.getTocBlock(), mainHeader);
+    const toc = readme.getTocBlock();
+    if (toc) {
+      readme.appendBlock(toc, mainHeader);
+    }
   }
 
   return readme.export();
 }
 
-/*
+/**
  * Reads the package.json and README.md files, and generates a standardized {@link Readme}, exports it and writes to disk.
+ * @public
  */
 export async function main(): Promise<void> {
   const repoRoot = __dirname;
   const resolvedRepoRoot = isAbsolute(repoRoot) ? repoRoot : resolve(join(process.cwd(), repoRoot));
   const packageJsonContent = JSON.parse(readFileSync('package.json', 'utf8'));
-  const scriptDocs = packageJsonContent.scriptsDocumentation || {};
+  const scriptDocs = packageJsonContent.scriptsDocumentation;
+  const envDocs = packageJsonContent.envDocumentation;
   const repoName = (packageJsonContent.name || 'README').trim();
 
   glob('**/*.md', GLOB_OPTIONS, (er: Error | null, files: string[]) => {
@@ -193,7 +245,7 @@ export async function main(): Promise<void> {
       try {
         const readmeContent = readFileSync(fileName, 'utf-8');
         if (fileName.toLowerCase() === 'readme.md') {
-          writeFileSync(fileName, standardize(readmeContent, repoName, scriptDocs, resolvedRepoRoot));
+          writeFileSync(fileName, standardize(readmeContent, repoName, scriptDocs, envDocs, resolvedRepoRoot));
         } else {
           writeFileSync(fileName, standardize(readmeContent, fileName));
         }

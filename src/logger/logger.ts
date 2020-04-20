@@ -4,6 +4,8 @@ import { loadEnv } from '../env/loadEnv';
 
 /**
  * The valid log levels
+ * @remarks These log levels conform to standard log level definitions
+ * @public
  */
 export enum LogLevel {
   DEBUG = 'debug',
@@ -14,6 +16,8 @@ export enum LogLevel {
 
 /**
  * The valid output locations for logs
+ * @remarks Additional output locations will be enabled in the future
+ * @public
  */
 export enum LogOutput {
   CONSOLE = 'console',
@@ -23,6 +27,7 @@ export enum LogOutput {
 
 /**
  * Configuration options for instantiating the Log
+ * @public
  */
 export interface LogOptions {
   /**
@@ -41,7 +46,8 @@ export interface LogOptions {
 
 /**
  * The default configuration if none is provided.
- * Defaults to ERROR level and FILE output.
+ * @defaultValue {@link LogLevel.ERROR} and {@link LogOutput.FILE}
+ * @public
  */
 export const DefaultLogOptions: LogOptions = {
   serviceName: 'js-tools',
@@ -51,6 +57,7 @@ export const DefaultLogOptions: LogOptions = {
 
 /**
  * Constructs a Winston LoggerOptions object based on the provided options
+ * @public
  * @param options - log options
  * @returns winston.LoggerOptions
  */
@@ -70,12 +77,22 @@ export const buildLoggerConfig = (options: LogOptions): LoggerOptions => {
   };
 };
 
+/**
+ * @public
+ */
 export type logMethod = (level: LogLevel, message: string, ...args: any[]) => void;
+/**
+ * @public
+ */
 export type infoMethod = (message: string, ...args: any[]) => void;
+/**
+ * @public
+ */
 export type errorMethod = (message: string, ...args: any[]) => void;
 
 /**
  * Definition of logging implementation requirements
+ * @public
  */
 export interface LogInterface {
   /**
@@ -105,6 +122,7 @@ export interface LogInterface {
 /**
  * A log class to be used for composing log messages.
  * This class is directly exposed to allow for customizing logging in specific contexts.
+ * @public
  */
 export class Log implements LogInterface {
   logger: Logger;
@@ -164,11 +182,13 @@ let staticLogger: LogInterface;
 /**
  * Fetches a static instance of a logger.
  * The returned logger will always be the same instance, with the same configuration.
+ * @public
  * @param logOptions - optional configuration options for the logger
  * @param reset - reset the static instance with a new configuration
  */
 export const getLogger = (logOptions: LogOptions = DefaultLogOptions, reset = false): LogInterface => {
   if (reset) staticLogger = new Log(logOptions);
+  /* istanbul ignore next */
   staticLogger = staticLogger || new Log(logOptions);
   return staticLogger;
 };

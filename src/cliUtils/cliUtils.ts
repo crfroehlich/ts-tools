@@ -2,9 +2,10 @@ import { promisify } from 'util';
 import * as readline from 'readline';
 import { fstat } from 'fs';
 
-/*
+/**
  * Read and concatenate lines from stdin.
  *
+ * @public
  * @returns a string comprised of the concatenated lines read from stdin.
  */
 export async function getContentFromStdin(): Promise<Error | string> {
@@ -31,7 +32,8 @@ export async function getContentFromStdin(): Promise<Error | string> {
   });
 }
 
-/*
+/**
+ * @public
  * @returns a boolean indicating whether stdin is a pipe or not.
  */
 export async function isPipe(): Promise<boolean> {
@@ -47,6 +49,9 @@ export async function isPipe(): Promise<boolean> {
   }
 }
 
+/**
+ * @public
+ */
 export function isRunAsScript(): boolean {
   return process?.mainModule?.filename === __filename;
 }

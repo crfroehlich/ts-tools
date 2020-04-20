@@ -65,3 +65,5 @@ dist
 # Documentation
 .scannerwork/
 *.bak
+temp/
+api/

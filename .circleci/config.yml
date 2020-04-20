@@ -29,11 +29,22 @@ jobs:
               exit 1
             fi
           name: Tag Release in GitHub
+      - run:
+          command: |
+            git checkout dev
+            git merge -m 'Merge branch `master` into `dev`' master
+            git push origin dev
+          name: Merge Changes Back to Development Branch
   publish:
     docker:
       - image: node:12
     steps:
       - checkout
+      - run:
+          command: |
+            git config user.email noreply@ns8.com
+            git config user.name 'CircleCI'
+          name: Setup Git
       - run:
           command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           name: Configure NPM
@@ -43,6 +54,9 @@ jobs:
       - run:
           command: yarn build
           name: Build
+      - run:
+          command: yarn docs:api:markdown
+          name: Publish Markdown Docs
       - run:
           command: npm publish
           name: Publish
@@ -70,6 +84,10 @@ jobs:
       - run:
           command: yarn test
           name: Run Tests
+      - store_artifacts:
+          path: coverage
+      - store_test_results:
+          path: coverage
 
 version: 2.1
 
@@ -84,7 +102,10 @@ workflows:
               only: /^\d+\.\d+\.\d+$/
   test_and_deploy:
     jobs:
-      - test
+      - test:
+          filters:
+            branches:
+              ignore: gh-pages
       - deploy:
           filters:
             branches:

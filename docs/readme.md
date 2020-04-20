@@ -16,7 +16,7 @@ The `readme` package is meant to facilitate automated creation and updates for r
 ### Modifying an Existing Readme
 
 ```typescript
-import { Readme } from "./src/readme/readme";
+import { Readme } from './src/readme/readme';
 const content = `
 # Test Readme
 This is a demonstration readme for the ns8/protect-js-tools readme tool.
@@ -25,12 +25,12 @@ Please submit a pull request.
 `;
 // read in and parse the readme into content blocks
 const readme = new Readme(content);
-const prLink = "";
+const prLink = '';
 // Add a contributing block if it doesn't exist
 if (!readme.getSection(/^ *#* Contributing/)) {
   readme.setSection(
-    "## Contributing",
-    'Please submit a pull request <a href="https://github.com/ns8inc/protect-tools-js/pulls">here</a>.'
+    '## Contributing',
+    'Please submit a pull request <a href="https://github.com/ns8inc/protect-tools-js/pulls">here</a>.',
   );
 }
 // Add a License block if it doesn't exist

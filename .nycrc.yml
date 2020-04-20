@@ -1,0 +1,22 @@
+---
+ branches: 100
+ checkCoverage: true
+ extends:
+   - '@istanbuljs/nyc-config-typescript'
+ extension:
+   - .ts
+ functions: 100
+ include:
+   - src/**/*.ts
+ instrument: true
+ lines: 100
+ reporter:
+   - lcov
+   - html
+   - text-summary
+   - text
+ require:
+   - source-map-support/register
+   - ts-node/register
+ sourceMap: true
+ statements: 100

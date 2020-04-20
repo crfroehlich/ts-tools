@@ -1,9 +1,27 @@
+/* istanbul ignore file */
+
+import { Options, format } from 'prettier';
 import glob from 'glob';
 import { readFileSync, writeFileSync } from 'fs';
 import { LogLevel, LogOutput, getLogger } from '../logger';
 import { GLOB_OPTIONS, GlobOptions, globCallback } from '../env/files';
 
-const sortedJson = require('sorted-json');
+const prettierConfig: Options = {
+  parser: 'markdown',
+  singleQuote: true,
+  trailingComma: 'all',
+  printWidth: 120,
+  arrowParens: 'always',
+  useTabs: false,
+};
+
+/**
+ * Formats markdown content according to the prettier config
+ * @public
+ */
+export const prettyMarkdown = (input: string): string => {
+  return format(input, prettierConfig);
+};
 
 const log = getLogger(
   {
@@ -14,9 +32,10 @@ const log = getLogger(
   true,
 );
 
-// Sort all the JSON files to improve readability and reduce conflicts
-const defaultPath = '**/*.json';
+// Prettier all the source code
+const defaultPath = '**/*.ts';
 
+/* eslint-disable-next-line complexity, sonarjs/cognitive-complexity */
 const defaultCallback = (er: Error | null, files: string[]): void => {
   if (er) {
     log.error(er.toString());
@@ -24,24 +43,19 @@ const defaultCallback = (er: Error | null, files: string[]): void => {
   files.forEach((fileName) => {
     try {
       const file = readFileSync(fileName, 'utf-8');
-      let json;
-      try {
-        json = JSON.parse(file);
-      } catch (e) {
-        log.error(`Error: parsing ${file}.`);
-        throw new Error(e);
-      }
-      const sorted = sortedJson.sortify(json);
-      writeFileSync(fileName, JSON.stringify(sorted, null, 2));
-      log.info(`Alpha-sorted ${fileName} JSON file`);
+      const pretty = format(file, prettierConfig);
+      writeFileSync(fileName, pretty);
     } catch (err) {
-      log.error(`${fileName}: failed`);
-      log.error(err);
+      log.error(`Error: parsing ${fileName}. Message: ${err.message}`);
     }
   });
 };
 
-export const sortJson = (
+/**
+ * Runs format against a directory
+ * @public
+ */
+export const pritify = (
   path: string = defaultPath,
   options: GlobOptions = GLOB_OPTIONS,
   callback: globCallback = defaultCallback,
@@ -50,5 +64,5 @@ export const sortJson = (
 };
 
 if (__filename === process?.mainModule?.filename) {
-  sortJson();
+  pritify();
 }

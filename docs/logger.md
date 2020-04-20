@@ -32,11 +32,11 @@ The following is are examples of instantiating a new logger and using the static
 ```ts
 const log = new Log({
   logLevel: LogLevel.ERROR, // Logs below the ERROR level will not be logged
-  serviceName: "my-service-name", // Any service name to use in the log metadata and filename
+  serviceName: 'my-service-name', // Any service name to use in the log metadata and filename
   transports: [LogOutput.CONSOLE, LogOutput.FILE], // logs to both the console and the file system
 });
-log.info("My info message"); // Will not be logged
-log.error("Fatal exception", { error, ipaddress }); // Will log an error and serialize the JSON param into the log message
+log.info('My info message'); // Will not be logged
+log.error('Fatal exception', { error, ipaddress }); // Will log an error and serialize the JSON param into the log message
 ```
 
 The following demonstrates usages utilizing the static Logger:
@@ -45,9 +45,9 @@ The following demonstrates usages utilizing the static Logger:
 // The first time you get the static logger, you should specify the configuration.
 const log = getLogger({
   logLevel: LogLevel.INFO,
-  serviceName: "unit-test",
+  serviceName: 'unit-test',
   transports: [LogOutput.CONSOLE],
 });
 //Once instantiated, you can get the same instance of the logger by just calling
-getLogger().error("My fatal error");
+getLogger().error('My fatal error');
 ```

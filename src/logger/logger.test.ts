@@ -45,51 +45,83 @@ describe('Logging', () => {
   });
 
   it('info logs', () => {
-    const log = new Log({ logLevel: LogLevel.INFO, serviceName, transports: [LogOutput.CONSOLE] });
+    const log = new Log({
+      logLevel: LogLevel.INFO,
+      serviceName,
+      transports: [LogOutput.CONSOLE],
+    });
     log.info(message, { test: 'info logs' });
     expect(true).to.be.true;
   });
 
   it('error logs', () => {
-    const log = new Log({ logLevel: LogLevel.ERROR, serviceName, transports: [LogOutput.CONSOLE] });
+    const log = new Log({
+      logLevel: LogLevel.ERROR,
+      serviceName,
+      transports: [LogOutput.CONSOLE],
+    });
     log.error(message, { test: 'error logs' });
     expect(true).to.be.true;
   });
 
   it('automatically adds console logging', () => {
     process.env.NODE_ENV = 'dev';
-    const log = new Log({ logLevel: LogLevel.ERROR, serviceName, transports: [LogOutput.FILE] });
+    const log = new Log({
+      logLevel: LogLevel.ERROR,
+      serviceName,
+      transports: [LogOutput.FILE],
+    });
     log.error(message, { test: 'automatically adds console logging' });
     expect(true).to.be.true;
   });
 
   it('logs nothing', () => {
     process.env.NODE_ENV = 'production';
-    const log = new Log({ logLevel: LogLevel.ERROR, serviceName, transports: [LogOutput.NONE] });
+    const log = new Log({
+      logLevel: LogLevel.ERROR,
+      serviceName,
+      transports: [LogOutput.NONE],
+    });
     log.error(message, { test: 'logs nothing' });
     expect(true).to.be.true;
   });
 
   it('custom logs debug', () => {
-    const log = new Log({ logLevel: LogLevel.DEBUG, serviceName, transports: [LogOutput.CONSOLE] });
+    const log = new Log({
+      logLevel: LogLevel.DEBUG,
+      serviceName,
+      transports: [LogOutput.CONSOLE],
+    });
     log.log(LogLevel.DEBUG, message, { test: 'custom logs debug' });
     expect(true).to.be.true;
   });
 
   it('custom logs warn', () => {
-    const log = new Log({ logLevel: LogLevel.WARN, serviceName, transports: [LogOutput.CONSOLE] });
+    const log = new Log({
+      logLevel: LogLevel.WARN,
+      serviceName,
+      transports: [LogOutput.CONSOLE],
+    });
     log.log(LogLevel.WARN, message, { test: 'custom logs warn' });
     expect(true).to.be.true;
   });
 
   it('custom logs error', () => {
-    const log = new Log({ logLevel: LogLevel.ERROR, serviceName, transports: [LogOutput.CONSOLE] });
+    const log = new Log({
+      logLevel: LogLevel.ERROR,
+      serviceName,
+      transports: [LogOutput.CONSOLE],
+    });
     log.log(LogLevel.ERROR, message, { test: 'custom logs error' });
     expect(true).to.be.true;
   });
 
   it('custom logs info', () => {
-    const log = new Log({ logLevel: LogLevel.INFO, serviceName, transports: [LogOutput.CONSOLE] });
+    const log = new Log({
+      logLevel: LogLevel.INFO,
+      serviceName,
+      transports: [LogOutput.CONSOLE],
+    });
     log.log(LogLevel.INFO, message, { test: 'custom logs info' });
     expect(true).to.be.true;
   });
@@ -107,8 +139,14 @@ describe('Logging', () => {
   });
 
   it('static logs to console again using the same instance', () => {
-    const log = getLogger({ logLevel: LogLevel.INFO, serviceName, transports: [LogOutput.CONSOLE] });
-    log.info(message, { test: 'static logs to console again using the same instance' });
+    const log = getLogger({
+      logLevel: LogLevel.INFO,
+      serviceName,
+      transports: [LogOutput.CONSOLE],
+    });
+    log.info(message, {
+      test: 'static logs to console again using the same instance',
+    });
     expect(true).to.be.true;
   });
 

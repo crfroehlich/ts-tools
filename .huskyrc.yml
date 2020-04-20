@@ -1,4 +1,5 @@
 
 ---
 hooks:
+  pre-commit: yarn lint:fix
   pre-push: yarn lint && yarn test && yarn build
