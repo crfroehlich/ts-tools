@@ -45,7 +45,7 @@ export const generateApi = (): void => {
   });
 
   if (extractorResult.succeeded) {
-    log.error('API Extractor completed successfully');
+    log.info('API Extractor completed successfully');
     process.exitCode = 0;
   } else {
     log.error(
