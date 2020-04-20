@@ -21,8 +21,8 @@ const log = getLogger(
 );
 
 /**
- * string field is for inserting new sections.
- * regex field is for matching sections.
+ * Defines known headers that we will parse
+ * @remarks `STRING` is for inserting new sections. `FIELD` is regex for matching sections.
  * @public
  */
 export const HEADERS = {
@@ -52,6 +52,7 @@ export const HEADERS = {
 };
 
 /**
+ * For each documented script in package.json, create documentation in README
  * @param docs - a {@link ScriptDocs} object containing documentation objects describing
  * package.json scripts.
  * @public
@@ -73,8 +74,8 @@ export const formatScriptDocs = (docs: ScriptDocs): ReadmeBlock => {
 };
 
 /**
- * @param docs - a {@link ScriptDocs} object containing documentation objects describing
- * environment variables.
+ * For each documented environment variable in package.json, create documentation in README
+ * @param docs - a {@link ScriptDocs} object containing documentation objects describing environment variables.
  * @public
  * @returns a {@link ReadmeBlock} whose content is a formatted {@link ScriptDocs}.
  */
@@ -94,6 +95,7 @@ export const formatEnvDocs = (docs: ScriptDocs): ReadmeBlock => {
 };
 
 /**
+ * Iterates over all the markdown files in the project to build a tree of links to each document
  * @param params - {@link DocLinksParams} a doc links section header, an introductory paragraph, and a path to the repository.
  * @public
  * @returns a {@link ReadmeBlock} of relative links to the documents in the standardized documentation path
@@ -132,6 +134,7 @@ export function buildDocumentationLinksBlock({
 }
 
 /**
+ * Normalizes all documentation in the project.
  * @param content - readme text content.
  * @param title - name of the H1 header
  * @param scriptDocs - a {@link ScriptDocs} object containing documentation on package.json scripts.

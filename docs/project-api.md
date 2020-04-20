@@ -7,7 +7,7 @@
 import { Logger } from 'winston';
 import { LoggerOptions } from 'winston';
 
-// @public (undocumented)
+// @public
 export interface Block {
     // (undocumented)
     content?: string;
@@ -15,7 +15,7 @@ export interface Block {
     header?: string;
 }
 
-// @public (undocumented)
+// @public
 export function buildDocumentationLinksBlock({ header, introduction, }: DocLinksParams): ReadmeBlock;
 
 // @public
@@ -26,7 +26,6 @@ export const DefaultLogOptions: LogOptions;
 
 // @public (undocumented)
 export interface DocLinksParams {
-    // (undocumented)
     header: string;
     introduction?: string;
     repoRoot: string | null;
@@ -64,10 +63,10 @@ export const EnvConfigDefaults: EnvConfig;
 // @public (undocumented)
 export type errorMethod = (message: string, ...args: any[]) => void;
 
-// @public (undocumented)
+// @public
 export const formatEnvDocs: (docs: ScriptDocs) => ReadmeBlock;
 
-// @public (undocumented)
+// @public
 export const formatScriptDocs: (docs: ScriptDocs) => ReadmeBlock;
 
 // @public
@@ -199,7 +198,7 @@ export enum LogOutput {
 // @public
 export function main(): Promise<void>;
 
-// @public (undocumented)
+// @public
 export type Query = string | RegExp;
 
 // @public
@@ -257,13 +256,13 @@ export class ReadmeBlock {
     toString(): string;
 }
 
-// @public (undocumented)
+// @public
 export interface ScriptDoc {
     description: string;
     dev: boolean;
 }
 
-// @public (undocumented)
+// @public
 export interface ScriptDocs {
     [index: string]: ScriptDoc;
 }
@@ -271,7 +270,7 @@ export interface ScriptDocs {
 // @public
 export const sortJson: (path?: string, options?: GlobOptions, callback?: globCallback) => void;
 
-// @public (undocumented)
+// @public
 export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, envDocs?: ScriptDocs, repoRoot?: string): string;
 
 

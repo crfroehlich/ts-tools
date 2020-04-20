@@ -1,11 +1,11 @@
 /**
- * @remarks Used to match against a content header.
+ * Used to match against a content header.
  * @public
  */
 export type Query = string | RegExp;
 
 /**
- * @remarks An array of strings representing the content section (no header) of a markdown section.
+ * An array of strings representing the content section (no header) of a markdown section.
  * @public
  */
 export interface Block {
@@ -18,7 +18,7 @@ export interface Block {
  */
 export interface DocLinksParams {
   /**
-   * @remarks A string representing the header line for the link block to standard documentation files.
+   * A string representing the header line for the link block to standard documentation files.
    */
   header: string;
 
@@ -34,6 +34,7 @@ export interface DocLinksParams {
 }
 
 /**
+ * Represents a script or environment variable doc block in package.json
  * @public
  */
 export interface ScriptDoc {
@@ -50,6 +51,7 @@ export interface ScriptDoc {
 }
 
 /**
+ * Collection of named {@link ScriptDoc} docs
  * @public
  */
 export interface ScriptDocs {
