@@ -86,6 +86,8 @@ jobs:
           name: Run Tests
       - store_artifacts:
           path: coverage
+      - store_test_results:
+          path: coverage
 
 version: 2.1
 
