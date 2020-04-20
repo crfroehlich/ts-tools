@@ -59,7 +59,7 @@
     "build:watch": "concurrently \"yarn build\" \"yarn test:watch\"",
     "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp temp api",
     "count": "cloc src/",
-    "docs:all": "yarn docs:standardize && yarn docs:api && yarn docs:api:markdown",
+    "docs:all": "yarn docs:standardize && yarn docs:api",
     "docs:api": "ts-node ./src/docs/api.ts",
     "docs:api:markdown": "ts-node ./src/docs/apiDocs.ts",
     "docs:standardize": "ts-node src/readme/standardizeReadme.ts",

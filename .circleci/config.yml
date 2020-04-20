@@ -55,6 +55,9 @@ jobs:
           command: yarn build
           name: Build
       - run:
+          command: yarn docs:api:markdown
+          name: Publish Markdown Docs
+      - run:
           command: npm publish
           name: Publish
   test:
