@@ -16,6 +16,7 @@ To get started, take a look at the documentation listed below:
 
 - docs
   - [Documentation Tooling](docs/documentation.md)
+  - [Environment Variables](docs/environment-variables.md)
   - [Logging Client](docs/logger.md)
   - [API Report File for "@ns8/protect-tools-js"](docs/project-api.md)
   - [Readme Tool](docs/readme.md)
