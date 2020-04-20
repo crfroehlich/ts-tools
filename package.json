@@ -73,27 +73,27 @@
   },
   "scriptsDocumentation": {
     "beautify": {
-      "description": "Performs aesthetic operations to make the project files easier to navigate and read",
+      "description": "Performs aesthetic operations to make the project files easier to navigate and read.",
       "dev": true
     },
     "build": {
-      "description": "Assembles build scripts into a single js module with type definitions",
+      "description": "Assembles build scripts into a single js module with type definitions.",
       "dev": false
     },
     "build:watch": {
-      "description": "Builds and tests concurrently while you develop",
+      "description": "Builds and tests concurrently while you develop.",
       "dev": true
     },
     "clean": {
-      "description": "Purges all temporary folders",
+      "description": "Purges all temporary folders.",
       "dev": true
     },
     "count": {
-      "description": "Counts lines of source code",
+      "description": "Counts lines of source code.",
       "dev": true
     },
     "docs:all": {
-      "description": "Runs all documentation commands",
+      "description": "Runs all documentation commands.",
       "dev": true
     },
     "docs:api": {
@@ -101,39 +101,39 @@
       "dev": true
     },
     "docs:api:markdown": {
-      "description": "Creates markdown documentation for the project and publishes to GitHub Pages.n",
+      "description": "Creates markdown documentation for the project and publishes to GitHub Pages.",
       "dev": true
     },
     "docs:standardize": {
-      "description": "Creates or updates a new readme with a standard set of readme sections, including a toc, yarn script documention, links to repo documentation files and an NS8 license",
+      "description": "Creates or updates a new readme with a standard set of readme sections, including a toc, yarn script documentation, links to repo documentation files and an NS8 license.",
       "dev": true
     },
     "generate:exports": {
-      "description": "Generates index.ts files for all exports recursively in the 'src' folder",
+      "description": "Generates index.ts files for all exports recursively in the 'src' folder.",
       "dev": true
     },
     "lint": {
-      "description": "Lints the codebase",
+      "description": "Lints the codebase.",
       "dev": true
     },
     "lint:docs": {
-      "description": "Lints the code documentation",
+      "description": "Lints the code documentation.",
       "dev": true
     },
     "lint:fix": {
-      "description": "Lints the codebase and automatically fixes what it can",
+      "description": "Lints the codebase and automatically fixes what it can.",
       "dev": true
     },
     "test": {
-      "description": "Runs tests and calculates test coverage",
+      "description": "Runs tests and calculates test coverage.",
       "dev": true
     },
     "test:fast": {
-      "description": "Runs tests in parallel and calculates test coverage",
+      "description": "Runs tests in parallel and calculates test coverage.",
       "dev": true
     },
     "test:watch": {
-      "description": "Re-runs tests as you develop",
+      "description": "Re-runs tests as you develop.",
       "dev": true
     }
   },

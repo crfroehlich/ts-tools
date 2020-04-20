@@ -33,20 +33,23 @@ export const generateApiDocs = async (params?: string): Promise<void> => {
     });
   };
 
-  // If we're not in CI, allow the user to confirm before they deploy
-  if (!process.env.CI) {
-    const confirm = await prompts({
-      type: 'confirm',
-      name: 'yesno',
-      message: 'You are about to to publish the API documentation to GitHub Pages. Are you sure? Y/n',
-    });
-    if (confirm.yesno) {
-      publishApiDocs();
-    } else {
-      log.info('User cancelled operation');
-    }
-  } else {
+  // If we're in CI, publish to GitHub Pages
+  if (process.env.CI) {
     publishApiDocs();
+  } else {
+    // If we ever want to allow devs to push directly to the gh-pages branch, this will do it
+    /*
+      const confirm = await prompts({
+        type: 'confirm',
+        name: 'yesno',
+        message: 'You are about to to publish the API documentation to GitHub Pages. Are you sure? Y/n',
+      });
+      if (confirm.yesno) {
+        publishApiDocs();
+      } else {
+        log.info('User cancelled operation');
+      }
+    */
   }
 };
 
