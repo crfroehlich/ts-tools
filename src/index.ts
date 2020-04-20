@@ -1,3 +1,4 @@
+export * from './bundle';
 export * from './cliUtils';
 export * from './docs';
 export * from './env';

@@ -6,6 +6,7 @@
 
 import { Logger } from 'winston';
 import { LoggerOptions } from 'winston';
+import * as webpack from 'webpack';
 
 // @public
 export interface Block {
@@ -20,6 +21,89 @@ export function buildDocumentationLinksBlock({ header, introduction, }: DocLinks
 
 // @public
 export const buildLoggerConfig: (options: LogOptions) => LoggerOptions;
+
+// @public
+export interface BundleConfig {
+    // (undocumented)
+    bundleMode: webpack.Options.Devtool;
+    // (undocumented)
+    bundleTarget: BundleTarget;
+    // (undocumented)
+    distDirectory: string;
+    // (undocumented)
+    fileName?: string;
+    // (undocumented)
+    globals?: BundleGlobals[];
+    // (undocumented)
+    hmr?: boolean;
+    // (undocumented)
+    libraryName: string;
+    // (undocumented)
+    mode?: BundleMode;
+    // (undocumented)
+    sourceDirectory: string;
+    // (undocumented)
+    useTypeCheckingService?: boolean;
+}
+
+// @public
+export const BundleDefaults: BundleConfig;
+
+// @public
+export enum BundleDevTool {
+    // (undocumented)
+    CHEAP_MODULE_SOURCE_MAP = "cheap-module-source-map",
+    // (undocumented)
+    CHEAP_SOURCE_MAP = "cheap-source-map",
+    // (undocumented)
+    EVAL = "eval",
+    // (undocumented)
+    EVAL_CHEAP_MODULE_SOURCE_MAP = "eval-cheap-module-source-map",
+    // (undocumented)
+    EVAL_CHEAP_SOURCE_MAP = "eval-cheap-source-map",
+    // (undocumented)
+    EVAL_SOURCE_MAP = "eval-source-map",
+    // (undocumented)
+    FILE = "source-map",
+    // (undocumented)
+    HIDDEN_SOURCE_MAP = "hidden-source-map",
+    // (undocumented)
+    INLINE = "inline-source-map",
+    // (undocumented)
+    INLINE_CHEAP_MODULE_SOURCE_MAP = "inline-cheap-module-source-map",
+    // (undocumented)
+    INLINE_CHEAP_SOURCE_MAP = "inline-cheap-source-map",
+    // (undocumented)
+    INLINE_SOURCE_MAP = "inline-source-map",
+    // (undocumented)
+    NO_SOURCES_SOURCE_MAP = "nosources-source-map",
+    // (undocumented)
+    SOURCE_MAP = "source-map"
+}
+
+// @public
+export interface BundleGlobals {
+    // (undocumented)
+    name: string;
+    // (undocumented)
+    value: boolean | string;
+}
+
+// @public
+export enum BundleMode {
+    // (undocumented)
+    DEVELOPMENT = "development",
+    // (undocumented)
+    PRODUCTION = "production"
+}
+
+// @public
+export enum BundleTarget {
+    // (undocumented)
+    NODE = "node",
+    // (undocumented)
+    WEB = "web"
+}
 
 // @public
 export const DefaultLogOptions: LogOptions;
@@ -80,6 +164,9 @@ export function getContentFromStdin(): Promise<Error | string>;
 
 // @public
 export const getLogger: (logOptions?: LogOptions, reset?: boolean) => LogInterface;
+
+// @public
+export const getWebpackConfig: (config?: BundleConfig) => webpack.Configuration;
 
 // @public (undocumented)
 export const GLOB_OPTIONS: {

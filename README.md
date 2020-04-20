@@ -15,6 +15,7 @@
 To get started, take a look at the documentation listed below:
 
 - docs
+  - [Project Bundling](docs/bundling.md)
   - [Documentation Tooling](docs/documentation.md)
   - [Environment Variables](docs/environment-variables.md)
   - [Logging Client](docs/logger.md)
