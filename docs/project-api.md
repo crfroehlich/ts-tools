@@ -7,7 +7,7 @@
 import { Logger } from 'winston';
 import { LoggerOptions } from 'winston';
 
-// @public
+// @public (undocumented)
 export interface Block {
     // (undocumented)
     content?: string;
@@ -26,6 +26,7 @@ export const DefaultLogOptions: LogOptions;
 
 // @public (undocumented)
 export interface DocLinksParams {
+    // (undocumented)
     header: string;
     introduction?: string;
     repoRoot: string | null;
@@ -198,7 +199,7 @@ export enum LogOutput {
 // @public
 export function main(): Promise<void>;
 
-// @public
+// @public (undocumented)
 export type Query = string | RegExp;
 
 // @public
@@ -206,10 +207,8 @@ export class Readme {
     constructor(content?: string);
     appendBlock(block: ReadmeBlock, target?: ReadmeBlock | null): void;
     appendContent(content: string): void;
-    // (undocumented)
     blocks: ReadmeBlock[];
     content: string;
-    // (undocumented)
     export(): string;
     static getLicenseBlock(header?: string): ReadmeBlock;
     getSection(target: Query, strict?: boolean): ReadmeBlock | null;
@@ -269,13 +268,11 @@ export interface ScriptDocs {
     [index: string]: ScriptDoc;
 }
 
-// @public (undocumented)
+// @public
 export const sortJson: (path?: string, options?: GlobOptions, callback?: globCallback) => void;
 
 // @public (undocumented)
 export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, envDocs?: ScriptDocs, repoRoot?: string): string;
 
-
-// (No @packageDocumentation comment for this package)
 
 ```

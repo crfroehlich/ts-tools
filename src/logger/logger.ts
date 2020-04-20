@@ -4,6 +4,7 @@ import { loadEnv } from '../env/loadEnv';
 
 /**
  * The valid log levels
+ * @remarks These log levels conform to standard log level definitions
  * @public
  */
 export enum LogLevel {
@@ -15,6 +16,7 @@ export enum LogLevel {
 
 /**
  * The valid output locations for logs
+ * @remarks Additional output locations will be enabled in the future
  * @public
  */
 export enum LogOutput {
@@ -44,7 +46,7 @@ export interface LogOptions {
 
 /**
  * The default configuration if none is provided.
- * Defaults to ERROR level and FILE output.
+ * @defaultValue {@link LogLevel.ERROR} and {@link LogOutput.FILE}
  * @public
  */
 export const DefaultLogOptions: LogOptions = {

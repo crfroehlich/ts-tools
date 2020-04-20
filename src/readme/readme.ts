@@ -1,6 +1,11 @@
-/* eslint-disable sonarjs/no-duplicated-branches */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable no-lonely-if */
+/*
+  eslint-disable
+    complexity,
+    no-lonely-if,
+    no-restricted-syntax,
+    sonarjs/cognitive-complexity,
+    sonarjs/no-duplicated-branches,
+*/
 import { Options, format } from 'prettier';
 import { Block, Query } from './types';
 
@@ -72,7 +77,7 @@ export class Readme {
    */
   public static isCodeStartTag = (line: string): boolean => /^ *```[^`]*$/.test(line);
 
-  /*
+  /**
    * @param line - string representing a single line from a readme content.
    *
    * @returns a boolean indicating whether the readme line is a code end tag.
@@ -86,7 +91,7 @@ export class Readme {
    */
   public static isRootNode = (block: Block): boolean => block.header === '_root';
 
-  /*
+  /**
    * @param line - string representing a single line from a readme content.
    *
    * @returns a github-sanitized string to be used as an anchor tag linking to another section of the same readme document.
@@ -97,7 +102,7 @@ export class Readme {
    * @param s - a string to be repeated
    * @param count - the number of times a string should be repeated.
    *
-   * @returns a string comprised of {@link s}, repeated {@link count} times.
+   * @returns a string comprised of `s`, repeated `count` times.
    */
   public static repeat = (s: string, count: number): string => [...Array(count).keys()].map(() => s).join('');
 
@@ -158,13 +163,13 @@ export class Readme {
    */
   content = '';
 
-  /*
-   * A list of {@link Content} or {@link Code} blocks.
+  /**
+   * A list of {@link ReadmeBlock}.
    */
   blocks: ReadmeBlock[] = [];
 
   /**
-   * A map of {@link Content} blocks.
+   * A map of {@link IndexedBlocks} blocks.
    */
   indexedBlocks: IndexedBlocks = new Map();
 
@@ -182,7 +187,6 @@ export class Readme {
    * @public
    * @returns a {@link Readme} instance.
    */
-  /* eslint-disable-next-line complexity */
   public static parse(content = ''): ReadmeBlock[] {
     const lines = content.split('\n').filter(Boolean);
     const blocks: ReadmeBlock[] = [];
@@ -277,7 +281,7 @@ export class Readme {
     return undefined;
   }
 
-  /*
+  /**
    * Convert the internal readme representation back to a string.
    *
    * @returns a string representing the entire readme after any transformations.
@@ -340,7 +344,6 @@ export class Readme {
    *
    * @returns a list of matched content {@link Block}s.
    */
-  /* eslint-disable-next-line complexity */
   getSections(target: Query, strict = false): ReadmeBlock[] {
     const blocks: ReadmeBlock[] = [];
 

@@ -1,3 +1,8 @@
+/*
+  eslint-disable
+    complexity,
+    sonarjs/cognitive-complexity,
+*/
 import { readFileSync, writeFileSync } from 'fs';
 import glob from 'glob';
 import { isAbsolute, join, resolve } from 'path';
@@ -14,6 +19,7 @@ const log = getLogger(
   },
   true,
 );
+
 /**
  * string field is for inserting new sections.
  * regex field is for matching sections.
@@ -88,7 +94,7 @@ export const formatEnvDocs = (docs: ScriptDocs): ReadmeBlock => {
 };
 
 /**
- * @param {@link DocLinksParams} - a doc links section header, an introductory paragraph, and a path to the repository.
+ * @param params - {@link DocLinksParams} a doc links section header, an introductory paragraph, and a path to the repository.
  * @public
  * @returns a {@link ReadmeBlock} of relative links to the documents in the standardized documentation path
  */
@@ -134,7 +140,6 @@ export function buildDocumentationLinksBlock({
  * @public
  * @returns an exported {@link Readme} instance.
  */
-/* eslint-disable-next-line complexity, sonarjs/cognitive-complexity */
 export function standardize(
   content: string,
   title: string,

@@ -1,11 +1,11 @@
 /**
- * @summary Used to match against a content header.
+ * @remarks Used to match against a content header.
  * @public
  */
 export type Query = string | RegExp;
 
 /**
- * @summary An array of strings representing the content section (no header) of a markdown section.
+ * @remarks An array of strings representing the content section (no header) of a markdown section.
  * @public
  */
 export interface Block {
@@ -18,7 +18,7 @@ export interface Block {
  */
 export interface DocLinksParams {
   /**
-   * @summary A string representing the header line for the link block to standard documentation files.
+   * @remarks A string representing the header line for the link block to standard documentation files.
    */
   header: string;
 

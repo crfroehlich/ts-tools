@@ -1,12 +1,15 @@
-/* eslint-disable no-console */
 import { execSync } from 'child_process';
+import { getLogger } from '../logger/logger';
 
+const log = getLogger();
 const prompts = require('prompts');
 const ghpages = require('gh-pages');
 
 /**
  * Generates API docs for every documented class/method/interface/enum
- * @param params Optional list of command line params
+ * @param params - Optional list of command line params
+ * @public
+ * @returns async void
  */
 export const generateApiDocs = async (params?: string): Promise<void> => {
   let command = 'api-documenter markdown --input-folder temp --output-folder api';
@@ -14,18 +17,18 @@ export const generateApiDocs = async (params?: string): Promise<void> => {
     command += ` ${params}`;
   }
   const cwd = `${process.cwd()}`;
-  console.info(`Running ${command} in ${cwd}`);
+  log.info(`Running ${command} in ${cwd}`);
 
   try {
     execSync(command, { cwd, stdio: 'inherit' });
   } catch (error) {
-    console.error(error);
+    log.error(error);
   }
 
   const publishApiDocs = () => {
     ghpages.publish('api', (err: Error) => {
       if (err) {
-        console.error(err);
+        log.error('Failed', err);
       }
     });
   };
@@ -40,7 +43,7 @@ export const generateApiDocs = async (params?: string): Promise<void> => {
     if (confirm.yesno) {
       publishApiDocs();
     } else {
-      console.log('User cancelled operation');
+      log.info('User cancelled operation');
     }
   } else {
     publishApiDocs();
