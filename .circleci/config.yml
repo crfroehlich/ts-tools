@@ -84,6 +84,8 @@ jobs:
       - run:
           command: yarn test
           name: Run Tests
+      - store_artifacts:
+          path: coverage
 
 version: 2.1
 

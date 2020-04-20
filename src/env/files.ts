@@ -15,7 +15,7 @@ export interface GlobOptions {
 /**
  * @public
  */
-export const GLOB_OPTIONS = {
+export const GLOB_OPTIONS: GlobOptions = {
   dot: true,
   ignore: [
     '.circleci/**',
