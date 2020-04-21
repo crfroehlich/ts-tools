@@ -55,6 +55,9 @@ jobs:
           command: yarn build:prod
           name: Build
       - run:
+          command: yarn docs:publish
+          name: Publish API Documentation
+      - run:
           command: npm publish
           name: Publish
   test:

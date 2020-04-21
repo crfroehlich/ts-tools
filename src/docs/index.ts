@@ -1,2 +1,2 @@
-export * from './api';
-export * from './apiDocs';
+export * from './generateApi';
+export * from './generateApiDocs';

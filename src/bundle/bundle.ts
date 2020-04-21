@@ -6,41 +6,13 @@
 import path from 'path';
 import fs from 'fs';
 import * as webpack from 'webpack';
-import { loadEnv } from '../env/loadEnv';
-import { getLogger } from '../logger/logger';
+import { LogLevel, getLogger } from '../logger/logger';
 
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const webpackFailPlugin = require('webpack-fail-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const tsLoader = require('ts-loader');
-
-if (!tsLoader) {
-  throw new Error('Loaders missing');
-}
-const log = getLogger();
-
-const license = `
--------------------------- NS8 PROPRIETARY 1.0 --------------------------
-
-Copyright (c) 2020 NS8 Inc - All rights reserved
-
-Proprietary and confidential.
-
-All information contained herein is, and remains the property
-of NS8 Inc. The intellectual and technical concepts contained herein
-are proprietary to NS8 Inc and may be covered by U.S. and Foreign
-Patents, patents in process, and are protected by trade secret or
-copyright law.  Dissemination of this information or reproduction of
-this material is strictly forbidden unless prior written permission is
-obtained from NS8 Inc.  Access to the source code contained herein is
-hereby forbidden to anyone except current NS8 Inc employees, managers
-or contractors who have executed Confidentiality and Non-disclosure
-agreements explicitly covering such access.
-
-Unauthorized copy of this file, via any medium is strictly prohibited.
-`;
 
 /**
  * Bundles for development or production
@@ -97,13 +69,14 @@ export enum BundleDevTool {
  * @public
  */
 export interface BundleConfig {
-  bundleMode: webpack.Options.Devtool;
+  devtool: webpack.Options.Devtool;
   bundleTarget: BundleTarget;
   distDirectory: string;
   fileName?: string;
   globals?: BundleGlobals[];
   hmr?: boolean;
   libraryName: string;
+  logLevel?: LogLevel;
   mode?: BundleMode;
   sourceDirectory: string;
   useTypeCheckingService?: boolean;
@@ -114,11 +87,12 @@ export interface BundleConfig {
  * @public
  */
 export const BundleDefaults: BundleConfig = {
-  bundleMode: BundleDevTool.EVAL,
+  devtool: BundleDevTool.EVAL,
   bundleTarget: BundleTarget.NODE,
   distDirectory: '../dist',
   hmr: undefined,
   libraryName: 'index',
+  logLevel: LogLevel.ERROR,
   mode: BundleMode.DEVELOPMENT,
   sourceDirectory: './src/index.ts',
   useTypeCheckingService: false,
@@ -130,7 +104,33 @@ export const BundleDefaults: BundleConfig = {
  * @param config - bundle configuration
  */
 export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack.Configuration => {
-  let { mode, bundleMode } = config;
+  if (!tsLoader) {
+    throw new Error('Loaders missing');
+  }
+  const log = getLogger();
+
+  const license = `
+-------------------------- NS8 PROPRIETARY 1.0 --------------------------
+
+Copyright (c) 2020 NS8 Inc - All rights reserved
+
+Proprietary and confidential.
+
+All information contained herein is, and remains the property
+of NS8 Inc. The intellectual and technical concepts contained herein
+are proprietary to NS8 Inc and may be covered by U.S. and Foreign
+Patents, patents in process, and are protected by trade secret or
+copyright law.  Dissemination of this information or reproduction of
+this material is strictly forbidden unless prior written permission is
+obtained from NS8 Inc.  Access to the source code contained herein is
+hereby forbidden to anyone except current NS8 Inc employees, managers
+or contractors who have executed Confidentiality and Non-disclosure
+agreements explicitly covering such access.
+
+Unauthorized copy of this file, via any medium is strictly prohibited.
+`;
+
+  let { mode, devtool } = config;
   const {
     bundleTarget,
     distDirectory,
@@ -138,6 +138,7 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
     globals,
     hmr,
     libraryName,
+    logLevel,
     sourceDirectory,
     useTypeCheckingService,
   } = config;
@@ -148,7 +149,7 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
     }
   }
   if (mode === BundleMode.PRODUCTION) {
-    bundleMode = BundleDevTool.CHEAP_SOURCE_MAP;
+    devtool = BundleDevTool.CHEAP_SOURCE_MAP;
   }
   const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
   const banner = `
@@ -157,7 +158,6 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
   `;
 
   const plugins: webpack.Plugin[] = [
-    new HardSourceWebpackPlugin(),
     new webpack.BannerPlugin({
       banner,
     }),
@@ -208,12 +208,15 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
         : `${libraryName.toLowerCase().trim()}.js`;
   }
 
+  const warnings: boolean = logLevel !== undefined && logLevel !== LogLevel.ERROR;
+
   const entry = sourceDirectory || './src/index.ts';
   const outputPath = path.resolve(distDirectory || './dist');
   log.info('Starting bundle', {
-    bundleMode,
+    devtool,
     entry,
     filename,
+    logLevel,
     outputPath,
     processEnv: process.env.NODE_ENV,
     resolvedEnv: mode,
@@ -236,7 +239,7 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
       extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js'],
       modules: ['node_modules'],
     },
-    devtool: bundleMode,
+    devtool,
     module: {
       rules: [
         {
@@ -258,6 +261,9 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
       fs: 'empty',
       __dirname: false,
       __filename: false,
+    },
+    stats: {
+      warnings,
     },
     watchOptions: {
       ignored: ['**/*.js', 'node_modules/**'],

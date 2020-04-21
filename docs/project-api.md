@@ -25,9 +25,9 @@ export const buildLoggerConfig: (options: LogOptions) => LoggerOptions;
 // @public
 export interface BundleConfig {
     // (undocumented)
-    bundleMode: webpack.Options.Devtool;
-    // (undocumented)
     bundleTarget: BundleTarget;
+    // (undocumented)
+    devtool: webpack.Options.Devtool;
     // (undocumented)
     distDirectory: string;
     // (undocumented)
@@ -38,6 +38,8 @@ export interface BundleConfig {
     hmr?: boolean;
     // (undocumented)
     libraryName: string;
+    // (undocumented)
+    logLevel?: LogLevel;
     // (undocumented)
     mode?: BundleMode;
     // (undocumented)
@@ -154,7 +156,7 @@ export const formatEnvDocs: (docs: ScriptDocs) => ReadmeBlock;
 export const formatScriptDocs: (docs: ScriptDocs) => ReadmeBlock;
 
 // @public
-export const generateApi: () => void;
+export const generateApi: (configPath?: string | undefined) => void;
 
 // @public
 export const generateApiDocs: (params?: string | undefined) => Promise<void>;

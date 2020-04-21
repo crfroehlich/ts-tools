@@ -24,7 +24,6 @@
     "fork-ts-checker-notifier-webpack-plugin": "2.0.0",
     "fork-ts-checker-webpack-plugin": "4.1.3",
     "gh-pages": "2.2.0",
-    "hard-source-webpack-plugin": "0.13.1",
     "husky": "4.2.5",
     "markdownlint-cli": "^0.22.0",
     "mocha": "7.1.1",
@@ -52,7 +51,6 @@
     "@types/chai-as-promised": "7.1.2",
     "@types/format-util": "1.0.1",
     "@types/glob": "7.1.1",
-    "@types/hard-source-webpack-plugin": "1.0.1",
     "@types/mocha": "7.0.2",
     "@types/node": "13.13.1",
     "@types/prettier": "2.0.0",
@@ -76,13 +74,13 @@
   "scripts": {
     "beautify": "ts-node ./src/lint/sortJson.ts",
     "build": "yarn clean && yarn generate:exports && tsc -d --outDir dist && yarn beautify && yarn docs:all",
-    "build:prod": "yarn clean && tsc -d --outDir dist && yarn docs:api:markdown",
+    "build:prod": "yarn clean && tsc -d --outDir dist",
     "build:watch": "concurrently \"yarn build\" \"yarn test:watch\"",
     "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp temp api",
     "count": "cloc src/",
     "docs:all": "yarn docs:standardize && yarn docs:api",
-    "docs:api": "ts-node ./src/docs/api.ts",
-    "docs:api:markdown": "ts-node ./src/docs/apiDocs.ts",
+    "docs:api": "ts-node ./src/docs/generateApi.ts",
+    "docs:publish": "ts-node ./src/docs/generateApiDocs.ts",
     "docs:standardize": "ts-node src/readme/standardizeReadme.ts",
     "generate:exports": "yarn cti create ./src -w",
     "lint": "yarn eslint src/**/*.ts docs/**/*.md",
@@ -125,8 +123,8 @@
       "description": "Generates a single API doc based on the code in the project.",
       "dev": true
     },
-    "docs:api:markdown": {
-      "description": "Creates markdown documentation for the project and publishes to GitHub Pages.",
+    "docs:publish": {
+      "description": "Assembles the Markdown documentation for the entire project and publish it to GitHub pages using API Extractor.",
       "dev": true
     },
     "docs:standardize": {
@@ -163,5 +161,5 @@
     }
   },
   "types": "dist/protect-tools-js.d.ts",
-  "version": "0.0.12"
+  "version": "0.1.0"
 }
