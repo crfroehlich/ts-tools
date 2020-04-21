@@ -76,13 +76,13 @@
   "scripts": {
     "beautify": "ts-node ./src/lint/sortJson.ts",
     "build": "yarn clean && yarn generate:exports && tsc -d --outDir dist && yarn beautify && yarn docs:all",
-    "build:prod": "yarn clean && tsc -d --outDir dist && yarn docs:api:markdown",
+    "build:prod": "yarn clean && tsc -d --outDir dist",
     "build:watch": "concurrently \"yarn build\" \"yarn test:watch\"",
     "clean": "rm -rf dist .awcache *.log .nyc_output coverage .tmp temp api",
     "count": "cloc src/",
     "docs:all": "yarn docs:standardize && yarn docs:api",
     "docs:api": "ts-node ./src/docs/api.ts",
-    "docs:api:markdown": "ts-node ./src/docs/apiDocs.ts",
+    "docs:publish": "ts-node ./src/docs/apiDocs.ts",
     "docs:standardize": "ts-node src/readme/standardizeReadme.ts",
     "generate:exports": "yarn cti create ./src -w",
     "lint": "yarn eslint src/**/*.ts docs/**/*.md",
@@ -125,8 +125,8 @@
       "description": "Generates a single API doc based on the code in the project.",
       "dev": true
     },
-    "docs:api:markdown": {
-      "description": "Creates markdown documentation for the project and publishes to GitHub Pages.",
+    "docs:publish": {
+      "description": "Assembles the Markdown documentation for the entire project and publish it to GitHub pages using API Extractor.",
       "dev": true
     },
     "docs:standardize": {

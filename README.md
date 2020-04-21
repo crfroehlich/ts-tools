@@ -36,7 +36,7 @@ To get started, take a look at the documentation listed below:
 - `yarn count`: Counts lines of source code.
 - `yarn docs:all`: Runs all documentation commands.
 - `yarn docs:api`: Generates a single API doc based on the code in the project.
-- `yarn docs:api:markdown`: Creates markdown documentation for the project and publishes to GitHub Pages.
+- `yarn docs:publish`: Assembles the Markdown documentation for the entire project and publish it to GitHub pages using API Extractor.
 - `yarn docs:standardize`: Creates or updates a new readme with a standard set of readme sections, including a toc, yarn script documentation, links to repo documentation files and an NS8 license.
 - `yarn generate:exports`: Generates index.ts files for all exports recursively in the 'src' folder.
 - `yarn lint`: Lints the codebase.
