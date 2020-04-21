@@ -4,6 +4,7 @@
   sonarjs/cognitive-complexity,
 */
 import { execSync } from 'child_process';
+import { existsSync, mkdirSync } from 'fs';
 import { getLogger } from '../logger/logger';
 
 const ghpages = require('gh-pages');
@@ -24,6 +25,10 @@ export const generateApiDocs = async (params?: string): Promise<void> => {
   }
   const cwd = `${process.cwd()}`;
   log.info(`Running ${command} in ${cwd}`);
+
+  if (!existsSync('api')) {
+    mkdirSync('api');
+  }
 
   try {
     execSync(command, { cwd, stdio: 'inherit' });
@@ -53,7 +58,7 @@ export const generateApiDocs = async (params?: string): Promise<void> => {
       log.info('User cancelled operation');
     }
   } else {
-      // If we're in CI, generate and publish the docs
+    // If we're in CI, generate and publish the docs
     publish();
   }
 };
