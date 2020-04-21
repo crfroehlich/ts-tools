@@ -163,5 +163,5 @@
     }
   },
   "types": "dist/protect-tools-js.d.ts",
-  "version": "0.1.00"
+  "version": "0.1.0"
 }
