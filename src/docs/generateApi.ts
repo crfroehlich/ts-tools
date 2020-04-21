@@ -31,8 +31,11 @@ export const generateApi = (configPath?: string): void => {
   if (!existsSync(apiExtractorJsonPath)) {
     throw new Error(`Could find config file: ${apiExtractorJsonPath}`);
   }
+  // Load and parse the api-extractor.json file
+  const extractorConfig: ExtractorConfig = ExtractorConfig.loadFileAndPrepare(apiExtractorJsonPath);
+
   const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
-  let indexDTs = readFileSync('dist/index.d.ts', 'utf8');
+  let indexDTs = readFileSync(extractorConfig.mainEntryPointFilePath, 'utf8');
   const packageDocumentation = `// Copyright (c) NS8, Inc. All rights reserved. UNLICENSED. Proprietary.
 
   /**
@@ -50,10 +53,8 @@ export const generateApi = (configPath?: string): void => {
   ${indexDTs}
   `;
 
-  writeFileSync('dist/index.d.ts', indexDTs);
+  writeFileSync(extractorConfig.mainEntryPointFilePath, indexDTs);
 
-  // Load and parse the api-extractor.json file
-  const extractorConfig: ExtractorConfig = ExtractorConfig.loadFileAndPrepare(apiExtractorJsonPath);
 
   // Invoke API Extractor
   const extractorResult: ExtractorResult = Extractor.invoke(extractorConfig, {
