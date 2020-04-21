@@ -55,7 +55,6 @@ export const generateApi = (configPath?: string): void => {
 
   writeFileSync(extractorConfig.mainEntryPointFilePath, indexDTs);
 
-
   // Invoke API Extractor
   const extractorResult: ExtractorResult = Extractor.invoke(extractorConfig, {
     localBuild: true,
