@@ -1,8 +1,11 @@
 .awcache/
+.circleci/
 .editorconfig
 .env
 .env.defaults
 .env.schema
+.eslintignore
+.eslintrc.yml
 .gitattributes
 .gitignore
 .npmignore
@@ -10,12 +13,14 @@
 .nyc_output/
 .vscode/
 *.log
+api/
 build/
 codealike.json
 CODEOWNERS
 coverage/
 docs/
 src/
+temp/
 test/
 tsconfig.json
 yarn.lock
