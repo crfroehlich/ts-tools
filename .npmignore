@@ -5,7 +5,6 @@
 .env.defaults
 .env.schema
 .eslintignore
-.eslintrc.yml
 .gitattributes
 .gitignore
 .npmignore

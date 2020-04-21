@@ -2,6 +2,8 @@
 
 [![CircleCI](https://circleci.com/gh/ns8inc/protect-tools-js.svg?style=svg&circle-token=6b0a7fe464a53289ee8ddea14f3a84b1996b5619)](https://app.circleci.com/pipelines/github/ns8inc/protect-tools-js)
 
+[API Documentation](https://ns8inc.github.io/protect-tools-js/protect-tools-js.html) is available.
+
 ## Table of Contents
 
 - [General Purpose Build Tools for Protect Projects](#general-purpose-build-tools-for-protect-projects)
