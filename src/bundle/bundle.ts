@@ -6,7 +6,6 @@
 import path from 'path';
 import fs from 'fs';
 import * as webpack from 'webpack';
-import { loadEnv } from '../env/loadEnv';
 import { getLogger } from '../logger/logger';
 
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
@@ -15,32 +14,6 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const webpackFailPlugin = require('webpack-fail-plugin');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const tsLoader = require('ts-loader');
-
-if (!tsLoader) {
-  throw new Error('Loaders missing');
-}
-const log = getLogger();
-
-const license = `
--------------------------- NS8 PROPRIETARY 1.0 --------------------------
-
-Copyright (c) 2020 NS8 Inc - All rights reserved
-
-Proprietary and confidential.
-
-All information contained herein is, and remains the property
-of NS8 Inc. The intellectual and technical concepts contained herein
-are proprietary to NS8 Inc and may be covered by U.S. and Foreign
-Patents, patents in process, and are protected by trade secret or
-copyright law.  Dissemination of this information or reproduction of
-this material is strictly forbidden unless prior written permission is
-obtained from NS8 Inc.  Access to the source code contained herein is
-hereby forbidden to anyone except current NS8 Inc employees, managers
-or contractors who have executed Confidentiality and Non-disclosure
-agreements explicitly covering such access.
-
-Unauthorized copy of this file, via any medium is strictly prohibited.
-`;
 
 /**
  * Bundles for development or production
@@ -130,6 +103,32 @@ export const BundleDefaults: BundleConfig = {
  * @param config - bundle configuration
  */
 export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack.Configuration => {
+  if (!tsLoader) {
+    throw new Error('Loaders missing');
+  }
+  const log = getLogger();
+
+  const license = `
+-------------------------- NS8 PROPRIETARY 1.0 --------------------------
+
+Copyright (c) 2020 NS8 Inc - All rights reserved
+
+Proprietary and confidential.
+
+All information contained herein is, and remains the property
+of NS8 Inc. The intellectual and technical concepts contained herein
+are proprietary to NS8 Inc and may be covered by U.S. and Foreign
+Patents, patents in process, and are protected by trade secret or
+copyright law.  Dissemination of this information or reproduction of
+this material is strictly forbidden unless prior written permission is
+obtained from NS8 Inc.  Access to the source code contained herein is
+hereby forbidden to anyone except current NS8 Inc employees, managers
+or contractors who have executed Confidentiality and Non-disclosure
+agreements explicitly covering such access.
+
+Unauthorized copy of this file, via any medium is strictly prohibited.
+`;
+
   let { mode, bundleMode } = config;
   const {
     bundleTarget,
