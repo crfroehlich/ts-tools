@@ -1,8 +1,15 @@
+/* eslint-disable
+  @typescript-eslint/no-explicit-any,
+  complexity,
+  sonarjs/cognitive-complexity,
+*/
 import { execSync } from 'child_process';
 import { getLogger } from '../logger/logger';
 
-const log = getLogger();
 const ghpages = require('gh-pages');
+const prompts = require('prompts');
+
+const log = getLogger();
 
 /**
  * Generates API docs for every documented class/method/interface/enum.
@@ -26,12 +33,30 @@ export const generateApiDocs = async (params?: string): Promise<void> => {
       log.error(error);
     }
 
-    // Publish to the `gh-pages` branch
-    ghpages.publish('api', (err: Error) => {
-      if (err) {
-        log.error('Failed', err);
+    const publish = (): any => {
+      // Publish to the `gh-pages` branch
+      return ghpages.publish('api', (err: Error) => {
+        if (err) {
+          log.error('Failed', err);
+        }
+      });
+    };
+
+    // If we're not in CI, allow the user to confirm before they deploy
+    if (!process.env.CI) {
+      const confirm = await prompts({
+        type: 'confirm',
+        name: 'yesno',
+        message: 'You are about to to publish the API documentation to GitHub Pages. Are you sure? Y/n',
+      });
+      if (confirm.yesno) {
+        publish();
+      } else {
+        log.info('User cancelled operation');
       }
-    });
+    } else {
+      publish();
+    }
   }
 };
 

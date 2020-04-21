@@ -6,9 +6,8 @@
 import path from 'path';
 import fs from 'fs';
 import * as webpack from 'webpack';
-import { getLogger } from '../logger/logger';
+import { LogLevel, getLogger } from '../logger/logger';
 
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const webpackFailPlugin = require('webpack-fail-plugin');
@@ -70,13 +69,14 @@ export enum BundleDevTool {
  * @public
  */
 export interface BundleConfig {
-  bundleMode: webpack.Options.Devtool;
+  devtool: webpack.Options.Devtool;
   bundleTarget: BundleTarget;
   distDirectory: string;
   fileName?: string;
   globals?: BundleGlobals[];
   hmr?: boolean;
   libraryName: string;
+  logLevel?: LogLevel;
   mode?: BundleMode;
   sourceDirectory: string;
   useTypeCheckingService?: boolean;
@@ -87,11 +87,12 @@ export interface BundleConfig {
  * @public
  */
 export const BundleDefaults: BundleConfig = {
-  bundleMode: BundleDevTool.EVAL,
+  devtool: BundleDevTool.EVAL,
   bundleTarget: BundleTarget.NODE,
   distDirectory: '../dist',
   hmr: undefined,
   libraryName: 'index',
+  logLevel: LogLevel.ERROR,
   mode: BundleMode.DEVELOPMENT,
   sourceDirectory: './src/index.ts',
   useTypeCheckingService: false,
@@ -129,7 +130,7 @@ agreements explicitly covering such access.
 Unauthorized copy of this file, via any medium is strictly prohibited.
 `;
 
-  let { mode, bundleMode } = config;
+  let { mode, devtool } = config;
   const {
     bundleTarget,
     distDirectory,
@@ -137,6 +138,7 @@ Unauthorized copy of this file, via any medium is strictly prohibited.
     globals,
     hmr,
     libraryName,
+    logLevel,
     sourceDirectory,
     useTypeCheckingService,
   } = config;
@@ -147,7 +149,7 @@ Unauthorized copy of this file, via any medium is strictly prohibited.
     }
   }
   if (mode === BundleMode.PRODUCTION) {
-    bundleMode = BundleDevTool.CHEAP_SOURCE_MAP;
+    devtool = BundleDevTool.CHEAP_SOURCE_MAP;
   }
   const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
   const banner = `
@@ -156,7 +158,6 @@ Unauthorized copy of this file, via any medium is strictly prohibited.
   `;
 
   const plugins: webpack.Plugin[] = [
-    new HardSourceWebpackPlugin(),
     new webpack.BannerPlugin({
       banner,
     }),
@@ -207,12 +208,15 @@ Unauthorized copy of this file, via any medium is strictly prohibited.
         : `${libraryName.toLowerCase().trim()}.js`;
   }
 
+  const warnings: boolean = logLevel !== undefined && logLevel !== LogLevel.ERROR;
+
   const entry = sourceDirectory || './src/index.ts';
   const outputPath = path.resolve(distDirectory || './dist');
   log.info('Starting bundle', {
-    bundleMode,
+    devtool,
     entry,
     filename,
+    logLevel,
     outputPath,
     processEnv: process.env.NODE_ENV,
     resolvedEnv: mode,
@@ -235,7 +239,7 @@ Unauthorized copy of this file, via any medium is strictly prohibited.
       extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js'],
       modules: ['node_modules'],
     },
-    devtool: bundleMode,
+    devtool,
     module: {
       rules: [
         {
@@ -257,6 +261,9 @@ Unauthorized copy of this file, via any medium is strictly prohibited.
       fs: 'empty',
       __dirname: false,
       __filename: false,
+    },
+    stats: {
+      warnings,
     },
     watchOptions: {
       ignored: ['**/*.js', 'node_modules/**'],

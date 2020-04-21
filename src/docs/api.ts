@@ -1,6 +1,7 @@
+/* eslint-disable complexity */
 import * as path from 'path';
 import { Extractor, ExtractorConfig, ExtractorResult } from '@microsoft/api-extractor';
-import { readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { getLogger } from '../logger/logger';
 
 /**
@@ -9,10 +10,27 @@ import { getLogger } from '../logger/logger';
  *
  * @public
  */
-export const generateApi = (): void => {
+export const generateApi = (configPath?: string): void => {
   const log = getLogger();
 
-  const apiExtractorJsonPath: string = path.join(__dirname, './api-extractor.json');
+  let apiExtractorJsonPath = '';
+  // Get any command line arguments that might have been passed
+  const args = process.argv.slice(2);
+
+  // If we passed in a path, use it
+  const stageArg = args?.find((a) => a.startsWith('--path='));
+  if (stageArg) {
+    apiExtractorJsonPath = stageArg.split('=')?.[1];
+  }
+  if (!existsSync(apiExtractorJsonPath)) {
+    apiExtractorJsonPath = configPath || '';
+  }
+  if (!existsSync(apiExtractorJsonPath)) {
+    apiExtractorJsonPath = path.join(__dirname, '../../api-extractor.json');
+  }
+  if (!existsSync(apiExtractorJsonPath)) {
+    throw new Error(`Could find config file: ${apiExtractorJsonPath}`);
+  }
   const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
   let indexDTs = readFileSync('dist/index.d.ts', 'utf8');
   const packageDocumentation = `// Copyright (c) NS8, Inc. All rights reserved. UNLICENSED. Proprietary.
