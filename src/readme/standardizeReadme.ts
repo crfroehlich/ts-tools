@@ -7,10 +7,12 @@ import { readFileSync, writeFileSync } from 'fs';
 import glob from 'glob';
 import { isAbsolute, join, resolve } from 'path';
 import { Readme, ReadmeBlock } from './readme';
-import { DocLinksParams, ScriptDocs } from './types';
+import { DocLinksParams, EnvDocs, ScriptDocs } from './types';
 import { GLOB_OPTIONS } from '../env/files';
 import { LogLevel, LogOutput, getLogger } from '../logger';
+import { loadEnv } from '../env/loadEnv';
 
+const env = loadEnv();
 const log = getLogger(
   {
     logLevel: LogLevel.INFO,
@@ -75,16 +77,17 @@ export const formatScriptDocs = (docs: ScriptDocs): ReadmeBlock => {
 
 /**
  * For each documented environment variable in package.json, create documentation in README
- * @param docs - a {@link ScriptDocs} object containing documentation objects describing environment variables.
+ * @param docs - a {@link EnvDocs} object containing documentation objects describing environment variables.
  * @public
- * @returns a {@link ReadmeBlock} whose content is a formatted {@link ScriptDocs}.
+ * @returns a {@link ReadmeBlock} whose content is a formatted {@link EnvDocs}.
  */
-export const formatEnvDocs = (docs: ScriptDocs): ReadmeBlock => {
+export const formatEnvDocs = (docs: EnvDocs): ReadmeBlock => {
   const header = HEADERS.ENV.STRING;
   const content = Object.keys(docs)
     .map((envName): string => {
-      const { description } = docs[envName];
-      return `- \`${envName}\`: ${description}`;
+      const { description, defaultValue } = docs[envName];
+      return `- \`${envName}\`: ${description}
+  - Default Value: "${defaultValue}"`;
     })
     .join('\n');
 
@@ -138,7 +141,7 @@ export function buildDocumentationLinksBlock({
  * @param content - readme text content.
  * @param title - name of the H1 header
  * @param scriptDocs - a {@link ScriptDocs} object containing documentation on package.json scripts.
- * @param envDocs - a {@link ScriptDocs} object containing documentation for environment variables
+ * @param envDocs - a {@link EnvDocs} object containing documentation for environment variables
  * @param repoRoot - the name of the repository, used as a fallback for the top-level readme header if it's missing.
  * @public
  * @returns an exported {@link Readme} instance.
@@ -147,7 +150,7 @@ export function standardize(
   content: string,
   title: string,
   scriptDocs?: ScriptDocs,
-  envDocs?: ScriptDocs,
+  envDocs?: EnvDocs,
   repoRoot?: string,
 ): string {
   /**
@@ -180,11 +183,13 @@ export function standardize(
       });
       readme.prependBlock(mainHeader);
     }
-
-    if (gettingStartedSection) {
-      gettingStartedSection.content = docLinksBlock.content;
-    } else {
-      readme.appendBlock(docLinksBlock, mainHeader);
+    const makeLinks = env.DOCS_CREATE_README_INDEX?.toLowerCase() !== 'false';
+    if (makeLinks) {
+      if (gettingStartedSection) {
+        gettingStartedSection.content = docLinksBlock.content;
+      } else {
+        readme.appendBlock(docLinksBlock, mainHeader);
+      }
     }
     if (scriptDocs) {
       if (scriptDocsSection) {
@@ -202,22 +207,23 @@ export function standardize(
         readme.appendBlock(envDocsBlock, gettingStartedSection);
       }
     }
-
     if (!licenseSection) {
       readme.appendBlock(Readme.getLicenseBlock());
     }
   }
-
-  // TOC goes last since it depends on the rest of the readme.
-  if (tocSection) {
-    const toc = readme.getTocBlock(0, '  ');
-    if (toc) {
-      tocSection.content = toc.content;
-    }
-  } else {
-    const toc = readme.getTocBlock();
-    if (toc) {
-      readme.appendBlock(toc, mainHeader);
+  const makeToC = env.DOCS_CREATE_TOC?.toLowerCase() !== 'false';
+  if (makeToC) {
+    // TOC goes last since it depends on the rest of the readme.
+    if (tocSection) {
+      const toc = readme.getTocBlock(0, '  ');
+      if (toc) {
+        tocSection.content = toc.content;
+      }
+    } else {
+      const toc = readme.getTocBlock();
+      if (toc) {
+        readme.appendBlock(toc, mainHeader);
+      }
     }
   }
 
