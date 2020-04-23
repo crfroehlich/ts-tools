@@ -146,11 +146,22 @@ export interface EnvConfig {
 // @public (undocumented)
 export const EnvConfigDefaults: EnvConfig;
 
+// @public
+export interface EnvDoc {
+    defaultValue: string;
+    description: string;
+}
+
+// @public
+export interface EnvDocs {
+    [index: string]: EnvDoc;
+}
+
 // @public (undocumented)
 export type errorMethod = (message: string, ...args: any[]) => void;
 
 // @public
-export const formatEnvDocs: (docs: ScriptDocs) => ReadmeBlock;
+export const formatEnvDocs: (docs: EnvDocs) => ReadmeBlock;
 
 // @public
 export const formatScriptDocs: (docs: ScriptDocs) => ReadmeBlock;
@@ -362,7 +373,7 @@ export interface ScriptDocs {
 export const sortJson: (path?: string, options?: GlobOptions, callback?: globCallback) => void;
 
 // @public
-export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, envDocs?: ScriptDocs, repoRoot?: string): string;
+export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, envDocs?: EnvDocs, repoRoot?: string): string;
 
 
 ```

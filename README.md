@@ -1,7 +1,6 @@
 # General Purpose Build Tools for Protect Projects
 
 [![CircleCI](https://circleci.com/gh/ns8inc/protect-tools-js.svg?style=svg&circle-token=6b0a7fe464a53289ee8ddea14f3a84b1996b5619)](https://app.circleci.com/pipelines/github/ns8inc/protect-tools-js)
-
 [API Documentation](https://ns8inc.github.io/protect-tools-js/protect-tools-js.html) is available.
 
 ## Table of Contents
@@ -26,7 +25,14 @@ To get started, take a look at the documentation listed below:
 
 ## Environment Variables
 
+- `DOCS_CREATE_README_INDEX`: If true, create an index of all documents in README.md
+  - Default Value: "true"
+- `DOCS_CREATE_TOC`: If true, create a Table of Contents for each Markdown doc.
+  - Default Value: "true"
 - `NODE_ENV`: The runtime environment, either `prod` or `dev`.
+  - Default Value: "dev"
+- `SYNC_PEER_DEPENDENCIES`: If true, sets all project dependencies as peer dependencies
+  - Default Value: "true"
 
 ## `package.json` scripts
 

@@ -45,7 +45,7 @@ export interface ScriptDoc {
 
   /**
    * flag as to whether script is for devs or not.
-   * not currently used, but potentially useful for f  uture organization.
+   * not currently used, but potentially useful for future organization.
    */
   dev: boolean;
 }
@@ -59,4 +59,31 @@ export interface ScriptDocs {
    * A string to {@link ScriptDoc}-block mapping.
    */
   [index: string]: ScriptDoc;
+}
+
+/**
+ * Represents an environment variable doc block in package.json
+ * @public
+ */
+export interface EnvDoc {
+  /**
+   * environment variable doc description property.
+   */
+  description: string;
+
+  /**
+   * variable's default value
+   */
+  defaultValue: string;
+}
+
+/**
+ * Collection of named {@link EnvDoc} docs
+ * @public
+ */
+export interface EnvDocs {
+  /**
+   * A string to {@link EnvDoc}-block mapping.
+   */
+  [index: string]: EnvDoc;
 }

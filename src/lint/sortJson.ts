@@ -27,10 +27,12 @@ const defaultPath = '**/*.json';
 
 // Parse the package JSON for script and environment variable documentation
 const parsePackageJson = (json: any): any => {
+  // Sync the scripts with their docs
   if (json.scripts) {
     if (!json.scriptsDocumentation) {
       json.scriptsDocumentation = {};
     }
+    // For each script, if no doc is defined, create it
     const scriptKeys = Object.keys(json.scripts);
     scriptKeys.forEach((key) => {
       if (!json.scriptsDocumentation[key]) {
@@ -40,6 +42,7 @@ const parsePackageJson = (json: any): any => {
         };
       }
     });
+    // If any doc exists for an undefined script, delete the doc
     const docKeys = Object.keys(json.scriptsDocumentation);
     docKeys.forEach((key) => {
       if (!json.scripts[key]) {
@@ -47,9 +50,11 @@ const parsePackageJson = (json: any): any => {
       }
     });
   }
+  // Sync the environment variables
   if (!json.envDocumentation) {
     json.envDocumentation = {};
   }
+  // For each environment variable, if no doc exists, create it
   const envKeys = Object.keys(env);
   envKeys.forEach((key) => {
     if (!json.envDocumentation[key]) {
@@ -58,12 +63,17 @@ const parsePackageJson = (json: any): any => {
       };
     }
   });
+  // For each doc, if no env exists, delete the doc
   const envDocKeys = Object.keys(json.envDocumentation);
   envDocKeys.forEach((key) => {
     if (!envKeys.find((k) => k === key)) {
       delete json.envDocumentation[key];
     }
   });
+  if (env?.SYNC_PEER_DEPENDENCIES?.toLowerCase() === 'true') {
+    // Sync peerDependencies
+    json.peerDependencies = json.dependencies;
+  }
   return json;
 };
 
