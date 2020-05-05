@@ -101,7 +101,8 @@ const defaultCallback = (er: Error | null, files: string[]): void => {
 
 /**
  * Iterates over all JSON files and alpha sorts them
- * @remarks This excludes files not in VCS
+ * @remarks
+ * This excludes files not in VCS
  * @public
  */
 export const sortJson = (

@@ -50,7 +50,9 @@ export async function isPipe(): Promise<boolean> {
 }
 
 /**
+ * Determins if the util is being run as a script
  * @public
+ * @returns a boolean with true if the process is being ran as a script, otherwise false
  */
 export function isRunAsScript(): boolean {
   return process?.mainModule?.filename === __filename;

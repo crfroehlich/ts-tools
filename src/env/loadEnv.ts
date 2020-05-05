@@ -1,6 +1,8 @@
+/* eslint-disable */
 const envExtended = require('dotenv-extended');
 
 /**
+ * Structure representing env configuration
  * @public
  */
 export interface EnvConfig {
@@ -18,6 +20,7 @@ export interface EnvConfig {
 }
 
 /**
+ * Defaults for env config
  * @public
  */
 export const EnvConfigDefaults: EnvConfig = {
@@ -36,13 +39,14 @@ export const EnvConfigDefaults: EnvConfig = {
 
 /**
  * This will load the `.env` file onto the current process.
+ *
+ * @remarks
  * Missing properties will be loaded from `.env.defaults` if possible.
  * If no defaults exist and the properties are defined in `.env.schema`,
  * but are missing from `.env`, an error will be thrown with the missing
  * property name.
  * @public
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const loadEnv = (config: EnvConfig = EnvConfigDefaults): any => {
   return envExtended.load(config);
 };

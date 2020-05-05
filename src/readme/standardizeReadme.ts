@@ -24,7 +24,8 @@ const log = getLogger(
 
 /**
  * Defines known headers that we will parse
- * @remarks `STRING` is for inserting new sections. `FIELD` is regex for matching sections.
+ * @remarks
+ * `STRING` is for inserting new sections. `FIELD` is regex for matching sections.
  * @public
  */
 export const HEADERS = {

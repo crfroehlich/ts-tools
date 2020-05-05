@@ -121,6 +121,7 @@ export interface LogInterface {
 
 /**
  * A log class to be used for composing log messages.
+ * @remarks
  * This class is directly exposed to allow for customizing logging in specific contexts.
  * @public
  */

@@ -36,6 +36,9 @@ const LITERALS = {
   REGULAR_CONTENT: 'Content',
 };
 
+/**
+ * Validates readme parsing logic
+ */
 describe('readme.parse()', () => {
   it('parses a block correctly', () => {
     const parseResult = Readme.parse('# Header\nContent\n\n');
@@ -48,6 +51,9 @@ describe('readme.parse()', () => {
   });
 });
 
+/**
+ * Validates readme constructor logic
+ */
 describe('readme constructor', () => {
   it('empty readme content should only result in a _root block and a _root indexedBlock.', () => {
     const readme = new Readme();
@@ -79,6 +85,9 @@ describe('readme constructor', () => {
   });
 });
 
+/**
+ * Validates readme getSection logic
+ */
 describe('readme.getSection()', () => {
   it('should return null for any getSection call with an emtpy file', () => {
     const readme = new Readme(TEST_FILES.EMPTY);
@@ -108,6 +117,9 @@ describe('readme.getSection()', () => {
   });
 });
 
+/**
+ * Validartes readme getSectionAt logic
+ */
 describe('readme.getSectionAt()', () => {
   it('should throw if the index is out of range', () => {
     expect(() => {
@@ -134,6 +146,9 @@ describe('readme.getSectionAt()', () => {
   });
 });
 
+/**
+ * Validates logic for readme getSections
+ */
 describe('readme.getSections()', () => {
   it('Should return any emtpy array for any getSections call where there are no matches.', () => {
     const readme = new Readme(TEST_FILES.EMPTY);
@@ -191,12 +206,18 @@ describe('readme.getSections()', () => {
   });
 });
 
+/**
+ * Validates toString conversion logic
+ */
 describe('readme.toString()', () => {
   const readme = new Readme(TEST_FILES.STANDARD);
   expect(readme.toString()).to.be.a('string');
   expect(readme.toString()).to.equal(`${readme}`);
 });
 
+/**
+ * Validates export logic for readme
+ */
 describe('readme.export()', () => {
   it('Export should be the same as the file content if it is not transformed.', () => {
     expect(new Readme(TEST_FILES.STANDARD).export()).to.equal(format(TEST_FILES.STANDARD, { parser: 'markdown' }));
@@ -206,6 +227,9 @@ describe('readme.export()', () => {
   });
 });
 
+/**
+ * Validates getTocBlock logic
+ */
 describe('readme.getTocBlock()', () => {
   it('Generates a correct toc using a default target startAt index of 1.', () => {
     const readme = new Readme(TEST_FILES.MISSING_TOC);
@@ -246,6 +270,9 @@ describe('readme.getTocBlock()', () => {
   });
 });
 
+/**
+ * Validates logic for insertBefore
+ */
 describe('readme.insertBefore()', () => {
   it('should add a block before the matched content block, when the query target is a valid match', () => {
     const readme = new Readme(TEST_FILES.STANDARD);
@@ -291,6 +318,9 @@ describe('readme.insertBefore()', () => {
   });
 });
 
+/**
+ * Validates logic for insertAfter
+ */
 describe('readme.insertAfter()', () => {
   it('should add a block before the matched content block, when the query target is a valid match', () => {
     const readme = new Readme(TEST_FILES.STANDARD);
@@ -366,6 +396,9 @@ describe('readme.insertAfter()', () => {
   });
 });
 
+/**
+ * Validates appendBlock logic
+ */
 describe('readme.appendBlock()', () => {
   it('should append new block to end of blocks', () => {
     const readme = new Readme(TEST_FILES.STANDARD);
@@ -415,6 +448,9 @@ describe('readme.appendBlock()', () => {
   });
 });
 
+/**
+ * Validates prependABlock logic
+ */
 describe('readme.prependBlock', () => {
   it('should prepend new block to readme content blocks', () => {
     const readme = new Readme('');
@@ -467,6 +503,9 @@ describe('readme.prependBlock', () => {
   });
 });
 
+/**
+ * Validates setSection logic
+ */
 describe('readme.setSection', () => {
   it('should replace content for a section by index', () => {
     const readme = new Readme(TEST_FILES.STANDARD);
@@ -504,6 +543,9 @@ describe('readme.setSection', () => {
   });
 });
 
+/**
+ * Validates toString method logic
+ */
 describe('readme.toString method', () => {
   it('converts the readme instance into an exported readme string', () => {
     const readme = new Readme('# Demo Readme\n## Contributing\nYou can contribute by submitting a PR.');
@@ -511,6 +553,9 @@ describe('readme.toString method', () => {
   });
 });
 
+/**
+ * Validates getLicenseBlock logic
+ */
 describe('readme.getLicenseBlock', () => {
   it('has a method that generates an NS8 license block', () => {
     const licenseBlock = Readme.getLicenseBlock();
@@ -519,6 +564,9 @@ describe('readme.getLicenseBlock', () => {
   });
 });
 
+/**
+ * Validates setSectionAt logic
+ */
 describe('readme.setSectionAt', () => {
   it('should replace content for a section by index', () => {
     const readme = new Readme(TEST_FILES.STANDARD);
@@ -543,6 +591,9 @@ describe('readme.setSectionAt', () => {
   });
 });
 
+/**
+ * Validates appendContent logic
+ */
 describe('readme.appendContent()', () => {
   it('should append content and reflect a block count of 1 more than before append.', () => {
     const readme = new Readme(TEST_FILES.STANDARD);
@@ -551,6 +602,9 @@ describe('readme.appendContent()', () => {
   });
 });
 
+/**
+ * Validates prependContent logic
+ */
 describe('readme.prependContent()', () => {
   it('should prepend content and reflect a block count of 1 more than before prepend.', () => {
     const readme = new Readme(TEST_FILES.STANDARD);
@@ -562,6 +616,9 @@ describe('readme.prependContent()', () => {
   });
 });
 
+/**
+ * Validates parseBlockFromContent logic
+ */
 describe('Readme.parseBlockFromContent()', () => {
   const parsedContentBlock = Readme.parseBlockFromContent('# Header\nContent\n');
 
@@ -574,6 +631,9 @@ describe('Readme.parseBlockFromContent()', () => {
   });
 });
 
+/**
+ * Validates ReadMeBlock toString logic
+ */
 describe('ReadmeBlock.toString()', () => {
   it('should', () => {
     const readmeBlock = new ReadmeBlock({

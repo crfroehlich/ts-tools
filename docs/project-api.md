@@ -117,7 +117,7 @@ export interface DocLinksParams {
     repoRoot: string | null;
 }
 
-// @public (undocumented)
+// @public
 export interface EnvConfig {
     // (undocumented)
     assignToProcessEnv?: boolean;
@@ -143,7 +143,7 @@ export interface EnvConfig {
     silent?: boolean;
 }
 
-// @public (undocumented)
+// @public
 export const EnvConfigDefaults: EnvConfig;
 
 // @public
@@ -181,13 +181,13 @@ export const getLogger: (logOptions?: LogOptions, reset?: boolean) => LogInterfa
 // @public
 export const getWebpackConfig: (config?: BundleConfig) => webpack.Configuration;
 
-// @public (undocumented)
+// @public
 export const GLOB_OPTIONS: GlobOptions;
 
-// @public (undocumented)
+// @public
 export type globCallback = (err: Error | null, matches: string[]) => void;
 
-// @public (undocumented)
+// @public
 export interface GlobOptions {
     // (undocumented)
     dot?: boolean;
@@ -233,7 +233,7 @@ export type infoMethod = (message: string, ...args: any[]) => void;
 // @public (undocumented)
 export function isPipe(): Promise<boolean>;
 
-// @public (undocumented)
+// @public
 export function isRunAsScript(): boolean;
 
 // @public
