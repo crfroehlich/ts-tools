@@ -31,7 +31,7 @@ export const EnvConfigDefaults: EnvConfig = {
   errorOnMissing: true,
   errorOnExtra: true,
   errorOnRegex: false,
-  includeProcessEnv: false,
+  includeProcessEnv: true,
   assignToProcessEnv: true,
   overrideProcessEnv: false,
 };
