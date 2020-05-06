@@ -1,4 +1,3 @@
-/* eslint-disable */
 const envExtended = require('dotenv-extended');
 
 /**
@@ -37,6 +36,8 @@ export const EnvConfigDefaults: EnvConfig = {
   overrideProcessEnv: false,
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /**
  * This will load the `.env` file onto the current process.
  *
@@ -50,3 +51,5 @@ export const EnvConfigDefaults: EnvConfig = {
 export const loadEnv = (config: EnvConfig = EnvConfigDefaults): any => {
   return envExtended.load(config);
 };
+
+/* eslint-enable @typescript-eslint/no-explicit-any */
