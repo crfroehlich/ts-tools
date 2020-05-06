@@ -449,7 +449,7 @@ describe('readme.appendBlock()', () => {
 });
 
 /**
- * Validates prependABlock logic
+ * Validates prependBlock logic
  */
 describe('readme.prependBlock', () => {
   it('should prepend new block to readme content blocks', () => {
