@@ -6,6 +6,7 @@
 import { execSync } from 'child_process';
 import { existsSync, mkdirSync } from 'fs';
 import { getLogger } from '../logger/logger';
+import { isRunAsScript } from '../cliUtils/cliUtils';
 
 const ghpages = require('gh-pages');
 const prompts = require('prompts');
@@ -63,6 +64,6 @@ export const generateApiDocs = async (params?: string): Promise<void> => {
   }
 };
 
-if (__filename === process?.mainModule?.filename) {
+if (isRunAsScript()) {
   generateApiDocs();
 }

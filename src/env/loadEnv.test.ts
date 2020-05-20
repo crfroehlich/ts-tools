@@ -3,6 +3,9 @@ import { expect } from 'chai';
 import 'mocha';
 import { loadEnv } from './loadEnv';
 
+/**
+ * Verifies the processing of env variables
+ */
 describe('Process Environment Variables', () => {
   it('loads the .env with defaults', () => {
     const env = loadEnv();

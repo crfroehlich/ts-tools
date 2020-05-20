@@ -8,6 +8,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { LogLevel, LogOutput, getLogger } from '../logger';
 import { GLOB_OPTIONS, GlobOptions, globCallback } from '../env/files';
 import { loadEnv } from '../env/loadEnv';
+import { isRunAsScript } from '../cliUtils/cliUtils';
 
 const sortedJson = require('sorted-json');
 
@@ -101,7 +102,8 @@ const defaultCallback = (er: Error | null, files: string[]): void => {
 
 /**
  * Iterates over all JSON files and alpha sorts them
- * @remarks This excludes files not in VCS
+ * @remarks
+ * This excludes files not in VCS
  * @public
  */
 export const sortJson = (
@@ -112,6 +114,6 @@ export const sortJson = (
   glob(path, options, callback);
 };
 
-if (__filename === process?.mainModule?.filename) {
+if (isRunAsScript()) {
   sortJson();
 }

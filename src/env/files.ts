@@ -1,9 +1,11 @@
 /**
+ * Callback representation for glob callback
  * @public
  */
 export type globCallback = (err: Error | null, matches: string[]) => void;
 
 /**
+ * Structure reprsenting glob options
  * @public
  */
 export interface GlobOptions {
@@ -13,6 +15,7 @@ export interface GlobOptions {
 }
 
 /**
+ * Options for glob input
  * @public
  */
 export const GLOB_OPTIONS: GlobOptions = {

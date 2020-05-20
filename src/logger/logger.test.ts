@@ -37,6 +37,9 @@ tests.forEach((test) => {
 const serviceName = 'unit-test';
 const message = 'This is a message';
 
+/**
+ * Validates logging functionality
+ */
 describe('Logging', () => {
   it('logs using the default settings', () => {
     const log = new Log();

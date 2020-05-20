@@ -11,6 +11,7 @@ import { DocLinksParams, EnvDocs, ScriptDocs } from './types';
 import { GLOB_OPTIONS } from '../env/files';
 import { LogLevel, LogOutput, getLogger } from '../logger';
 import { loadEnv } from '../env/loadEnv';
+import { isRunAsScript } from '../cliUtils/cliUtils';
 
 const env = loadEnv();
 const log = getLogger(
@@ -24,7 +25,8 @@ const log = getLogger(
 
 /**
  * Defines known headers that we will parse
- * @remarks `STRING` is for inserting new sections. `FIELD` is regex for matching sections.
+ * @remarks
+ * `STRING` is for inserting new sections. `FIELD` is regex for matching sections.
  * @public
  */
 export const HEADERS = {
@@ -262,6 +264,6 @@ export async function main(): Promise<void> {
   });
 }
 
-if (__filename === process?.mainModule?.filename) {
+if (isRunAsScript()) {
   main();
 }
