@@ -8,6 +8,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { LogLevel, LogOutput, getLogger } from '../logger';
 import { GLOB_OPTIONS, GlobOptions, globCallback } from '../env/files';
 import { loadEnv } from '../env/loadEnv';
+import { isRunAsScript } from '../cliUtils/cliUtils';
 
 const sortedJson = require('sorted-json');
 
@@ -113,6 +114,6 @@ export const sortJson = (
   glob(path, options, callback);
 };
 
-if (__filename === process?.mainModule?.filename) {
+if (isRunAsScript()) {
   sortJson();
 }

@@ -3,6 +3,7 @@ import * as path from 'path';
 import { Extractor, ExtractorConfig, ExtractorResult } from '@microsoft/api-extractor';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { getLogger } from '../logger/logger';
+import { isRunAsScript } from '../cliUtils/cliUtils';
 
 /**
  * Uses \@microsoft/api-extractor to produce API documentation for this project
@@ -74,6 +75,6 @@ export const generateApi = (configPath?: string): void => {
   }
 };
 
-if (__filename === process?.mainModule?.filename) {
+if (isRunAsScript()) {
   generateApi();
 }

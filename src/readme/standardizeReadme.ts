@@ -11,6 +11,7 @@ import { DocLinksParams, EnvDocs, ScriptDocs } from './types';
 import { GLOB_OPTIONS } from '../env/files';
 import { LogLevel, LogOutput, getLogger } from '../logger';
 import { loadEnv } from '../env/loadEnv';
+import { isRunAsScript } from '../cliUtils/cliUtils';
 
 const env = loadEnv();
 const log = getLogger(
@@ -263,6 +264,6 @@ export async function main(): Promise<void> {
   });
 }
 
-if (__filename === process?.mainModule?.filename) {
+if (isRunAsScript()) {
   main();
 }
