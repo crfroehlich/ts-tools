@@ -59,16 +59,20 @@
   "description": "NS8 Protect JavaScript project providing build tooling",
   "envDocumentation": {
     "DOCS_CREATE_README_INDEX": {
-      "description": "Please document the <DOCS_CREATE_README_INDEX> variable"
+      "defaultValue": true,
+      "description": "If true, create an index of all documents in README.md"
     },
     "DOCS_CREATE_TOC": {
-      "description": "Please document the <DOCS_CREATE_TOC> variable"
+      "defaultValue": true,
+      "description": "If true, create a Table of Contents for each Markdown doc."
     },
     "NODE_ENV": {
-      "description": "Please document the <NODE_ENV> variable"
+      "defaultValue": "dev",
+      "description": "The runtime environment, either `prod` or `dev`."
     },
     "SYNC_PEER_DEPENDENCIES": {
-      "description": "Please document the <SYNC_PEER_DEPENDENCIES> variable"
+      "defaultValue": true,
+      "description": "If true, sets all project dependencies as peer dependencies"
     }
   },
   "homepage": "https://github.com/ns8inc/protect-tools-js#readme",
