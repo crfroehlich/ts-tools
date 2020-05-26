@@ -2,10 +2,11 @@
 
 ## Table of Contents
 
-- [Getting Started](#getting-started)
-- [`package.json` scripts](#packagejson-scripts)
-- [Environment Variables](#environment-variables)
-- [License](#license)
+- [@ns8/protect-tools-js](#ns8protect-tools-js)
+  - [Getting Started](#getting-started)
+  - [`package.json` scripts](#packagejson-scripts)
+  - [Environment Variables](#environment-variables)
+  - [License](#license)
 
 ## Getting Started
 
@@ -41,17 +42,16 @@ To get started, take a look at the documentation listed below:
 
 ## Environment Variables
 
-- `DOCS_CREATE_README_INDEX`: Please document the <DOCS_CREATE_README_INDEX> variable
-  - Default Value: "undefined"
-- `DOCS_CREATE_TOC`: Please document the <DOCS_CREATE_TOC> variable
-  - Default Value: "undefined"
-- `NODE_ENV`: Please document the <NODE_ENV> variable
-  - Default Value: "undefined"
-- `SYNC_PEER_DEPENDENCIES`: Please document the <SYNC_PEER_DEPENDENCIES> variable
-  - Default Value: "undefined"
+- `DOCS_CREATE_README_INDEX`: If true, create an index of all documents in README.md
+  - Default Value: "true"
+- `DOCS_CREATE_TOC`: If true, create a Table of Contents for each Markdown doc.
+  - Default Value: "true"
+- `NODE_ENV`: The runtime environment, either `prod` or `dev`.
+  - Default Value: "dev"
+- `SYNC_PEER_DEPENDENCIES`: If true, sets all project dependencies as peer dependencies
+  - Default Value: "true"
 
 ## License
 
 See [License](./LICENSE)
-
 © [ns8inc](https://ns8.com)
