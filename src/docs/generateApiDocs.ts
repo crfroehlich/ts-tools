@@ -64,6 +64,6 @@ export const generateApiDocs = async (params?: string): Promise<void> => {
   }
 };
 
-if (isRunAsScript()) {
+if (isRunAsScript(__filename)) {
   generateApiDocs();
 }

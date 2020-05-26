@@ -173,9 +173,6 @@ export const generateApi: (configPath?: string | undefined) => void;
 export const generateApiDocs: (params?: string | undefined) => Promise<void>;
 
 // @public
-export function getContentFromStdin(): Promise<Error | string>;
-
-// @public
 export const getLogger: (logOptions?: LogOptions, reset?: boolean) => LogInterface;
 
 // @public
@@ -230,11 +227,8 @@ export type IndexedBlocks = Map<string, ReadmeBlock[]>;
 // @public (undocumented)
 export type infoMethod = (message: string, ...args: any[]) => void;
 
-// @public (undocumented)
-export function isPipe(): Promise<boolean>;
-
 // @public
-export function isRunAsScript(): boolean;
+export const isRunAsScript: (fileName: string) => boolean;
 
 // @public
 export const loadEnv: (config?: EnvConfig) => any;
