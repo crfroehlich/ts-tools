@@ -75,6 +75,6 @@ export const generateApi = (configPath?: string): void => {
   }
 };
 
-if (isRunAsScript()) {
+if (isRunAsScript(__filename)) {
   generateApi();
 }

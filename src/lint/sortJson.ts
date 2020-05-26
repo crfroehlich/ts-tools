@@ -56,7 +56,8 @@ const parsePackageJson = (json: any): any => {
     json.envDocumentation = {};
   }
   // For each environment variable, if no doc exists, create it
-  const envKeys = Object.keys(env);
+  const definedEnvKeys = readFileSync('.env.schema').toString().replace(/=/g, '').split('\n').filter(Boolean);
+  const envKeys = Object.keys(env).filter((key) => definedEnvKeys.includes(key));
   envKeys.forEach((key) => {
     if (!json.envDocumentation[key]) {
       json.envDocumentation[key] = {
@@ -114,6 +115,6 @@ export const sortJson = (
   glob(path, options, callback);
 };
 
-if (isRunAsScript()) {
+if (isRunAsScript(__filename)) {
   sortJson();
 }

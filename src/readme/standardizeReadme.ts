@@ -264,6 +264,6 @@ export async function main(): Promise<void> {
   });
 }
 
-if (isRunAsScript()) {
+if (isRunAsScript(__filename)) {
   main();
 }

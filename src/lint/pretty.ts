@@ -64,6 +64,6 @@ export const pritify = (
   glob(path, options, callback);
 };
 
-if (isRunAsScript()) {
+if (isRunAsScript(__filename)) {
   pritify();
 }
