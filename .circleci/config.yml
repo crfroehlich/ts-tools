@@ -3,6 +3,9 @@ jobs:
     docker:
       - image: node:12
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "52:a4:0f:d8:26:b8:3a:ae:23:55:94:2e:d5:3c:b5:08"
       - checkout
       - run:
           command: |
@@ -39,6 +42,9 @@ jobs:
     docker:
       - image: node:12
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "52:a4:0f:d8:26:b8:3a:ae:23:55:94:2e:d5:3c:b5:08"
       - checkout
       - run:
           command: |
@@ -64,6 +70,9 @@ jobs:
     docker:
       - image: node:12
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "52:a4:0f:d8:26:b8:3a:ae:23:55:94:2e:d5:3c:b5:08"
       - checkout
       - run:
           command: |
