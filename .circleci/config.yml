@@ -27,7 +27,7 @@ jobs:
       - run:
           command: |
             if ! git push -u origin master --follow-tags; then
-              echo "Push failed. Please delete and re-add this CircleCI deploy key to your repo with write access:"
+              echo "Push failed. Please add this CircleCI deploy key to your repo with write access:"
               ssh-keygen -y -f ~/.ssh/id_rsa
               exit 1
             fi
@@ -42,9 +42,6 @@ jobs:
     docker:
       - image: node:12
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "52:a4:0f:d8:26:b8:3a:ae:23:55:94:2e:d5:3c:b5:08"
       - checkout
       - run:
           command: |
@@ -70,9 +67,6 @@ jobs:
     docker:
       - image: node:12
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "52:a4:0f:d8:26:b8:3a:ae:23:55:94:2e:d5:3c:b5:08"
       - checkout
       - run:
           command: |
