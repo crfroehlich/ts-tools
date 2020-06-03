@@ -69,8 +69,8 @@ export enum BundleDevTool {
  * @public
  */
 export interface BundleConfig {
-  devtool: webpack.Options.Devtool;
   bundleTarget: BundleTarget;
+  devtool: webpack.Options.Devtool;
   distDirectory: string;
   fileName?: string;
   globals?: BundleGlobals[];
@@ -87,8 +87,8 @@ export interface BundleConfig {
  * @public
  */
 export const BundleDefaults: BundleConfig = {
-  devtool: BundleDevTool.EVAL,
   bundleTarget: BundleTarget.NODE,
+  devtool: BundleDevTool.EVAL,
   distDirectory: '../dist',
   hmr: undefined,
   libraryName: 'index',
