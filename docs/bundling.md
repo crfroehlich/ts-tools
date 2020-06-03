@@ -23,7 +23,7 @@ Webpack is the tool that powers the bundling. By using protect-tools-js, you no 
 - Second, create a `webpack.config.ts` file in the root of your project with the following example:
 
 ```ts
-import { BundleTarget, getWebpackConfig } from '@ns8/protect-tools-js';
+import { BundleDevTool, BundleTarget, getWebpackConfig } from '@ns8/protect-tools-js';
 export default getWebpackConfig({
   bundleTarget: BundleTarget.NODE,
   devtool: BundleDevTool.EVAL,
