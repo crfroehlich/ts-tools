@@ -13,6 +13,7 @@ overrides:
       mocha: true
     files:
       - '*.test.ts'
+      - 'testSdk.ts'
 parser: '@typescript-eslint/parser'
 parserOptions:
   ecmaVersion: 2019
