@@ -27,6 +27,7 @@ const env = loadEnv();
 const defaultPath = '**/*.json';
 
 // Parse the package JSON for script and environment variable documentation
+// eslint-disable-next-line complexity, sonarjs/cognitive-complexity
 const parsePackageJson = (json: any): any => {
   // Sync the scripts with their docs
   if (json.scripts) {
@@ -73,8 +74,17 @@ const parsePackageJson = (json: any): any => {
     }
   });
   if (env?.SYNC_PEER_DEPENDENCIES?.toLowerCase() === 'true') {
-    // Sync peerDependencies
-    json.peerDependencies = json.dependencies;
+    if (env?.IGNORE_PEER_DEPENDENCIES) {
+      const ignored: string[] = env.IGNORE_PEER_DEPENDENCIES.split(',');
+      const peerDepKeys = Object.keys(json.dependencies).filter((key) => !ignored.includes(key));
+      json.peerDependencies = {};
+      peerDepKeys.forEach((key) => {
+        json.peerDependencies[key] = json.dependencies[key];
+      });
+    } else {
+      // Sync peerDependencies
+      json.peerDependencies = json.dependencies;
+    }
   }
   return json;
 };

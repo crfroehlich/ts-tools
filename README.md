@@ -46,6 +46,8 @@ To get started, take a look at the documentation listed below:
   - Default Value: "true"
 - `DOCS_CREATE_TOC`: If true, create a Table of Contents for each Markdown doc.
   - Default Value: "true"
+- `IGNORE_PEER_DEPENDENCIES`: Comma-delimited list of `dependencies` to exclude from `peerDependencies`.
+  - Default Value: ""
 - `NODE_ENV`: The runtime environment, either `prod` or `dev`.
   - Default Value: "dev"
 - `SYNC_PEER_DEPENDENCIES`: If true, sets all project dependencies as peer dependencies

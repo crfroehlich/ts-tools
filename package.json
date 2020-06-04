@@ -66,6 +66,10 @@
       "defaultValue": true,
       "description": "If true, create a Table of Contents for each Markdown doc."
     },
+    "IGNORE_PEER_DEPENDENCIES": {
+      "defaultValue": "",
+      "description": "Comma-delimited list of `dependencies` to exclude from `peerDependencies`."
+    },
     "NODE_ENV": {
       "defaultValue": "dev",
       "description": "The runtime environment, either `prod` or `dev`."
