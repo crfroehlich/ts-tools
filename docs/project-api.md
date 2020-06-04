@@ -364,10 +364,73 @@ export interface ScriptDocs {
 }
 
 // @public
+export interface SdkEnumTest {
+    // (undocumented)
+    assert: any;
+    // (undocumented)
+    input?: string | number;
+}
+
+// @public
+export interface SdkEnumTestSuite {
+    // (undocumented)
+    conversionFunction: Function;
+    // (undocumented)
+    targetEnum: string;
+    // (undocumented)
+    tests: SdkEnumTest[];
+}
+
+// @public
+export interface SdkModelTestMock {
+    // (undocumented)
+    assert: string;
+    // (undocumented)
+    input: any;
+}
+
+// @public
+export interface SdkModelTestSuite {
+    // (undocumented)
+    conversionFunction: Function;
+    // (undocumented)
+    mocks: SdkModelTestMock[];
+    // (undocumented)
+    targetModel: string;
+}
+
+// @public
+export interface SdkStringTest {
+    // (undocumented)
+    assert: string;
+    // (undocumented)
+    input?: string;
+}
+
+// @public
+export interface SdkStringTestSuite {
+    // (undocumented)
+    conversionFunction: Function;
+    // (undocumented)
+    strings: SdkStringTest[];
+    // (undocumented)
+    targetString: string;
+}
+
+// @public
 export const sortJson: (path?: string, options?: GlobOptions, callback?: globCallback) => void;
 
 // @public
 export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, envDocs?: EnvDocs, repoRoot?: string): string;
+
+// @public
+export const testSdkEnumConversion: (suite: SdkEnumTestSuite) => void;
+
+// @public
+export const testSdkModelConversion: (suite: SdkModelTestSuite) => void;
+
+// @public
+export const testSdkStringConversion: (suite: SdkStringTestSuite) => void;
 
 
 ```

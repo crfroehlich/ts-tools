@@ -23,23 +23,30 @@ Webpack is the tool that powers the bundling. By using protect-tools-js, you no 
 - Second, create a `webpack.config.ts` file in the root of your project with the following example:
 
 ```ts
-import { BundleTarget, getWebpackConfig } from '@ns8/protect-tools-js';
+import { BundleDevTool, BundleTarget, getWebpackConfig } from '@ns8/protect-tools-js';
 export default getWebpackConfig({
   bundleTarget: BundleTarget.NODE,
+  devtool: BundleDevTool.EVAL,
   distDirectory: './dist',
-  sourceDirectory: './src/index.ts',
   libraryName: 'index',
+  sourceDirectory: './src/index.ts',
 });
 ```
 
 The following configuration options are possible:
 
-- `bundleTarget` supports `NODE` or `WEB`
 - `bundleMode` (optional param) supports `PRODUCTION` or `DEVELOPMENT`. If omitted, the mode defers to the environment variable `NODE_ENV`. If no value is supplied, the mode defaults to `PRODUCTION`
+- `bundleTarget` supports `NODE` or `WEB`
+- `devTool` default `EVAL`, supports all options as defined by [WebPack's enum](https://webpack.js.org/configuration/devtool/), such as `SOURCE_MAP`
 - `distDirectory` is the output path for the bundle
-- `sourceDirectory` is the input path for the source code to be compiled and bundled
-- `libraryName` is the name that will be used both for the name of the library as well as the names of the output files
+- `fileName` optional name of the output file, default is `index.min.js` or `index.js`
+- `globals` optional hack to allow defining global properties to comply with some third party libraries which do not bundle well.
+  - Example: `globals: [{ name: 'GENTLY', value: false }],` (see <https://github.com/node-formidable/formidable/issues/337#issuecomment-183388869>)
 - `hmr` explicitly turn Hot Module Reloading (web) or watch (node) on
+- `libraryName` is the name that will be used both for the name of the library as well as the names of the output files
+- `logLevel` log level to use for debug, info, error warnings. Default is `ERROR`
+- `mode` optional mode to run WebPack. Default is `DEVELOPMENT`, but supports `PRODUCTION` as a second option
+- `sourceDirectory` is the input path for the source code to be compiled and bundled
 - `useTypeCheckingService` optionally enable the type checking service (this can sometimes decrease build performance)
 
 ## Hot Module Reloading
