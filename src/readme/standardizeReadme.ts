@@ -249,6 +249,9 @@ export async function main(): Promise<void> {
       log.error(er.toString());
     }
     files.forEach((fileName) => {
+      // Do not modify this file, as API Extractor considers any modifications to be a change to the API.
+      if (fileName.indexOf('protect-api.md')) return;
+
       log.info(`Standardized ${fileName}`);
       try {
         const readmeContent = readFileSync(fileName, 'utf-8');
