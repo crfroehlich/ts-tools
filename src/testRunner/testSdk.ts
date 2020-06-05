@@ -1,10 +1,12 @@
-/* eslint-disable no-unused-expressions */
+/* eslint-disable
+  @typescript-eslint/ban-types,
+  @typescript-eslint/no-explicit-any,
+  no-unused-expressions,
+*/
 
 import { expect, use } from 'chai';
 import 'mocha';
 import chaiAsPromised from 'chai-as-promised';
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
  * Properties required for an SDK enum test

@@ -86,6 +86,10 @@ const defaultCallback = (er: Error | null, files: string[]): void => {
   files.forEach((fileName) => {
     try {
       const file = readFileSync(fileName, 'utf-8');
+
+      // If the JSON file has comments, skip it
+      if (file.indexOf('//') || file.indexOf('/*')) return;
+
       const json: any = JSON.parse(file);
       if (fileName === 'package.json') {
         parsePackageJson(json);
