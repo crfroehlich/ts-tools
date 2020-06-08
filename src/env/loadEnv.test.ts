@@ -11,14 +11,14 @@ testSdkAssertion({
   assertions: [
     {
       name: 'loads the .env with defaults',
-      conversionFunction: loadEnv,
+      assertionFunction: loadEnv,
       input: undefined,
       assertion: SdkTestAssertionType.IS_NOT_NULL,
       property: 'NODE_ENV',
     },
     {
       name: 'loads the .env with custom config',
-      conversionFunction: loadEnv,
+      assertionFunction: loadEnv,
       input: { overrideProcessEnv: true },
       assertion: SdkTestAssertionType.IS_NOT_NULL,
       property: 'NODE_ENV',

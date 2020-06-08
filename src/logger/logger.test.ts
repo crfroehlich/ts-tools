@@ -10,135 +10,135 @@ testSdkAssertion({
   assertions: [
     {
       name: 'logs using the default settings',
-      conversionFunction: () => {
+      assertionFunction: async () => {
         const log = new Log();
-        log.error(message, { test: message });
+        return log.error(message, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },
     {
       name: 'info logs',
-      conversionFunction: () => {
+      assertionFunction: async () => {
         const log = new Log({
           logLevel: LogLevel.INFO,
           serviceName,
           transports: [LogOutput.CONSOLE],
         });
-        log.info(message, { test: message });
+        return log.info(message, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },
     {
       name: 'error logs',
-      conversionFunction: () => {
+      assertionFunction: async () => {
         const log = new Log({
           logLevel: LogLevel.ERROR,
           serviceName,
           transports: [LogOutput.CONSOLE],
         });
-        log.error(message, { test: message });
+        return log.error(message, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },
     {
       name: 'automatically adds console logging',
-      conversionFunction: () => {
+      assertionFunction: async () => {
         process.env.NODE_ENV = 'dev';
         const log = new Log({
           logLevel: LogLevel.ERROR,
           serviceName,
           transports: [LogOutput.FILE],
         });
-        log.error(message, { test: message });
+        return log.error(message, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },
     {
       name: 'logs nothing',
-      conversionFunction: () => {
+      assertionFunction: async () => {
         process.env.NODE_ENV = 'production';
         const log = new Log({
           logLevel: LogLevel.ERROR,
           serviceName,
           transports: [LogOutput.NONE],
         });
-        log.error(message, { test: message });
+        return log.error(message, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },
     {
       name: 'custom logs debug',
-      conversionFunction: () => {
+      assertionFunction: async () => {
         const log = new Log({
           logLevel: LogLevel.DEBUG,
           serviceName,
           transports: [LogOutput.CONSOLE],
         });
-        log.log(LogLevel.DEBUG, message, { test: message });
+        return log.log(LogLevel.DEBUG, message, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },
     {
       name: 'custom logs warn',
-      conversionFunction: () => {
+      assertionFunction: async () => {
         const log = new Log({
           logLevel: LogLevel.WARN,
           serviceName,
           transports: [LogOutput.CONSOLE],
         });
-        log.log(LogLevel.WARN, message, { test: message });
+        return log.log(LogLevel.WARN, message, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },
     {
       name: 'custom logs error',
-      conversionFunction: () => {
+      assertionFunction: async () => {
         const log = new Log({
           logLevel: LogLevel.ERROR,
           serviceName,
           transports: [LogOutput.CONSOLE],
         });
-        log.log(LogLevel.ERROR, message, { test: message });
+        return log.log(LogLevel.ERROR, message, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },
     {
       name: 'custom logs info',
-      conversionFunction: () => {
+      assertionFunction: async () => {
         const log = new Log({
           logLevel: LogLevel.INFO,
           serviceName,
           transports: [LogOutput.CONSOLE],
         });
-        log.log(LogLevel.INFO, message, { test: message });
+        return log.log(LogLevel.INFO, message, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },
     {
       name: 'static logs using the default options',
-      conversionFunction: () => {
+      assertionFunction: async () => {
         const log = getLogger();
-        log.info(message, { test: message });
+        return log.info(message, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },
     {
       name: 'static logs to console',
-      conversionFunction: () => {
+      assertionFunction: async () => {
         const log = getLogger({ logLevel: LogLevel.INFO, serviceName, transports: [LogOutput.CONSOLE] }, true);
-        log.info(message, { test: 'static logs to console' });
+        return log.info(message, { test: 'static logs to console' });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },
     {
       name: 'static logs to console again using the same instance',
-      conversionFunction: () => {
+      assertionFunction: async () => {
         const log = getLogger({
           logLevel: LogLevel.INFO,
           serviceName,
           transports: [LogOutput.CONSOLE],
         });
-        log.info(message, {
+        return log.info(message, {
           test: 'static logs to console again using the same instance',
         });
       },
@@ -146,17 +146,17 @@ testSdkAssertion({
     },
     {
       name: 'static logs to file',
-      conversionFunction: () => {
+      assertionFunction: async () => {
         const log = getLogger({ logLevel: LogLevel.INFO, serviceName, transports: [LogOutput.FILE] }, true);
-        log.info(message, { test: message });
+        return log.info(message, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },
     {
       name: 'static logs to file and console',
-      conversionFunction: () => {
+      assertionFunction: async () => {
         const log = getLogger({ logLevel: LogLevel.INFO, serviceName, transports: [LogOutput.FILE] }, true);
-        log.info(message, { test: message });
+        return log.info(message, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },

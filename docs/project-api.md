@@ -9,6 +9,9 @@ import { LoggerOptions } from 'winston';
 import * as webpack from 'webpack';
 
 // @public
+export type Assertion = (data?: any) => Promise<any>;
+
+// @public
 export interface Block {
     // (undocumented)
     content?: string;
@@ -364,6 +367,28 @@ export interface ScriptDocs {
 }
 
 // @public
+export interface SdkAssertionTest {
+    // (undocumented)
+    assertion?: SdkTestAssertionType;
+    // (undocumented)
+    assertionFunction: Assertion;
+    // (undocumented)
+    input?: any;
+    // (undocumented)
+    name: string;
+    // (undocumented)
+    property?: string;
+}
+
+// @public
+export interface SdkAssertionTestSuite {
+    // (undocumented)
+    assertions: SdkAssertionTest[];
+    // (undocumented)
+    name: string;
+}
+
+// @public
 export interface SdkEnumTest {
     // (undocumented)
     assert: any;
@@ -374,7 +399,7 @@ export interface SdkEnumTest {
 // @public
 export interface SdkEnumTestSuite {
     // (undocumented)
-    conversionFunction: Function;
+    conversionFunction: (data?: any) => Promise<string>;
     // (undocumented)
     targetEnum: string;
     // (undocumented)
@@ -386,13 +411,13 @@ export interface SdkModelTestMock {
     // (undocumented)
     assert: string;
     // (undocumented)
-    input: any;
+    input: object;
 }
 
 // @public
 export interface SdkModelTestSuite {
     // (undocumented)
-    conversionFunction: Function;
+    conversionFunction: (data?: any) => Promise<object | Error>;
     // (undocumented)
     mocks: SdkModelTestMock[];
     // (undocumented)
@@ -410,11 +435,27 @@ export interface SdkStringTest {
 // @public
 export interface SdkStringTestSuite {
     // (undocumented)
-    conversionFunction: Function;
+    conversionFunction: Assertion;
     // (undocumented)
     strings: SdkStringTest[];
     // (undocumented)
     targetString: string;
+}
+
+// @public
+export enum SdkTestAssertionType {
+    // (undocumented)
+    IS_FALSE = "is_false",
+    // (undocumented)
+    IS_NOT_NULL = "is_not_null",
+    // (undocumented)
+    IS_NULL = "is_null",
+    // (undocumented)
+    IS_TRUE = "is_true",
+    // (undocumented)
+    TO_NOT_THROW = "not_to_throw",
+    // (undocumented)
+    TO_THROW = "to_throw"
 }
 
 // @public
@@ -424,13 +465,16 @@ export const sortJson: (path?: string, options?: GlobOptions, callback?: globCal
 export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, envDocs?: EnvDocs, repoRoot?: string): string;
 
 // @public
-export const testSdkEnumConversion: (suite: SdkEnumTestSuite) => void;
+export const testSdkAssertion: (suite: SdkAssertionTestSuite) => Promise<void>;
 
 // @public
-export const testSdkModelConversion: (suite: SdkModelTestSuite) => void;
+export const testSdkEnumConversion: (suite: SdkEnumTestSuite) => Promise<void>;
 
 // @public
-export const testSdkStringConversion: (suite: SdkStringTestSuite) => void;
+export const testSdkModelConversion: (suite: SdkModelTestSuite) => Promise<void>;
+
+// @public
+export const testSdkStringConversion: (suite: SdkStringTestSuite) => Promise<void>;
 
 
 ```

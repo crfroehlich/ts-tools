@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable
     no-labels,
     no-restricted-syntax,
@@ -21,22 +22,22 @@ testSdkAssertion({
   assertions: [
     {
       assertion: SdkTestAssertionType.IS_NOT_NULL,
-      conversionFunction: () => 1,
+      assertionFunction: async () => 1,
       name: 'Assert is not null',
     },
     {
       assertion: SdkTestAssertionType.IS_NULL,
-      conversionFunction: () => null,
+      assertionFunction: async () => null,
       name: 'Assert is null',
     },
     {
       assertion: SdkTestAssertionType.IS_TRUE,
-      conversionFunction: () => true,
+      assertionFunction: async () => true,
       name: 'Assert is true',
     },
     {
       assertion: SdkTestAssertionType.IS_TRUE,
-      conversionFunction: () => {
+      assertionFunction: async () => {
         return { prop: true };
       },
       name: 'Assert is true',
@@ -44,15 +45,15 @@ testSdkAssertion({
     },
     {
       assertion: SdkTestAssertionType.IS_FALSE,
-      conversionFunction: () => false,
+      assertionFunction: async () => false,
       name: 'Assert is false',
     },
     {
-      conversionFunction: () => true,
+      assertionFunction: async () => true,
       name: 'Assert does not throw',
     },
     {
-      conversionFunction: () => {
+      assertionFunction: async () => {
         return { prop: true };
       },
       name: 'Assert does not throw with value',
@@ -60,8 +61,8 @@ testSdkAssertion({
     },
     {
       name: 'Assert does throw',
-      conversionFunction: () => {
-        throw new Error('Test error');
+      assertionFunction: async () => {
+        return Promise.reject(new Error('Test error'));
       },
       assertion: SdkTestAssertionType.TO_THROW,
     },
@@ -89,7 +90,7 @@ const tests: TestAssertion[] = [
 ];
 
 testSdkEnumConversion({
-  conversionFunction: () => TestEnum.TEST_1,
+  conversionFunction: async () => TestEnum.TEST_1,
   targetEnum: TestEnum.TEST_1,
   tests,
 });
@@ -123,11 +124,11 @@ const TestMockAssertions: TestMockAssertion[] = [
 ];
 
 testSdkModelConversion({
-  conversionFunction: (data: TestMock) => {
+  conversionFunction: async (data: TestMock): Promise<object> => {
     if (data?.name === 'foo') {
       return { name: 'foo' };
     }
-    throw new Error('Asserting errors');
+    return Promise.reject(new Error('Asserting errors'));
   },
   mocks: TestMockAssertions,
   targetModel: 'TestMock',
@@ -145,7 +146,7 @@ const testStrings: TestAssertion[] = [
 ];
 
 testSdkStringConversion({
-  conversionFunction: () => 'US',
+  conversionFunction: async () => 'US',
   strings: testStrings,
   targetString: 'test strings',
 });
