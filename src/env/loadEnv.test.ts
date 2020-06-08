@@ -1,19 +1,27 @@
 /* eslint-disable no-unused-expressions */
-import { expect } from 'chai';
-import 'mocha';
 import { loadEnv } from './loadEnv';
+import { SdkTestAssertionType, testSdkAssertion } from '../testRunner/testSdk';
 
 /**
  * Verifies the processing of env variables
  */
-describe('Process Environment Variables', () => {
-  it('loads the .env with defaults', () => {
-    const env = loadEnv();
-    expect(env.NODE_ENV).to.not.be.null;
-  });
 
-  it('loads the .env with custom config', () => {
-    const env = loadEnv({ overrideProcessEnv: true });
-    expect(env.NODE_ENV).to.not.be.null;
-  });
+testSdkAssertion({
+  name: 'Process Environment Variables',
+  assertions: [
+    {
+      name: 'loads the .env with defaults',
+      conversionFunction: loadEnv,
+      input: undefined,
+      assertion: SdkTestAssertionType.IS_NOT_NULL,
+      property: 'NODE_ENV',
+    },
+    {
+      name: 'loads the .env with custom config',
+      conversionFunction: loadEnv,
+      input: { overrideProcessEnv: true },
+      assertion: SdkTestAssertionType.IS_NOT_NULL,
+      property: 'NODE_ENV',
+    },
+  ],
 });

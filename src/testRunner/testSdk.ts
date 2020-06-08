@@ -1,7 +1,10 @@
 /* eslint-disable
   @typescript-eslint/ban-types,
   @typescript-eslint/no-explicit-any,
+  complexity,
+  default-case,
   no-unused-expressions,
+  sonarjs/cognitive-complexity,
 */
 
 import { expect, use } from 'chai';
@@ -35,8 +38,6 @@ export interface SdkStringTest {
   input?: string;
 }
 
-/* eslint-enable @typescript-eslint/no-explicit-any */
-
 /**
  * Complete set of properties required for an SDK enum test suite
  * @public
@@ -66,6 +67,86 @@ export interface SdkStringTestSuite {
   strings: SdkStringTest[];
   targetString: string;
 }
+
+export enum SdkTestAssertionType {
+  IS_NULL = 'is_null',
+  IS_NOT_NULL = 'is_not_null',
+  IS_TRUE = 'is_true',
+  IS_FALSE = 'is_false',
+  TO_NOT_THROW = 'not_to_throw',
+  TO_THROW = 'to_throw',
+}
+
+export interface SdkAssertionTest {
+  assertion?: SdkTestAssertionType;
+  conversionFunction: Function;
+  input?: any;
+  name: string;
+  property?: string;
+}
+
+export interface SdkAssertionTestSuite {
+  assertions: SdkAssertionTest[];
+  name: string;
+}
+
+/**
+ * Executes an SDK enum conversion test suite using the provided conversion
+ * function and array of tests.
+ *
+ * @param suite - The suite to be executed
+ * @public
+ */
+export const testSdkAssertion = (suite: SdkAssertionTestSuite): void => {
+  describe(`${suite.name} assertion suite`, () => {
+    use(chaiAsPromised);
+    suite.assertions.forEach((test) => {
+      it(test.name, () => {
+        const throwables = [SdkTestAssertionType.TO_NOT_THROW, SdkTestAssertionType.TO_THROW];
+        const nonThrowables = [
+          SdkTestAssertionType.IS_NOT_NULL,
+          SdkTestAssertionType.IS_NULL,
+          SdkTestAssertionType.IS_FALSE,
+          SdkTestAssertionType.IS_TRUE,
+        ];
+        if (!test.assertion) {
+          const result = test.conversionFunction(test.input);
+          const value = test.property ? result[test.property] : result;
+          expect(value).to.not.throw;
+        }
+        if (throwables.find((t) => t === test.assertion)) {
+          const method = () => test.conversionFunction(test.input);
+          switch (test.assertion) {
+            case SdkTestAssertionType.TO_NOT_THROW:
+              expect(method).to.not.throw();
+              break;
+            case SdkTestAssertionType.TO_THROW:
+              expect(method).to.throw();
+              break;
+          }
+        }
+        if (nonThrowables.find((t) => t === test.assertion)) {
+          const result = test.conversionFunction(test.input);
+          const value = test.property ? result[test.property] : result;
+          switch (test.assertion) {
+            case SdkTestAssertionType.IS_NOT_NULL:
+              expect(value).to.not.be.null;
+              break;
+            case SdkTestAssertionType.IS_NULL:
+              expect(value).to.be.null;
+              break;
+            case SdkTestAssertionType.IS_FALSE:
+              expect(value).to.be.false;
+              break;
+            case SdkTestAssertionType.IS_TRUE:
+              expect(value).to.be.true;
+              break;
+          }
+        }
+      });
+    });
+  });
+};
 
 /**
  * Executes an SDK enum conversion test suite using the provided conversion
