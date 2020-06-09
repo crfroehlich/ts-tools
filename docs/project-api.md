@@ -4,8 +4,9 @@
 
 ```ts
 
-import { Logger } from 'winston';
-import { LoggerOptions } from 'winston';
+import { ILogObject } from 'tslog';
+import { ISettingsParam } from 'tslog';
+import { Logger } from 'tslog';
 import * as webpack from 'webpack';
 
 // @public
@@ -22,8 +23,10 @@ export interface Block {
 // @public
 export function buildDocumentationLinksBlock({ header, introduction, }: DocLinksParams): ReadmeBlock;
 
-// @public
-export const buildLoggerConfig: (options: LogOptions) => LoggerOptions;
+// Warning: (ae-internal-missing-underscore) The name "buildLoggerConfig" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export const buildLoggerConfig: (options?: LogOptions | undefined) => ISettingsParam;
 
 // @public
 export interface BundleConfig {
@@ -110,8 +113,10 @@ export enum BundleTarget {
     WEB = "web"
 }
 
-// @public
-export const DefaultLogOptions: LogOptions;
+// Warning: (ae-internal-missing-underscore) The name "DefaultLogOptions" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export const DefaultLogOptions: ISettingsParam;
 
 // @public (undocumented)
 export interface DocLinksParams {
@@ -160,8 +165,10 @@ export interface EnvDocs {
     [index: string]: EnvDoc;
 }
 
-// @public (undocumented)
-export type errorMethod = (message: string, ...args: any[]) => void;
+// Warning: (ae-internal-missing-underscore) The name "errorMethod" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export type errorMethod = (message: string, error: Error, ...args: any[]) => void;
 
 // @public
 export const formatEnvDocs: (docs: EnvDocs) => ReadmeBlock;
@@ -176,7 +183,7 @@ export const generateApi: (configPath?: string | undefined) => void;
 export const generateApiDocs: (params?: string | undefined) => Promise<void>;
 
 // @public
-export const getLogger: (logOptions?: LogOptions, reset?: boolean) => LogInterface;
+export const getLogger: (logOptions?: LogOptions | undefined, reset?: boolean) => LogInterface;
 
 // @public
 export const getWebpackConfig: (config?: BundleConfig) => webpack.Configuration;
@@ -224,11 +231,17 @@ export const HEADERS: {
     };
 };
 
+export { ILogObject }
+
 // @public (undocumented)
 export type IndexedBlocks = Map<string, ReadmeBlock[]>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "infoMethod" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export type infoMethod = (message: string, ...args: any[]) => void;
+
+export { ISettingsParam }
 
 // @public
 export const isRunAsScript: (fileName: string) => boolean;
@@ -239,21 +252,32 @@ export const loadEnv: (config?: EnvConfig) => any;
 // @public
 export class Log implements LogInterface {
     constructor(logOptions?: LogOptions);
-    // (undocumented)
-    error: (message: string, ...args: any[]) => void;
-    // (undocumented)
+    debug: (message: string, ...args: any[]) => void;
+    error: (message: string, error: Error, ...args: any[]) => void;
+    fatal: (message: string, error: Error, ...args: any[]) => void;
     info: (message: string, ...args: any[]) => void;
-    // (undocumented)
     log: (level: LogLevel, message: string, ...args: any[]) => void;
     // (undocumented)
     logger: Logger;
+    warn: (message: string, ...args: any[]) => void;
 }
+
+export { Logger }
 
 // @public
 export interface LogInterface {
+    // Warning: (ae-incompatible-release-tags) The symbol "debug" is marked as @public, but its signature references "infoMethod" which is marked as @internal
+    debug: infoMethod;
+    // Warning: (ae-incompatible-release-tags) The symbol "error" is marked as @public, but its signature references "errorMethod" which is marked as @internal
     error: errorMethod;
+    // Warning: (ae-incompatible-release-tags) The symbol "fatal" is marked as @public, but its signature references "errorMethod" which is marked as @internal
+    fatal: errorMethod;
+    // Warning: (ae-incompatible-release-tags) The symbol "info" is marked as @public, but its signature references "infoMethod" which is marked as @internal
     info: infoMethod;
+    // Warning: (ae-incompatible-release-tags) The symbol "log" is marked as @public, but its signature references "logMethod" which is marked as @internal
     log: logMethod;
+    // Warning: (ae-incompatible-release-tags) The symbol "warn" is marked as @public, but its signature references "infoMethod" which is marked as @internal
+    warn: infoMethod;
 }
 
 // @public
@@ -263,12 +287,20 @@ export enum LogLevel {
     // (undocumented)
     ERROR = "error",
     // (undocumented)
+    FATAL = "fatal",
+    // (undocumented)
     INFO = "info",
+    // (undocumented)
+    SILLY = "silly",
+    // (undocumented)
+    TRACE = "trace",
     // (undocumented)
     WARN = "warn"
 }
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "logMethod" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export type logMethod = (level: LogLevel, message: string, ...args: any[]) => void;
 
 // @public
@@ -281,6 +313,8 @@ export interface LogOptions {
 // @public
 export enum LogOutput {
     // (undocumented)
+    API = "api",
+    // (undocumented)
     CONSOLE = "console",
     // (undocumented)
     FILE = "file",
@@ -292,10 +326,10 @@ export enum LogOutput {
 export function main(): Promise<void>;
 
 // @public
-export const prettyMarkdown: (input: string) => string;
+export const prettify: (path?: string, options?: GlobOptions, callback?: globCallback) => void;
 
 // @public
-export const pritify: (path?: string, options?: GlobOptions, callback?: globCallback) => void;
+export const prettyMarkdown: (input: string) => string;
 
 // @public
 export type Query = string | RegExp;
@@ -457,6 +491,11 @@ export enum SdkTestAssertionType {
     // (undocumented)
     TO_THROW = "to_throw"
 }
+
+// Warning: (ae-internal-missing-underscore) The name "sleep" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export const sleep: (milliseconds?: number) => Promise<void>;
 
 // @public
 export const sortJson: (path?: string, options?: GlobOptions, callback?: globCallback) => void;

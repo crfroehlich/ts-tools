@@ -39,7 +39,7 @@ const defaultPath = '**/*.ts';
 /* eslint-disable-next-line complexity, sonarjs/cognitive-complexity */
 const defaultCallback = (er: Error | null, files: string[]): void => {
   if (er) {
-    log.error(er.toString());
+    log.error('Prettier failed', er);
   }
   files.forEach((fileName) => {
     try {
@@ -47,7 +47,7 @@ const defaultCallback = (er: Error | null, files: string[]): void => {
       const pretty = format(file, prettierConfig);
       writeFileSync(fileName, pretty);
     } catch (err) {
-      log.error(`Error: parsing ${fileName}. Message: ${err.message}`);
+      log.error(`Error: parsing ${fileName}.`, err);
     }
   });
 };
@@ -56,7 +56,7 @@ const defaultCallback = (er: Error | null, files: string[]): void => {
  * Runs format against a directory
  * @public
  */
-export const pritify = (
+export const prettify = (
   path: string = defaultPath,
   options: GlobOptions = GLOB_OPTIONS,
   callback: globCallback = defaultCallback,
@@ -65,5 +65,5 @@ export const pritify = (
 };
 
 if (isRunAsScript(__filename)) {
-  pritify();
+  prettify();
 }

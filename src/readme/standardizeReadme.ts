@@ -131,7 +131,7 @@ export function buildDocumentationLinksBlock({
         docLinksContent.push(link);
       }
     } catch (e) {
-      log.error(e.toString());
+      log.error(`Failed to parse ${fileName}`, e);
     }
   });
   const content = `${introduction ? `${introduction}\n` : ''}${docLinksContent.join('\n')}`;
@@ -246,7 +246,7 @@ export async function main(): Promise<void> {
 
   glob('**/*.md', GLOB_OPTIONS, (er: Error | null, files: string[]) => {
     if (er) {
-      log.error(er.toString());
+      log.error('Parsing markdown failed', er);
     }
     files.forEach((fileName) => {
       // Do not modify this file, as API Extractor considers any modifications to be a change to the API.
@@ -261,7 +261,7 @@ export async function main(): Promise<void> {
           writeFileSync(fileName, standardize(readmeContent, fileName));
         }
       } catch (e) {
-        log.error(e.toString());
+        log.error(`Parsing ${fileName} failed`, e);
       }
     });
   });

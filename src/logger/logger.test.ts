@@ -4,6 +4,7 @@ import { Log, LogLevel, LogOutput, getLogger } from './logger';
 
 const serviceName = 'unit-test';
 const message = 'This is a message';
+const error = new Error(message);
 
 testSdkAssertion({
   name: 'Logger Suite',
@@ -12,7 +13,7 @@ testSdkAssertion({
       name: 'logs using the default settings',
       assertionFunction: async () => {
         const log = new Log();
-        return log.error(message, { test: message });
+        return log.error(message, error, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },
@@ -36,7 +37,43 @@ testSdkAssertion({
           serviceName,
           transports: [LogOutput.CONSOLE],
         });
-        return log.error(message, { test: message });
+        return log.error(message, error, { test: message });
+      },
+      assertion: SdkTestAssertionType.TO_NOT_THROW,
+    },
+    {
+      name: 'debug logs',
+      assertionFunction: async () => {
+        const log = new Log({
+          logLevel: LogLevel.DEBUG,
+          serviceName,
+          transports: [LogOutput.CONSOLE],
+        });
+        return log.debug(message, error, { test: message });
+      },
+      assertion: SdkTestAssertionType.TO_NOT_THROW,
+    },
+    {
+      name: 'warn logs',
+      assertionFunction: async () => {
+        const log = new Log({
+          logLevel: LogLevel.WARN,
+          serviceName,
+          transports: [LogOutput.CONSOLE],
+        });
+        return log.warn(message, error, { test: message });
+      },
+      assertion: SdkTestAssertionType.TO_NOT_THROW,
+    },
+    {
+      name: 'fatal logs',
+      assertionFunction: async () => {
+        const log = new Log({
+          logLevel: LogLevel.FATAL,
+          serviceName,
+          transports: [LogOutput.CONSOLE],
+        });
+        return log.fatal(message, error, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },
@@ -49,7 +86,7 @@ testSdkAssertion({
           serviceName,
           transports: [LogOutput.FILE],
         });
-        return log.error(message, { test: message });
+        return log.error(message, error, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },
@@ -62,7 +99,7 @@ testSdkAssertion({
           serviceName,
           transports: [LogOutput.NONE],
         });
-        return log.error(message, { test: message });
+        return log.error(message, error, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
     },

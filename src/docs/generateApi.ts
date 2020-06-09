@@ -67,7 +67,7 @@ export const generateApi = (configPath?: string): void => {
     log.info('API Extractor completed successfully');
     process.exitCode = 0;
   } else {
-    log.error(
+    log.warn(
       `API Extractor completed with ${extractorResult.errorCount} errors` +
         ` and ${extractorResult.warningCount} warnings`,
     );

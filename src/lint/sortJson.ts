@@ -91,7 +91,7 @@ const parsePackageJson = (json: any): any => {
 
 const defaultCallback = (er: Error | null, files: string[]): void => {
   if (er) {
-    log.error(er.toString());
+    log.error('File parsing failed', er);
   }
   files.forEach((fileName) => {
     try {
@@ -110,7 +110,7 @@ const defaultCallback = (er: Error | null, files: string[]): void => {
       writeFileSync(fileName, JSON.stringify(sorted, null, 2));
       log.info(`Alpha-sorted ${fileName} JSON file`);
     } catch (err) {
-      log.error(`Error: parsing ${fileName}. Message: ${err.message}`);
+      log.error(`Error: parsing ${fileName}.`, err);
     }
   });
 };

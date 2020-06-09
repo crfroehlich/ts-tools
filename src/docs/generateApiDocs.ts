@@ -34,7 +34,7 @@ export const generateApiDocs = async (params?: string): Promise<void> => {
   try {
     execSync(command, { cwd, stdio: 'inherit' });
   } catch (error) {
-    log.error(error);
+    log.error('Fatal error', error);
   }
 
   const publish = (): any => {

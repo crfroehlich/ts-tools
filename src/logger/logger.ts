@@ -1,6 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Logger, LoggerOptions, createLogger, format, transports } from 'winston';
-import { loadEnv } from '../env/loadEnv';
+import { ILogObject, ISettingsParam, Logger } from 'tslog';
+import { appendFileSync } from 'fs';
+
+/**
+ * NOTE: these properties need to be explicitly exported for downstream consumers.
+ * Since they come from a 3rd party library, we can safely ignore them from code coverage.
+ */
+export {
+  /* istanbul ignore next */
+  Logger,
+  /* istanbul ignore next */
+  ISettingsParam,
+  /* istanbul ignore next */
+  ILogObject,
+} from 'tslog';
 
 /**
  * The valid log levels
@@ -8,10 +21,13 @@ import { loadEnv } from '../env/loadEnv';
  * @public
  */
 export enum LogLevel {
+  SILLY = 'silly',
+  TRACE = 'trace',
   DEBUG = 'debug',
   INFO = 'info',
   WARN = 'warn',
   ERROR = 'error',
+  FATAL = 'fatal',
 }
 
 /**
@@ -23,6 +39,7 @@ export enum LogOutput {
   CONSOLE = 'console',
   FILE = 'file',
   NONE = 'none',
+  API = 'api',
 }
 
 /**
@@ -47,48 +64,54 @@ export interface LogOptions {
 /**
  * The default configuration if none is provided.
  * @defaultValue {@link LogLevel.ERROR} and {@link LogOutput.FILE}
- * @public
+ * @internal
  */
-export const DefaultLogOptions: LogOptions = {
-  serviceName: 'js-tools',
-  logLevel: LogLevel.ERROR,
-  transports: [LogOutput.FILE],
+export const DefaultLogOptions: ISettingsParam = {
+  displayInstanceName: true,
+  displayFunctionName: true,
+  displayLogLevel: true,
+  displayLoggerName: true,
+  name: 'js-tools',
+  setCallerAsLoggerName: true,
+  minLevel: LogLevel.ERROR,
+  printLogMessageInNewLine: true,
+  overwriteConsole: true,
 };
 
 /**
- * Constructs a Winston LoggerOptions object based on the provided options
- * @public
+ * Constructs a tslog LoggerOptions object based on the provided options
+ * @internal
  * @param options - log options
- * @returns winston.LoggerOptions
+ * @returns ISettingsParam
  */
-export const buildLoggerConfig = (options: LogOptions): LoggerOptions => {
-  return {
-    level: options.logLevel,
-    format: format.combine(
-      format.timestamp({
-        format: 'YYYY-MM-DD HH:mm:ss',
-      }),
-      format.errors({ stack: true }),
-      format.splat(),
-      format.json(),
-    ),
-    defaultMeta: { service: options.serviceName },
-    transports: [],
-  };
+export const buildLoggerConfig = (options?: LogOptions): ISettingsParam => {
+  const ret = DefaultLogOptions;
+  if (options?.serviceName) {
+    ret.name = options.serviceName;
+  }
+  if (options?.logLevel) {
+    ret.minLevel = options.logLevel;
+  }
+  return ret;
 };
 
 /**
- * @public
+ * Type signature for log method
+ * @internal
  */
 export type logMethod = (level: LogLevel, message: string, ...args: any[]) => void;
+
 /**
- * @public
+ * Type signature for info method
+ * @internal
  */
 export type infoMethod = (message: string, ...args: any[]) => void;
+
 /**
- * @public
+ * Type signature for error method
+ * @internal
  */
-export type errorMethod = (message: string, ...args: any[]) => void;
+export type errorMethod = (message: string, error: Error, ...args: any[]) => void;
 
 /**
  * Definition of logging implementation requirements
@@ -103,6 +126,15 @@ export interface LogInterface {
    * @returns void
    */
   log: logMethod;
+
+  /**
+   * Generates an INFO log
+   * @param message - a brief description of the issue
+   * @param args - any number of additional string messages, which will be joined together or a JSON object
+   * @returns void
+   */
+  debug: infoMethod;
+
   /**
    * Generates an INFO log
    * @param message - a brief description of the issue
@@ -110,6 +142,15 @@ export interface LogInterface {
    * @returns void
    */
   info: infoMethod;
+
+  /**
+   * Generates an WARN log
+   * @param message - a brief description of the issue
+   * @param args - any number of additional string messages, which will be joined together or a JSON object
+   * @returns void
+   */
+  warn: infoMethod;
+
   /**
    * Generates an ERROR log
    * @param message - a brief description of the issue
@@ -117,12 +158,18 @@ export interface LogInterface {
    * @returns void
    */
   error: errorMethod;
+
+  /**
+   * Generates an FATAL log
+   * @param message - a brief description of the issue
+   * @param args - any number of additional string messages, which will be joined together or a JSON object
+   * @returns void
+   */
+  fatal: errorMethod;
 }
 
 /**
- * A log class to be used for composing log messages.
- * @remarks
- * This class is directly exposed to allow for customizing logging in specific contexts.
+ * {@inheritDoc LogInterface}
  * @public
  */
 export class Log implements LogInterface {
@@ -131,63 +178,90 @@ export class Log implements LogInterface {
   /**
    * @param logOptions - optional configuration options for the logger
    */
-  constructor(logOptions: LogOptions = DefaultLogOptions) {
-    const loggerConfig = buildLoggerConfig(logOptions);
-    this.logger = createLogger(loggerConfig);
+  constructor(logOptions?: LogOptions) {
+    const config = buildLoggerConfig(logOptions);
+    this.logger = new Logger(config);
 
-    const addFileTransport = logOptions.transports.find((t) => t === LogOutput.FILE);
+    const addFileTransport = logOptions?.transports.find((t) => t === LogOutput.FILE);
     if (addFileTransport) {
-      this.logger.add(
-        new transports.File({
-          filename: `${logOptions.serviceName}_error.log`,
-          level: LogLevel.ERROR,
-          handleExceptions: true,
-        }),
-      );
-      this.logger.add(new transports.File({ filename: `${logOptions.serviceName}_info.log` }));
-    }
-
-    const env = loadEnv();
-    const addConsoleTransport =
-      logOptions.transports.find((t) => t === LogOutput.CONSOLE) || env.NODE_ENV !== 'production';
-
-    /* istanbul ignore else */
-    if (addConsoleTransport) {
-      this.logger.add(
-        new transports.Console({
-          format: format.combine(format.colorize(), format.simple()),
-          handleExceptions: true,
-        }),
+      const logToFile = (logObject: ILogObject) => {
+        appendFileSync(`${config.name}_error.log`, `${JSON.stringify(logObject)}\n`);
+      };
+      this.logger.attachTransport(
+        {
+          silly: logToFile,
+          debug: logToFile,
+          trace: logToFile,
+          info: logToFile,
+          warn: logToFile,
+          error: logToFile,
+          fatal: logToFile,
+        },
+        LogLevel.ERROR,
       );
     }
   }
 
+  /**
+   * {@inheritDoc LogInterface.log}
+   */
   public log = (level: LogLevel, message: string, ...args: any[]): void => {
-    this.logger.log(level, message, ...args);
+    try {
+      this.logger[level](message, ...args);
+      // eslint-disable-next-line no-empty
+    } catch {}
   };
 
+  /**
+   * {@inheritDoc LogInterface.info}
+   */
+  public debug = (message: string, ...args: any[]): void => {
+    this.log(LogLevel.DEBUG, message, ...args);
+  };
+
+  /**
+   * {@inheritDoc LogInterface.info}
+   */
   public info = (message: string, ...args: any[]): void => {
-    this.logger.info(message, ...args);
+    this.log(LogLevel.INFO, message, ...args);
   };
 
-  public error = (message: string, ...args: any[]): void => {
-    this.logger.log('error', message, ...args);
+  /**
+   * {@inheritDoc LogInterface.info}
+   */
+  public warn = (message: string, ...args: any[]): void => {
+    this.log(LogLevel.WARN, message, ...args);
+  };
+
+  /**
+   * {@inheritDoc LogInterface.error}
+   */
+  public error = (message: string, error: Error, ...args: any[]): void => {
+    this.log(LogLevel.ERROR, message, error, ...args);
+  };
+
+  /**
+   * {@inheritDoc LogInterface.error}
+   */
+  public fatal = (message: string, error: Error, ...args: any[]): void => {
+    this.log(LogLevel.FATAL, message, error, ...args);
   };
 }
 
 /**
  * Internal handle on a static instance of a logger
+ * @internal
  */
 let staticLogger: LogInterface;
 
 /**
  * Fetches a static instance of a logger.
- * The returned logger will always be the same instance, with the same configuration.
+ * @remarks The returned logger will always be the same instance, with the same configuration.
  * @public
  * @param logOptions - optional configuration options for the logger
  * @param reset - reset the static instance with a new configuration
  */
-export const getLogger = (logOptions: LogOptions = DefaultLogOptions, reset = false): LogInterface => {
+export const getLogger = (logOptions?: LogOptions, reset = false): LogInterface => {
   if (reset) staticLogger = new Log(logOptions);
   /* istanbul ignore next */
   staticLogger = staticLogger || new Log(logOptions);
