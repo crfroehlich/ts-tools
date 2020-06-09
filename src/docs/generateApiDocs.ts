@@ -6,7 +6,7 @@
 import { execSync } from 'child_process';
 import { existsSync, mkdirSync } from 'fs';
 import { getLogger } from '../logger/logger';
-import { isRunAsScript } from '../cliUtils/cliUtils';
+import { isRunAsScript } from '../utils/utils';
 
 const ghpages = require('gh-pages');
 const prompts = require('prompts');

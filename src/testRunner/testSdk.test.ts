@@ -12,6 +12,7 @@ import {
   testSdkModelConversion,
   testSdkStringConversion,
 } from './testSdk';
+import { sleep } from '../utils';
 
 /**
  * Generalized assertion tests
@@ -41,6 +42,15 @@ testSdkAssertion({
         return { prop: true };
       },
       name: 'Assert is true',
+      property: 'prop',
+    },
+    {
+      assertion: SdkTestAssertionType.IS_TRUE,
+      assertionFunction: async () => {
+        await sleep(1000);
+        return { prop: true };
+      },
+      name: 'Real async assert is true',
       property: 'prop',
     },
     {
