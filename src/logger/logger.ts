@@ -97,19 +97,19 @@ export const buildLoggerConfig = (options?: LogOptions): ISettingsParam => {
 
 /**
  * Type signature for log method
- * @internal
+ * @public
  */
 export type logMethod = (level: LogLevel, message: string, ...args: any[]) => void;
 
 /**
  * Type signature for info method
- * @internal
+ * @public
  */
 export type infoMethod = (message: string, ...args: any[]) => void;
 
 /**
  * Type signature for error method
- * @internal
+ * @public
  */
 export type errorMethod = (message: string, error: Error, ...args: any[]) => void;
 

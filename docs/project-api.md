@@ -165,9 +165,7 @@ export interface EnvDocs {
     [index: string]: EnvDoc;
 }
 
-// Warning: (ae-internal-missing-underscore) The name "errorMethod" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
+// @public
 export type errorMethod = (message: string, error: Error, ...args: any[]) => void;
 
 // @public
@@ -236,9 +234,7 @@ export { ILogObject }
 // @public (undocumented)
 export type IndexedBlocks = Map<string, ReadmeBlock[]>;
 
-// Warning: (ae-internal-missing-underscore) The name "infoMethod" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
+// @public
 export type infoMethod = (message: string, ...args: any[]) => void;
 
 export { ISettingsParam }
@@ -266,17 +262,11 @@ export { Logger }
 
 // @public
 export interface LogInterface {
-    // Warning: (ae-incompatible-release-tags) The symbol "debug" is marked as @public, but its signature references "infoMethod" which is marked as @internal
     debug: infoMethod;
-    // Warning: (ae-incompatible-release-tags) The symbol "error" is marked as @public, but its signature references "errorMethod" which is marked as @internal
     error: errorMethod;
-    // Warning: (ae-incompatible-release-tags) The symbol "fatal" is marked as @public, but its signature references "errorMethod" which is marked as @internal
     fatal: errorMethod;
-    // Warning: (ae-incompatible-release-tags) The symbol "info" is marked as @public, but its signature references "infoMethod" which is marked as @internal
     info: infoMethod;
-    // Warning: (ae-incompatible-release-tags) The symbol "log" is marked as @public, but its signature references "logMethod" which is marked as @internal
     log: logMethod;
-    // Warning: (ae-incompatible-release-tags) The symbol "warn" is marked as @public, but its signature references "infoMethod" which is marked as @internal
     warn: infoMethod;
 }
 
@@ -298,9 +288,7 @@ export enum LogLevel {
     WARN = "warn"
 }
 
-// Warning: (ae-internal-missing-underscore) The name "logMethod" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
+// @public
 export type logMethod = (level: LogLevel, message: string, ...args: any[]) => void;
 
 // @public
