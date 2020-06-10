@@ -23,9 +23,7 @@ export interface Block {
 // @public
 export function buildDocumentationLinksBlock({ header, introduction, }: DocLinksParams): ReadmeBlock;
 
-// Warning: (ae-internal-missing-underscore) The name "buildLoggerConfig" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
+// @public
 export const buildLoggerConfig: (options?: LogOptions | undefined) => ISettingsParam;
 
 // @public
@@ -113,9 +111,7 @@ export enum BundleTarget {
     WEB = "web"
 }
 
-// Warning: (ae-internal-missing-underscore) The name "DefaultLogOptions" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
+// @public
 export const DefaultLogOptions: ISettingsParam;
 
 // @public (undocumented)

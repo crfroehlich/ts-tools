@@ -1,4 +1,7 @@
-/* eslint-disable no-unused-expressions */
+/* eslint-disable
+  no-unused-expressions,
+  sonarjs/no-identical-functions,
+*/
 import { SdkTestAssertionType, testSdkAssertion } from '../testRunner/testSdk';
 import { Log, LogLevel, TransportType, getLogger } from './logger';
 
@@ -203,7 +206,14 @@ testSdkAssertion({
       name: 'static logs to file and console',
       assertionFunction: async () => {
         const log = getLogger(
-          { logLevel: LogLevel.INFO, serviceName, transports: [{ type: TransportType.FILE, logLevel: LogLevel.INFO }] },
+          {
+            logLevel: LogLevel.INFO,
+            serviceName,
+            transports: [
+              { type: TransportType.FILE, logLevel: LogLevel.INFO },
+              { type: TransportType.CONSOLE, logLevel: LogLevel.INFO },
+            ],
+          },
           true,
         );
         return log.info(message, { test: message });

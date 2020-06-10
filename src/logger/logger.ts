@@ -72,7 +72,7 @@ export interface LogOptions {
 /**
  * The default configuration if none is provided.
  * @defaultValue {@link LogLevel.ERROR} and {@link LogOutput.FILE}
- * @internal
+ * @public
  */
 export const DefaultLogOptions: ISettingsParam = {
   displayInstanceName: true,
@@ -88,7 +88,7 @@ export const DefaultLogOptions: ISettingsParam = {
 
 /**
  * Constructs a tslog LoggerOptions object based on the provided options
- * @internal
+ * @public
  * @param options - log options
  * @returns ISettingsParam
  */
