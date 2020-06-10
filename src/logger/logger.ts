@@ -1,4 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable
+  @typescript-eslint/no-explicit-any,
+  no-unused-expressions,
+*/
 import { ILogObject, ISettingsParam, Logger } from 'tslog';
 import { appendFileSync } from 'fs';
 
@@ -35,11 +38,16 @@ export enum LogLevel {
  * @remarks Additional output locations will be enabled in the future
  * @public
  */
-export enum LogOutput {
+export enum TransportType {
   CONSOLE = 'console',
   FILE = 'file',
   NONE = 'none',
   API = 'api',
+}
+
+export interface Transports {
+  type: TransportType;
+  logLevel: LogLevel;
 }
 
 /**
@@ -56,9 +64,9 @@ export interface LogOptions {
    */
   logLevel: LogLevel;
   /**
-   * A list of all supported output locations
+   * An optional collection of all required output targets
    */
-  transports: LogOutput[];
+  transports?: Transports[];
 }
 
 /**
@@ -182,24 +190,25 @@ export class Log implements LogInterface {
     const config = buildLoggerConfig(logOptions);
     this.logger = new Logger(config);
 
-    const addFileTransport = logOptions?.transports.find((t) => t === LogOutput.FILE);
-    if (addFileTransport) {
-      const logToFile = (logObject: ILogObject) => {
-        appendFileSync(`${config.name}_error.log`, `${JSON.stringify(logObject)}\n`);
-      };
-      this.logger.attachTransport(
-        {
-          silly: logToFile,
-          debug: logToFile,
-          trace: logToFile,
-          info: logToFile,
-          warn: logToFile,
-          error: logToFile,
-          fatal: logToFile,
-        },
-        LogLevel.ERROR,
-      );
-    }
+    logOptions?.transports
+      ?.filter((t) => t.type === TransportType.FILE)
+      .forEach((t) => {
+        const logToFile = (logObject: ILogObject) => {
+          appendFileSync(`${config.name}_${t.logLevel}.log`, `${JSON.stringify(logObject)}\n`);
+        };
+        this.logger.attachTransport(
+          {
+            silly: logToFile,
+            debug: logToFile,
+            trace: logToFile,
+            info: logToFile,
+            warn: logToFile,
+            error: logToFile,
+            fatal: logToFile,
+          },
+          t.logLevel,
+        );
+      });
   }
 
   /**

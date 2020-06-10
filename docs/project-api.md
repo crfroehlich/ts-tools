@@ -295,19 +295,7 @@ export type logMethod = (level: LogLevel, message: string, ...args: any[]) => vo
 export interface LogOptions {
     logLevel: LogLevel;
     serviceName: string;
-    transports: LogOutput[];
-}
-
-// @public
-export enum LogOutput {
-    // (undocumented)
-    API = "api",
-    // (undocumented)
-    CONSOLE = "console",
-    // (undocumented)
-    FILE = "file",
-    // (undocumented)
-    NONE = "none"
+    transports?: Transports[];
 }
 
 // @public
@@ -502,6 +490,26 @@ export const testSdkModelConversion: (suite: SdkModelTestSuite) => Promise<void>
 
 // @public
 export const testSdkStringConversion: (suite: SdkStringTestSuite) => Promise<void>;
+
+// @public (undocumented)
+export interface Transports {
+    // (undocumented)
+    logLevel: LogLevel;
+    // (undocumented)
+    type: TransportType;
+}
+
+// @public
+export enum TransportType {
+    // (undocumented)
+    API = "api",
+    // (undocumented)
+    CONSOLE = "console",
+    // (undocumented)
+    FILE = "file",
+    // (undocumented)
+    NONE = "none"
+}
 
 
 ```

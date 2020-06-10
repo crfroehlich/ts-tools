@@ -9,7 +9,7 @@ import { isAbsolute, join, resolve } from 'path';
 import { Readme, ReadmeBlock } from './readme';
 import { DocLinksParams, EnvDocs, ScriptDocs } from './types';
 import { GLOB_OPTIONS } from '../env/files';
-import { LogLevel, LogOutput, getLogger } from '../logger';
+import { LogLevel, TransportType, getLogger } from '../logger';
 import { loadEnv } from '../env/loadEnv';
 import { isRunAsScript } from '../utils/utils';
 
@@ -18,7 +18,6 @@ const log = getLogger(
   {
     logLevel: LogLevel.INFO,
     serviceName: 'js-tools/standardize-readme',
-    transports: [LogOutput.CONSOLE],
   },
   true,
 );

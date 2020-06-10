@@ -5,7 +5,7 @@
 */
 import glob from 'glob';
 import { readFileSync, writeFileSync } from 'fs';
-import { LogLevel, LogOutput, getLogger } from '../logger';
+import { LogLevel, TransportType, getLogger } from '../logger';
 import { GLOB_OPTIONS, GlobOptions, globCallback } from '../env/files';
 import { loadEnv } from '../env/loadEnv';
 import { isRunAsScript } from '../utils/utils';
@@ -16,7 +16,6 @@ const log = getLogger(
   {
     logLevel: LogLevel.INFO,
     serviceName: 'js-tools/sort-json',
-    transports: [LogOutput.CONSOLE],
   },
   true,
 );
