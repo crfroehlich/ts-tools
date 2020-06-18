@@ -155,7 +155,7 @@
     "generate:exports": "yarn cti create ./src -w -b",
     "lint": "yarn eslint src/**/*.ts docs/**/*.md",
     "lint:docs": "markdownlint . --ignore node_modules/",
-    "lint:fix": "yarn prettier --write 'src/**/*.ts' && yarn eslint src/**/*.ts --fix",
+    "lint:fix": "yarn prettier --write src/**/*.ts && yarn eslint src/**/*.ts --fix",
     "test": "nyc mocha --reporter spec 'src/**/*.test.ts' && yarn count",
     "test:fast": "nyc mocha-parallel-tests 'src/**/*.test.ts'",
     "test:watch": "nodemon --exec nyc mocha 'src/**/*.test.ts'"
