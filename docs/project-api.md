@@ -185,7 +185,7 @@ export const generateApi: (configPath?: string | undefined) => void;
 export const generateApiDocs: (params?: string | undefined) => Promise<void>;
 
 // @public
-export const getCliLogger: (name: string) => LogInterface;
+export const getCliLogger: (name?: string | undefined) => LogInterface;
 
 // @public
 export const getLogger: (logOptions?: LogOptions | undefined, reset?: boolean) => LogInterface;

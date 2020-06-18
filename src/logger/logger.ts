@@ -218,6 +218,7 @@ export class Log implements LogInterface {
           /* istanbul ignore next */
           config.name = config.name || 'ns8';
           const name = config.name.replace('/', '-');
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           appendFile(`${name}_${t.logLevel}.log`, `${JSON.stringify(logObject)}\n`, () => {});
         };
         this.logger.attachTransport(
