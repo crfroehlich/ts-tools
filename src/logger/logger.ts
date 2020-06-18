@@ -3,7 +3,7 @@
   no-unused-expressions,
 */
 import { ILogObject, ISettingsParam, Logger } from 'tslog';
-import { appendFileSync } from 'fs';
+import { appendFile } from 'fs';
 
 /**
  * NOTE: these properties need to be explicitly exported for downstream consumers.
@@ -215,8 +215,10 @@ export class Log implements LogInterface {
       ?.filter((t) => t.type === TransportType.FILE)
       .forEach((t) => {
         const logToFile = (logObject: ILogObject) => {
-          const name = config.name?.replace('/', '-') || 'service';
-          appendFileSync(`${name}_${t.logLevel}.log`, `${JSON.stringify(logObject)}\n`);
+          /* istanbul ignore next */
+          config.name = config.name || 'ns8';
+          const name = config.name.replace('/', '-');
+          appendFile(`${name}_${t.logLevel}.log`, `${JSON.stringify(logObject)}\n`, () => {});
         };
         this.logger.attachTransport(
           {
@@ -305,14 +307,14 @@ export const getLogger = (logOptions?: LogOptions, reset = false): LogInterface 
  * @public
  * @param name - Script/project/method running this logger
  */
-export const getCliLogger = (name: string): LogInterface => {
+export const getCliLogger = (name?: string): LogInterface => {
   return getLogger(
     {
       logLevel: LogLevel.INFO,
-      serviceName: name,
+      serviceName: name || 'ns8',
       transports: [
         { logLevel: LogLevel.INFO, type: TransportType.CONSOLE },
-        { logLevel: LogLevel.FATAL, type: TransportType.FILE },
+        { logLevel: LogLevel.SILLY, type: TransportType.FILE },
       ],
       type: DisplayType.pretty,
     },

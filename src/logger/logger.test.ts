@@ -3,7 +3,7 @@
   sonarjs/no-identical-functions,
 */
 import { SdkTestAssertionType, testSdkAssertion } from '../testRunner/testSdk';
-import { Log, LogLevel, TransportType, getLogger } from './logger';
+import { Log, LogLevel, TransportType, getCliLogger, getLogger } from './logger';
 
 const serviceName = 'unit-test';
 const message = 'This is a message';
@@ -158,6 +158,14 @@ testSdkAssertion({
       name: 'static logs using the default options',
       assertionFunction: async () => {
         const log = getCliLogger('js-tools/test');
+        return log.info(message, { test: message });
+      },
+      assertion: SdkTestAssertionType.TO_NOT_THROW,
+    },
+    {
+      name: 'static logs using the default options with no name',
+      assertionFunction: async () => {
+        const log = getCliLogger();
         return log.info(message, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,
