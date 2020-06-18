@@ -2,7 +2,7 @@
 import * as path from 'path';
 import { Extractor, ExtractorConfig, ExtractorResult } from '@microsoft/api-extractor';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { getLogger } from '../logger/logger';
+import { getCliLogger } from '../logger/logger';
 import { isRunAsScript } from '../utils/utils';
 
 /**
@@ -12,7 +12,7 @@ import { isRunAsScript } from '../utils/utils';
  * @public
  */
 export const generateApi = (configPath?: string): void => {
-  const log = getLogger();
+  const log = getCliLogger('js-tools/generate-api');
 
   let apiExtractorJsonPath = '';
   // Get any command line arguments that might have been passed

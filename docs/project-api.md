@@ -114,6 +114,14 @@ export enum BundleTarget {
 // @public
 export const DefaultLogOptions: ISettingsParam;
 
+// @public
+export enum DisplayType {
+    // (undocumented)
+    json = "json",
+    // (undocumented)
+    pretty = "pretty"
+}
+
 // @public (undocumented)
 export interface DocLinksParams {
     header: string;
@@ -175,6 +183,9 @@ export const generateApi: (configPath?: string | undefined) => void;
 
 // @public
 export const generateApiDocs: (params?: string | undefined) => Promise<void>;
+
+// @public
+export const getCliLogger: (name: string) => LogInterface;
 
 // @public
 export const getLogger: (logOptions?: LogOptions | undefined, reset?: boolean) => LogInterface;
@@ -292,6 +303,7 @@ export interface LogOptions {
     logLevel: LogLevel;
     serviceName: string;
     transports?: Transports[];
+    type?: DisplayType;
 }
 
 // @public
@@ -487,7 +499,7 @@ export const testSdkModelConversion: (suite: SdkModelTestSuite) => Promise<void>
 // @public
 export const testSdkStringConversion: (suite: SdkStringTestSuite) => Promise<void>;
 
-// @public (undocumented)
+// @public
 export interface Transports {
     // (undocumented)
     logLevel: LogLevel;

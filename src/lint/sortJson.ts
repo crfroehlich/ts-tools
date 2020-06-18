@@ -5,20 +5,14 @@
 */
 import glob from 'glob';
 import { readFileSync, writeFileSync } from 'fs';
-import { LogLevel, TransportType, getLogger } from '../logger';
+import { getCliLogger } from '../logger';
 import { GLOB_OPTIONS, GlobOptions, globCallback } from '../env/files';
 import { loadEnv } from '../env/loadEnv';
 import { isRunAsScript } from '../utils/utils';
 
 const sortedJson = require('sorted-json');
 
-const log = getLogger(
-  {
-    logLevel: LogLevel.INFO,
-    serviceName: 'js-tools/sort-json',
-  },
-  true,
-);
+const log = getCliLogger('js-tools/sort-json');
 
 const env = loadEnv();
 
@@ -96,16 +90,18 @@ const defaultCallback = (er: Error | null, files: string[]): void => {
     try {
       const file = readFileSync(fileName, 'utf-8');
 
-      // If the JSON file has comments, skip it
-      if (file.indexOf('//') || file.indexOf('/*')) return;
-
-      const json: any = JSON.parse(file);
+      let json: any;
+      try {
+        json = JSON.parse(file);
+      } catch (e) {
+        log.info(`Skipped ${fileName}.`);
+        return;
+      }
       if (fileName === 'package.json') {
         parsePackageJson(json);
       }
 
       const sorted = sortedJson.sortify(json);
-
       writeFileSync(fileName, JSON.stringify(sorted, null, 2));
       log.info(`Alpha-sorted ${fileName} JSON file`);
     } catch (err) {

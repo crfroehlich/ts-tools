@@ -157,7 +157,7 @@ testSdkAssertion({
     {
       name: 'static logs using the default options',
       assertionFunction: async () => {
-        const log = getLogger();
+        const log = getCliLogger('js-tools/test');
         return log.info(message, { test: message });
       },
       assertion: SdkTestAssertionType.TO_NOT_THROW,

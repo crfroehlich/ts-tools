@@ -3,7 +3,7 @@
 import { Options, format } from 'prettier';
 import glob from 'glob';
 import { readFileSync, writeFileSync } from 'fs';
-import { LogLevel, TransportType, getLogger } from '../logger';
+import { getCliLogger } from '../logger';
 import { GLOB_OPTIONS, GlobOptions, globCallback } from '../env/files';
 import { isRunAsScript } from '../utils/utils';
 
@@ -24,13 +24,7 @@ export const prettyMarkdown = (input: string): string => {
   return format(input, prettierConfig);
 };
 
-const log = getLogger(
-  {
-    logLevel: LogLevel.INFO,
-    serviceName: 'js-tools/sort-json',
-  },
-  true,
-);
+const log = getCliLogger('js-tools/pretty');
 
 // Prettier all the source code
 const defaultPath = '**/*.ts';

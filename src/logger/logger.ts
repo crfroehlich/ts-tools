@@ -45,9 +45,22 @@ export enum TransportType {
   API = 'api',
 }
 
+/**
+ * Defines a specific output type, which is log level + location
+ * @public
+ */
 export interface Transports {
   type: TransportType;
   logLevel: LogLevel;
+}
+
+/**
+ * Render method for log messages
+ * @public
+ */
+export enum DisplayType {
+  json = 'json',
+  pretty = 'pretty',
 }
 
 /**
@@ -67,23 +80,28 @@ export interface LogOptions {
    * An optional collection of all required output targets
    */
   transports?: Transports[];
+  /**
+   * An optional type for rendering. Choices are `pretty` and `json`. Default is `json`.
+   */
+  type?: DisplayType;
 }
 
 /**
  * The default configuration if none is provided.
- * @defaultValue {@link LogLevel.ERROR} and {@link LogOutput.FILE}
+ * @defaultValue {@link LogLevel.ERROR} and {@link TransportType.FILE}
  * @public
  */
 export const DefaultLogOptions: ISettingsParam = {
-  displayInstanceName: true,
+  displayDateTime: true,
   displayFunctionName: true,
-  displayLogLevel: true,
+  displayInstanceName: true,
   displayLoggerName: true,
+  displayLogLevel: true,
   name: 'js-tools',
-  setCallerAsLoggerName: true,
-  minLevel: LogLevel.ERROR,
-  printLogMessageInNewLine: true,
   overwriteConsole: true,
+  printLogMessageInNewLine: true,
+  setCallerAsLoggerName: true,
+  type: 'json',
 };
 
 /**
@@ -99,6 +117,9 @@ export const buildLoggerConfig = (options?: LogOptions): ISettingsParam => {
   }
   if (options?.logLevel) {
     ret.minLevel = options.logLevel;
+  }
+  if (options?.type) {
+    ret.type = options.type;
   }
   return ret;
 };
@@ -275,4 +296,22 @@ export const getLogger = (logOptions?: LogOptions, reset = false): LogInterface 
   /* istanbul ignore next */
   staticLogger = staticLogger || new Log(logOptions);
   return staticLogger;
+};
+
+/**
+ * Fetches an instance of a logger.
+ * @remarks The returned logger will always be a new instance, with the same configuration.
+ * @public
+ * @param name - Script/project/method running this logger
+ */
+export const getCliLogger = (name: string): LogInterface => {
+  return getLogger(
+    {
+      logLevel: LogLevel.INFO,
+      serviceName: name,
+      transports: [{ logLevel: LogLevel.INFO, type: TransportType.CONSOLE }],
+      type: DisplayType.pretty,
+    },
+    true,
+  );
 };

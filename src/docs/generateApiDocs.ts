@@ -5,13 +5,13 @@
 */
 import { execSync } from 'child_process';
 import { existsSync, mkdirSync } from 'fs';
-import { getLogger } from '../logger/logger';
+import { getCliLogger } from '../logger/logger';
 import { isRunAsScript } from '../utils/utils';
 
 const ghpages = require('gh-pages');
 const prompts = require('prompts');
 
-const log = getLogger();
+const log = getCliLogger('js-tools/generate-api-docs');
 
 /**
  * Generates API docs for every documented class/method/interface/enum.

@@ -6,7 +6,7 @@
 import path from 'path';
 import fs from 'fs';
 import * as webpack from 'webpack';
-import { LogLevel, getLogger } from '../logger/logger';
+import { LogLevel, getCliLogger } from '../logger/logger';
 
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -107,7 +107,7 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
   if (!tsLoader) {
     throw new Error('Loaders missing');
   }
-  const log = getLogger();
+  const log = getCliLogger('js-tools/bundle');
 
   const license = `
 -------------------------- NS8 PROPRIETARY 1.0 --------------------------

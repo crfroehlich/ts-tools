@@ -9,18 +9,12 @@ import { isAbsolute, join, resolve } from 'path';
 import { Readme, ReadmeBlock } from './readme';
 import { DocLinksParams, EnvDocs, ScriptDocs } from './types';
 import { GLOB_OPTIONS } from '../env/files';
-import { LogLevel, TransportType, getLogger } from '../logger';
+import { getCliLogger } from '../logger';
 import { loadEnv } from '../env/loadEnv';
 import { isRunAsScript } from '../utils/utils';
 
 const env = loadEnv();
-const log = getLogger(
-  {
-    logLevel: LogLevel.INFO,
-    serviceName: 'js-tools/standardize-readme',
-  },
-  true,
-);
+const log = getCliLogger('js-tools/standardize-readme');
 
 /**
  * Defines known headers that we will parse
@@ -249,7 +243,7 @@ export async function main(): Promise<void> {
     }
     files.forEach((fileName) => {
       // Do not modify this file, as API Extractor considers any modifications to be a change to the API.
-      if (fileName.indexOf('protect-api.md')) return;
+      if (fileName.indexOf('protect-api.md') > -1) return;
 
       log.info(`Standardized ${fileName}`);
       try {
