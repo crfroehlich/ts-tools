@@ -315,7 +315,7 @@ export const getCliLogger = (name?: string): LogInterface => {
       serviceName: name || 'ns8',
       transports: [
         { logLevel: LogLevel.INFO, type: TransportType.CONSOLE },
-        { logLevel: LogLevel.SILLY, type: TransportType.FILE },
+        { logLevel: LogLevel.FATAL, type: TransportType.FILE },
       ],
       type: DisplayType.pretty,
     },
