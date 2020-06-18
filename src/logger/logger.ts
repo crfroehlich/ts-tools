@@ -215,7 +215,8 @@ export class Log implements LogInterface {
       ?.filter((t) => t.type === TransportType.FILE)
       .forEach((t) => {
         const logToFile = (logObject: ILogObject) => {
-          appendFileSync(`${config.name}_${t.logLevel}.log`, `${JSON.stringify(logObject)}\n`);
+          const name = config.name?.replace('/', '-') || 'service';
+          appendFileSync(`${name}_${t.logLevel}.log`, `${JSON.stringify(logObject)}\n`);
         };
         this.logger.attachTransport(
           {
@@ -309,7 +310,10 @@ export const getCliLogger = (name: string): LogInterface => {
     {
       logLevel: LogLevel.INFO,
       serviceName: name,
-      transports: [{ logLevel: LogLevel.INFO, type: TransportType.CONSOLE }],
+      transports: [
+        { logLevel: LogLevel.INFO, type: TransportType.CONSOLE },
+        { logLevel: LogLevel.FATAL, type: TransportType.FILE },
+      ],
       type: DisplayType.pretty,
     },
     true,
