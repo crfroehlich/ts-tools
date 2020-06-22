@@ -5909,10 +5909,10 @@ tslib@^1.10.0, tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.13.0.tgz#c881e13cc7015894ed914862d276436fa9a47043"
   integrity sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q==
 
-tslog@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/tslog/-/tslog-2.2.0.tgz#a0e8794c4652a1ca3f87f719659157b6e13ace50"
-  integrity sha512-a8zk7eTSWY1UossSTJgarQV93XwlyH7rdYSXzrYoBAbm5a2qo7qiVO79FiJ5VkObon2SiHf+KZzofpL5TpurUQ==
+tslog@2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/tslog/-/tslog-2.5.0.tgz#f5df2bf68c4574ff435c5a9c6cbe0502f9843833"
+  integrity sha512-K5FeBJVZ1vL/OOJjJuXPb0AHcA0ldNeoG89IdcJkxtW6i0REpS3X/ZCTC9fDDSMCXA7NciHkYbzoGl3auqrxcA==
   dependencies:
     source-map-support "^0.5.19"
 
