@@ -1,5 +1,11 @@
 {
   "author": "ns8inc",
+  "bin": {
+    "generateApi": "./dist/docs/generateApi.js",
+    "generateApiDocs": "./dist/docs/generateApiDocs.js",
+    "sortJson": "./dist/lint/sortJson.js",
+    "standardizeReadme": "./dist/readme/standardizeReadme.js"
+  },
   "dependencies": {
     "@istanbuljs/nyc-config-typescript": "1.0.1",
     "@microsoft/api-documenter": "7.8.16",

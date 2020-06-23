@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /* eslint-disable complexity */
 import * as path from 'path';
 import { Extractor, ExtractorConfig, ExtractorResult } from '@microsoft/api-extractor';
