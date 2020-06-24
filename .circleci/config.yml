@@ -43,7 +43,7 @@ jobs:
             git config user.name 'CircleCI'
           name: Setup Git
       - run:
-          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=${NS8_GLOBAL_NPM_TOKEN}" > ~/.npmrc
           name: Configure NPM
       - run:
           command: yarn
@@ -70,7 +70,7 @@ jobs:
             fi
           name: Skip if CI Made the Last Commit
       - run:
-          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=${NS8_GLOBAL_NPM_TOKEN}" > ~/.npmrc
           name: Configure NPM
       - run:
           command: yarn
@@ -81,9 +81,7 @@ jobs:
       - run:
           command: yarn test
           name: Run Tests
-
 version: 2.1
-
 workflows:
   publish:
     jobs:
@@ -93,15 +91,18 @@ workflows:
               ignore: /.*/
             tags:
               only: /^\d+\.\d+\.\d+$/
+          context: org-global
   test_and_deploy:
     jobs:
       - test:
           filters:
             branches:
               ignore: gh-pages
+          context: org-global
       - deploy:
           filters:
             branches:
               only: master
           requires:
             - test
+          context: org-global
