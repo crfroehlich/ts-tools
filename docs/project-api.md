@@ -236,9 +236,6 @@ export const HEADERS: {
     };
 };
 
-// @public (undocumented)
-export const IGNORED_FILES: string[];
-
 export { ILogObject }
 
 // @public (undocumented)

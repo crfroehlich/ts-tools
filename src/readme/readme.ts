@@ -9,10 +9,6 @@
 import { Block, Query } from './types';
 import { prettyMarkdown } from '../lint/pretty';
 
-// Do not modify these files, as API Extractor considers any modifications to be a change to the API;
-// and other files should not be parsed at all.
-export const IGNORED_FILES = ['protect-api.md', 'pull_request_template.md', '.github', 'temp'];
-
 /**
  * @public
  */

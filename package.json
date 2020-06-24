@@ -67,6 +67,10 @@
       "defaultValue": true,
       "description": "If true, create a Table of Contents for each Markdown doc."
     },
+    "IGNORE_MARKDOWN_FILES": {
+      "defaultValue": "protect-api.md,pull_request_template.md,.github,temp,.tmp,node_modules",
+      "description": "A comma-delimited list of markdown files to exclude from processing"
+    },
     "IGNORE_PEER_DEPENDENCIES": {
       "defaultValue": "",
       "description": "Comma-delimited list of `dependencies` to exclude from `peerDependencies`."

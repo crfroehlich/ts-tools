@@ -6,7 +6,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 import glob from 'glob';
 import { isAbsolute, join, resolve } from 'path';
-import { IGNORED_FILES, Readme, ReadmeBlock } from './readme';
+import { Readme, ReadmeBlock } from './readme';
 import { DocLinksParams, EnvDocs, ScriptDocs } from './types';
 import { GLOB_OPTIONS } from '../env/files';
 import { getCliLogger } from '../logger';
@@ -15,6 +15,28 @@ import { isRunAsScript } from '../utils/utils';
 
 const env = loadEnv();
 const log = getCliLogger('js-tools/standardize-readme');
+
+let ignoredFiles: string[];
+
+/**
+ * Gets the unique set of markdown file patterns to ignore
+ */
+const getIgnoredFiles = (): string[] => {
+  if (ignoredFiles) return ignoredFiles;
+  const envIgnored = env.IGNORE_MARKDOWN_FILES?.length > 0 ? env.IGNORE_MARKDOWN_FILES.split(',') : [];
+  const ignored = ['protect-api.md', 'pull_request_template.md', '.github', 'temp'].concat(envIgnored);
+  ignoredFiles = ignored.filter((name, index) => ignored.indexOf(name) === index);
+  return ignoredFiles;
+};
+
+/**
+ * Returns true if the fileName is in the ignore pattern
+ * @param fileName - name of path to ignore
+ */
+const isIgnored = (fileName: string): boolean => {
+  const ignoreList = getIgnoredFiles();
+  return ignoreList.some((i) => fileName.indexOf(i) > -1);
+};
 
 /**
  * Defines known headers that we will parse
@@ -108,7 +130,7 @@ export function buildDocumentationLinksBlock({
   let lastPath = '';
   /* eslint-disable-next-line complexity */
   files.forEach((fileName) => {
-    if (IGNORED_FILES.some((i) => fileName.indexOf(i) > -1)) return;
+    if (isIgnored(fileName)) return;
     try {
       const content = readFileSync(fileName, 'utf-8');
       const lines = content.split('\n');
@@ -243,7 +265,7 @@ export async function main(): Promise<void> {
       log.error('Parsing markdown failed', er);
     }
     files.forEach((fileName) => {
-      if (IGNORED_FILES.some((i) => fileName.indexOf(i) > -1)) return;
+      if (isIgnored(fileName)) return;
 
       log.info(`Standardized ${fileName}`);
       try {

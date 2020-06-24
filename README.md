@@ -46,6 +46,8 @@ To get started, take a look at the documentation listed below:
   - Default Value: "true"
 - `DOCS_CREATE_TOC`: If true, create a Table of Contents for each Markdown doc.
   - Default Value: "true"
+- `IGNORE_MARKDOWN_FILES`: A comma-delimited list of markdown files to exclude from processing
+  - Default Value: "protect-api.md,pull_request_template.md,.github,temp,.tmp,node_modules"
 - `IGNORE_PEER_DEPENDENCIES`: Comma-delimited list of `dependencies` to exclude from `peerDependencies`.
   - Default Value: ""
 - `NODE_ENV`: The runtime environment, either `prod` or `dev`.
