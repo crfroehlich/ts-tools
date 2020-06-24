@@ -119,6 +119,21 @@ export interface SdkAssertionTestSuite {
 }
 
 /**
+ * List of assertion types that are expected to throw (or not throw)
+ */
+const throwables = [SdkTestAssertionType.TO_NOT_THROW, SdkTestAssertionType.TO_THROW];
+
+/**
+ * List of assertion types that expect to resolve
+ */
+const nonThrowables = [
+  SdkTestAssertionType.IS_NOT_NULL,
+  SdkTestAssertionType.IS_NULL,
+  SdkTestAssertionType.IS_FALSE,
+  SdkTestAssertionType.IS_TRUE,
+];
+
+/**
  * Executes an SDK assertion suite using the provided functions
  *
  * @param suite - The suite to be executed
@@ -129,13 +144,6 @@ export const testSdkAssertion = async function (suite: SdkAssertionTestSuite): P
     use(chaiAsPromised);
     suite.assertions.forEach(async function (test): Promise<void> {
       it(test.name, async function (): Promise<void> {
-        const throwables = [SdkTestAssertionType.TO_NOT_THROW, SdkTestAssertionType.TO_THROW];
-        const nonThrowables = [
-          SdkTestAssertionType.IS_NOT_NULL,
-          SdkTestAssertionType.IS_NULL,
-          SdkTestAssertionType.IS_FALSE,
-          SdkTestAssertionType.IS_TRUE,
-        ];
         if (!test.assertion) {
           const method = async function () {
             return test.assertionFunction(test.input);
