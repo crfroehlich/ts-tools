@@ -11,6 +11,7 @@ import {
   testSdkEnumConversion,
   testSdkModelConversion,
   testSdkStringConversion,
+  testExecutionTime,
 } from './testSdk';
 import { sleep } from '../utils';
 
@@ -160,3 +161,6 @@ testSdkStringConversion({
   strings: testStrings,
   targetString: 'test strings',
 });
+
+testExecutionTime('sleeps for 1 second', sleep, 1000);
+testExecutionTime('sleeps for 5 seconds', sleep, 5000);
