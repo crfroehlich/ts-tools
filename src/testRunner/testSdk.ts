@@ -134,6 +134,17 @@ const nonThrowables = [
 ];
 
 /**
+ *
+ * @param test - a test assertion to match
+ * @param collection - a collection of assertion types to validate against
+ */
+const matchAssertion = (test: any, collection: any): boolean => {
+  return collection.find(function (t: any) {
+    return t === test.assertion;
+  });
+};
+
+/**
  * Executes an SDK assertion suite using the provided functions
  *
  * @param suite - The suite to be executed
@@ -142,7 +153,7 @@ const nonThrowables = [
 export const testSdkAssertion = async function (suite: SdkAssertionTestSuite): Promise<void> {
   describe(`${suite.name} assertion suite`, async function () {
     use(chaiAsPromised);
-    suite.assertions.forEach(async function (test): Promise<void> {
+    suite.assertions.forEach(async function (test: SdkAssertionTest): Promise<void> {
       it(test.name, async function (): Promise<void> {
         if (!test.assertion) {
           const method = async function () {
@@ -150,11 +161,7 @@ export const testSdkAssertion = async function (suite: SdkAssertionTestSuite): P
           };
           expect(method).to.not.throw();
         }
-        if (
-          throwables.find(function (t) {
-            return t === test.assertion;
-          })
-        ) {
+        if (matchAssertion(test, throwables)) {
           const method = async function () {
             return test.assertionFunction(test.input);
           };
@@ -167,11 +174,7 @@ export const testSdkAssertion = async function (suite: SdkAssertionTestSuite): P
               break;
           }
         }
-        if (
-          nonThrowables.find(function (t) {
-            return t === test.assertion;
-          })
-        ) {
+        if (matchAssertion(test, nonThrowables)) {
           const result = await test.assertionFunction(test.input);
           const value = test.property ? result[test.property] : result;
           switch (test.assertion) {
