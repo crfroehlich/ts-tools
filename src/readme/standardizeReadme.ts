@@ -6,7 +6,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 import glob from 'glob';
 import { isAbsolute, join, resolve } from 'path';
-import { Readme, ReadmeBlock } from './readme';
+import { Readme, ReadmeBlock, IGNORED_FILES } from './readme';
 import { DocLinksParams, EnvDocs, ScriptDocs } from './types';
 import { GLOB_OPTIONS } from '../env/files';
 import { getCliLogger } from '../logger';
@@ -108,6 +108,7 @@ export function buildDocumentationLinksBlock({
   let lastPath = '';
   /* eslint-disable-next-line complexity */
   files.forEach((fileName) => {
+    if (IGNORED_FILES.some((i) => fileName.indexOf(i) > -1)) return;
     try {
       const content = readFileSync(fileName, 'utf-8');
       const lines = content.split('\n');
@@ -242,8 +243,7 @@ export async function main(): Promise<void> {
       log.error('Parsing markdown failed', er);
     }
     files.forEach((fileName) => {
-      // Do not modify this file, as API Extractor considers any modifications to be a change to the API.
-      if (fileName.indexOf('protect-api.md') > -1) return;
+      if (IGNORED_FILES.some((i) => fileName.indexOf(i) > -1)) return;
 
       log.info(`Standardized ${fileName}`);
       try {

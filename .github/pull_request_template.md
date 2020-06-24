@@ -1,10 +1,10 @@
 ## Clubhouse Stories
 
-[__REPLACE__](https://app.clubhouse.io/ns8/story/__REPLACE__)
+[**REPLACE**](https://app.clubhouse.io/ns8/story/__REPLACE__)
 
 ## Summary
 
-__REPLACE__
+**REPLACE**
 
 ## Author Checklist
 

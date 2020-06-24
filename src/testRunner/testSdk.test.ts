@@ -7,11 +7,11 @@
 */
 import {
   SdkTestAssertionType,
+  testExecutionTime,
   testSdkAssertion,
   testSdkEnumConversion,
   testSdkModelConversion,
   testSdkStringConversion,
-  testExecutionTime,
 } from './testSdk';
 import { sleep } from '../utils';
 

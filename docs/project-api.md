@@ -236,6 +236,9 @@ export const HEADERS: {
     };
 };
 
+// @public (undocumented)
+export const IGNORED_FILES: string[];
+
 export { ILogObject }
 
 // @public (undocumented)
@@ -486,6 +489,9 @@ export const sortJson: (path?: string, options?: GlobOptions, callback?: globCal
 
 // @public
 export function standardize(content: string, title: string, scriptDocs?: ScriptDocs, envDocs?: EnvDocs, repoRoot?: string): string;
+
+// @public
+export const testExecutionTime: (name: string, method: any, time: number) => void;
 
 // @public
 export const testSdkAssertion: (suite: SdkAssertionTestSuite) => Promise<void>;
