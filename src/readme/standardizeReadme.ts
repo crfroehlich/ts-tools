@@ -6,7 +6,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 import glob from 'glob';
 import { isAbsolute, join, resolve } from 'path';
-import { Readme, ReadmeBlock, IGNORED_FILES } from './readme';
+import { IGNORED_FILES, Readme, ReadmeBlock } from './readme';
 import { DocLinksParams, EnvDocs, ScriptDocs } from './types';
 import { GLOB_OPTIONS } from '../env/files';
 import { getCliLogger } from '../logger';
