@@ -103,7 +103,8 @@ const defaultCallback = (er: Error | null, files: string[]): void => {
       }
 
       const sorted = sortedJson.sortify(json);
-      writeFileSync(fileName, JSON.stringify(sorted, null, 2));
+      const stringified = JSON.stringify(sorted, null, 2).concat('\n');
+      writeFileSync(fileName, stringified);
       log.info(`Alpha-sorted ${fileName} JSON file`);
     } catch (err) {
       log.error(`Error: parsing ${fileName}.`, err);
