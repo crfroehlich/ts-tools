@@ -224,6 +224,13 @@ Unauthorized copy of this file, via any medium is strictly prohibited.
     watch,
   });
 
+  // Regular expression to find scripts with a `#!/usr/bin/env node` shebang.
+  // This facilitates removing the shebang to avoid webpack build errors.
+  const distDir = '/node_modules/@ns8/protect-tools-js/dist';
+  const subDirs = '(docs|readme|lint)';
+  const scripts = '(generateApiDocs|generateApi|standardizeReadme|sortJson)';
+  const distScripts = new RegExp(`${distDir}/${subDirs}/${scripts}.js`);
+
   return {
     entry,
     mode,
@@ -240,6 +247,12 @@ Unauthorized copy of this file, via any medium is strictly prohibited.
       modules: ['node_modules'],
     },
     devtool,
+    externals: {
+      // The fsevents package includes a binary file via require(), which
+      // causes a build error when webpack attempts to parse it. Using
+      // externals allows us to use the webpack-equivalent require().
+      fsevents: 'require("fsevents")',
+    },
     module: {
       rules: [
         {
@@ -249,6 +262,18 @@ Unauthorized copy of this file, via any medium is strictly prohibited.
               loader: 'ts-loader',
               options: {
                 transpileOnly: true,
+              },
+            },
+          ],
+        },
+        {
+          test: distScripts,
+          use: [
+            {
+              loader: 'string-replace-loader',
+              options: {
+                search: '#!/usr/bin/env node',
+                replace: '',
               },
             },
           ],

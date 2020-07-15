@@ -42,7 +42,7 @@
     "fork-ts-checker-webpack-plugin": "5.0.7",
     "gh-pages": "3.1.0",
     "husky": "4.2.5",
-    "markdownlint-cli": "^0.23.2",
+    "markdownlint-cli": "0.23.2",
     "mocha": "8.0.1",
     "mocha-parallel-tests": "2.3.0",
     "nodemon": "2.0.4",
@@ -52,7 +52,8 @@
     "rimraf": "3.0.2",
     "sorted-json": "0.2.6",
     "source-map-support": "0.5.19",
-    "stdio": "^2.1.1",
+    "stdio": "2.1.1",
+    "string-replace-loader": "2.3.0",
     "ts-loader": "8.0.0",
     "ts-mocha": "7.0.0",
     "ts-node": "8.10.2",
@@ -130,7 +131,7 @@
     "fork-ts-checker-webpack-plugin": "5.0.7",
     "gh-pages": "3.1.0",
     "husky": "4.2.5",
-    "markdownlint-cli": "^0.23.2",
+    "markdownlint-cli": "0.23.2",
     "mocha": "8.0.1",
     "mocha-parallel-tests": "2.3.0",
     "nodemon": "2.0.4",
@@ -140,7 +141,8 @@
     "rimraf": "3.0.2",
     "sorted-json": "0.2.6",
     "source-map-support": "0.5.19",
-    "stdio": "^2.1.1",
+    "stdio": "2.1.1",
+    "string-replace-loader": "2.3.0",
     "ts-loader": "8.0.0",
     "ts-mocha": "7.0.0",
     "ts-node": "8.10.2",
@@ -245,5 +247,5 @@
     }
   },
   "types": "dist/index.d.ts",
-  "version": "1.0.25"
+  "version": "1.0.27"
 }
