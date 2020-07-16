@@ -12,13 +12,6 @@ jobs:
       - checkout
       - run:
           command: |
-            set +eo pipefail
-            if git log | head -n 2 | tail -n 1 | grep 'Author: CircleCI'; then
-              circleci step halt
-            fi
-          name: Skip if CI Made the Last Commit
-      - run:
-          command: |
             git config user.email noreply@ns8.com
             git config user.name 'CircleCI'
           name: Setup Git
@@ -87,13 +80,6 @@ jobs:
     executor: nodeaws-executor
     steps:
       - checkout
-      - run:
-          command: |
-            set +eo pipefail
-            if git log | head -n 2 | tail -n 1 | grep 'Author: CircleCI'; then
-              circleci step halt
-            fi
-          name: Skip if CI Made the Last Commit
       - run:
           command: echo "//registry.npmjs.org/:_authToken=${NS8_GLOBAL_NPM_TOKEN}" > ~/.npmrc
           name: Configure NPM
