@@ -1,7 +1,10 @@
+executors:
+  nodeaws-executor:
+    docker:
+      - image: ns8inc/nodeaws:node-erbium
 jobs:
   deploy:
-    docker:
-      - image: node:12
+    executor: nodeaws-executor
     steps:
       - add_ssh_keys:
           fingerprints:
@@ -22,19 +25,32 @@ jobs:
       - run:
           command: |
             yarn config set version-tag-prefix ''
-            yarn version --patch
+            current_version="$(jq -r .version package.json)"
+
+            while
+              new_version="$(jq -r .version package.json)"
+              [[ "$(git tag | grep -c $new_version)" -gt "0" ]]
+            do yarn version --no-git-tag-version --patch; done
+
+            if [ "$new_version" = "$current_version" ]; then
+              # Someone manually bumped the version in package.json, so don't bump, only tag.
+              git tag $new_version
+            else
+              # Reset then bump and tag like usual.
+              git checkout package.json
+              yarn version --new-version $new_version
+            fi
           name: Bump Version
       - run:
           command: |
-            if ! git push -u origin master --follow-tags; then
+            if ! git push -u origin master --tags; then
               echo "Push failed. Please add this CircleCI deploy key to your repo with write access:"
               ssh-keygen -y -f ~/.ssh/id_rsa
               exit 1
             fi
           name: Tag Release in GitHub
   publish:
-    docker:
-      - image: node:12
+    executor: nodeaws-executor
     steps:
       - checkout
       - run:
@@ -52,14 +68,23 @@ jobs:
           command: yarn build:prod
           name: Build
       - run:
+          command: |
+            version=$(jq -r .version package.json)
+            echo "export VERSION=$version" >> $BASH_ENV
+          name: Get Version
+      - run:
+          command: |
+            yarn gren release -m -t $VERSION -T $GITHUB_ACCESS_TOKEN
+            yarn gren release -o -t $VERSION -T $GITHUB_ACCESS_TOKEN
+          name: Create GitHub Release
+      - run:
           command: yarn docs:publish
           name: Publish API Documentation
       - run:
           command: npm publish
           name: Publish
   test:
-    docker:
-      - image: node:12
+    executor: nodeaws-executor
     steps:
       - checkout
       - run:
@@ -86,23 +111,31 @@ workflows:
   publish:
     jobs:
       - publish:
+          context: org-global
           filters:
             branches:
               ignore: /.*/
             tags:
               only: /^\d+\.\d+\.\d+$/
-          context: org-global
   test_and_deploy:
     jobs:
       - test:
+          context: org-global
           filters:
             branches:
               ignore: gh-pages
+      - approve:
           context: org-global
-      - deploy:
           filters:
             branches:
               only: master
           requires:
             - test
+          type: approval
+      - deploy:
           context: org-global
+          filters:
+            branches:
+              only: master
+          requires:
+            - approve
