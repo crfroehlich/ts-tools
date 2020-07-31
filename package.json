@@ -200,7 +200,7 @@
     "test": "nyc mocha --reporter spec 'src/**/*.test.ts' && yarn count",
     "test:bdd": "yarn cucumber-js",
     "test:fast": "nyc mocha-parallel-tests 'src/**/*.test.ts'",
-    "test:mutations": "tsc -p tsconfig.stryker.json && stryker run --fileLogLevel trace --logLevel debug",
+    "test:mutations": "tsc -p tsconfig.stryker.json && stryker run",
     "test:watch": "nodemon --exec nyc mocha 'src/**/*.test.ts'"
   },
   "scriptsDocumentation": {

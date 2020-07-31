@@ -2,7 +2,7 @@ module.exports = function (config) {
   config.set({
     coverageAnalysis: 'off',
     files: ['src/**/*.ts', 'src/**/*.md'],
-    maxConcurrentTestRunners: 2,
+    maxConcurrentTestRunners: 0,
     mochaOptions: {
       config: '.mocharc.stryker.js',
     },
