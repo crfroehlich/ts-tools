@@ -286,6 +286,8 @@ export class Log implements LogInterface {
     fatal: (message: string, error: Error, ...args: any[]) => void;
     info: (message: string, ...args: any[]) => void;
     log: (level: LogLevel, message: string, ...args: any[]) => void;
+    // (undocumented)
+    logger: Logger;
     warn: (message: string, ...args: any[]) => void;
 }
 
