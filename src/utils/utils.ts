@@ -51,6 +51,7 @@ export const getIgnoredFiles = (envIgnoreFiles: EnvVariables, exclude = ''): str
  * Returns true if the fileName is in the ignore pattern
  * @param envIgnoreFiles - environment variable to use for ignoring files
  * @param fileName - name of path to ignore
+ * @param exclude - optional string value of path(s) to exclude from the ignore equation
  * @public
  */
 export const isIgnored = (envIgnoreFiles: EnvVariables, fileName: string, exclude = ''): boolean => {
