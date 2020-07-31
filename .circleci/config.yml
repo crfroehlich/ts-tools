@@ -55,7 +55,10 @@ jobs:
           command: echo "//registry.npmjs.org/:_authToken=${NS8_GLOBAL_NPM_TOKEN}" > ~/.npmrc
           name: Configure NPM
       - run:
-          command: yarn
+          command: |
+            npm install -g yarn
+            yarn set version berry
+            yarn install
           name: Install Dependencies
       - run:
           command: yarn build:prod
@@ -84,7 +87,10 @@ jobs:
           command: echo "//registry.npmjs.org/:_authToken=${NS8_GLOBAL_NPM_TOKEN}" > ~/.npmrc
           name: Configure NPM
       - run:
-          command: yarn
+          command: |
+            npm install -g yarn
+            yarn set version berry
+            yarn install
           name: Install Dependencies
       - run:
           command: yarn lint
