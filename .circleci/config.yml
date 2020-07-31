@@ -56,8 +56,8 @@ jobs:
           name: Configure NPM
       - run:
           command: |
-            yarn set version berry
-            yarn install
+            curl -o- -L https://yarnpkg.com/install.sh | bash
+            yarn
           name: Install Dependencies
       - run:
           command: yarn build:prod
@@ -87,8 +87,8 @@ jobs:
           name: Configure NPM
       - run:
           command: |
-            yarn set version berry
-            yarn install
+            curl -o- -L https://yarnpkg.com/install.sh | bash
+            yarn
           name: Install Dependencies
       - run:
           command: yarn lint
