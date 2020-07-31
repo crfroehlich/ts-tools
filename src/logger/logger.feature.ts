@@ -42,8 +42,8 @@ export class LoggerSteps {
           at Object.<anonymous> (K:\ns8\protect-tools-js\node_modules\tslog\src\index.ts:32:1)
       ```
 
-      This is not a cucumber error--this is a TypeScript error that is trigger by instantiating the Log class.
-      This is specific to the execution from with the context of cucumber, however.
+      This is not a cucumber error--this is a TypeScript error that is triggered by instantiating the Log class;
+      however, this is specific to the execution from with the context of cucumber.
     */
     // expect(() => new Log().info(message)).to.not.throw();
 
