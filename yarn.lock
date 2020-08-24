@@ -230,14 +230,6 @@
     js-yaml "~3.13.1"
     resolve "~1.17.0"
 
-"@microsoft/api-extractor-model@7.8.15":
-  version "7.8.15"
-  resolved "https://registry.yarnpkg.com/@microsoft/api-extractor-model/-/api-extractor-model-7.8.15.tgz#a9ade86180157aead2e63e5edb439c4d8f158049"
-  integrity sha512-z81RLrvZdCxPMDBH6JVtZAMMrxDsDGz4mW7GM6OGxPlooTtSVtPH9RNhZFbA6zp7/4ANgBlqURl8zIsxvFeppA==
-  dependencies:
-    "@microsoft/tsdoc" "0.12.19"
-    "@rushstack/node-core-library" "3.27.0"
-
 "@microsoft/api-extractor-model@7.8.18":
   version "7.8.18"
   resolved "https://registry.yarnpkg.com/@microsoft/api-extractor-model/-/api-extractor-model-7.8.18.tgz#15a0a53216b921a42388ab29ddee3eb33c2d9995"
@@ -246,15 +238,15 @@
     "@microsoft/tsdoc" "0.12.19"
     "@rushstack/node-core-library" "3.29.1"
 
-"@microsoft/api-extractor@7.9.5":
-  version "7.9.5"
-  resolved "https://registry.yarnpkg.com/@microsoft/api-extractor/-/api-extractor-7.9.5.tgz#38a17e81466763c60714e2e6b8160d49fa209fa8"
-  integrity sha512-vqatQEp62zi+kjWzAbQZHR1/BHuM9EdLvH6yJX+TRrgY3qONJmZ4cMP6hc5QdqkW8V8fDR8B559nQOxmRQfXHg==
+"@microsoft/api-extractor@7.9.10":
+  version "7.9.10"
+  resolved "https://registry.yarnpkg.com/@microsoft/api-extractor/-/api-extractor-7.9.10.tgz#e15676ca35c5061971697a017ac05abf9cba694b"
+  integrity sha512-hN/iyFN7FRM6flSDmeb2RJGGeo1CF7CONlsjxgoiXU3cqx8601vWheJK06s8+aR8IrBtnV12ZVMii8syQw6AgA==
   dependencies:
-    "@microsoft/api-extractor-model" "7.8.15"
+    "@microsoft/api-extractor-model" "7.8.18"
     "@microsoft/tsdoc" "0.12.19"
-    "@rushstack/node-core-library" "3.27.0"
-    "@rushstack/ts-command-line" "4.4.8"
+    "@rushstack/node-core-library" "3.29.1"
+    "@rushstack/ts-command-line" "4.6.3"
     colors "~1.2.1"
     lodash "~4.17.15"
     resolve "~1.17.0"
@@ -303,19 +295,6 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@rushstack/node-core-library@3.27.0":
-  version "3.27.0"
-  resolved "https://registry.yarnpkg.com/@rushstack/node-core-library/-/node-core-library-3.27.0.tgz#474446d29dcb5166946af2cd9ec86d58e1444b58"
-  integrity sha512-6fS7wqcxL4XGVFkhECMCqsqXouPRDWKMgNpyrmXJRS0PPumRMW+9m2knVK/kgTrMwcnbGysqxX/77PiFErw8wg==
-  dependencies:
-    "@types/node" "10.17.13"
-    colors "~1.2.1"
-    fs-extra "~7.0.1"
-    jju "~1.4.0"
-    semver "~7.3.0"
-    timsort "~0.3.0"
-    z-schema "~3.18.3"
-
 "@rushstack/node-core-library@3.29.1":
   version "3.29.1"
   resolved "https://registry.yarnpkg.com/@rushstack/node-core-library/-/node-core-library-3.29.1.tgz#99d246b3e0573b78a2f9669356b29d70e3e25773"
@@ -329,15 +308,6 @@
     semver "~7.3.0"
     timsort "~0.3.0"
     z-schema "~3.18.3"
-
-"@rushstack/ts-command-line@4.4.8":
-  version "4.4.8"
-  resolved "https://registry.yarnpkg.com/@rushstack/ts-command-line/-/ts-command-line-4.4.8.tgz#46559932c7e9a70ea071c3ce376a2e7ad0d2e9b1"
-  integrity sha512-giyVXuyI2BAID0BINp8TbxcTf5MEao+UPadAMfCuuS64mSE1E76S8wzhjqEy3WaTSpgyRDi7dMlEegNnD/97Gw==
-  dependencies:
-    "@types/argparse" "1.0.38"
-    argparse "~1.0.9"
-    colors "~1.2.1"
 
 "@rushstack/ts-command-line@4.6.3":
   version "4.6.3"
