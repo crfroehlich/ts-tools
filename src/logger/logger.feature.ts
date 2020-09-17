@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { binding, given, then, when, before } from 'cucumber-tsflow';
+import { before, binding, given, then, when } from 'cucumber-tsflow';
 import { assert, expect } from 'chai';
 import { Log } from './logger';
 
