@@ -162,5 +162,5 @@ testSdkStringConversion({
   targetString: 'test strings',
 });
 
-testExecutionTime('sleeps for 1 second', sleep, 1000);
+testExecutionTime('sleeps for 2 seconds', sleep, 2000);
 testExecutionTime('sleeps for 5 seconds', sleep, 5000);

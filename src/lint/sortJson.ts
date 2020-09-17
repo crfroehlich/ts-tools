@@ -8,8 +8,8 @@ import glob from 'glob';
 import { readFileSync, writeFileSync } from 'fs';
 import { getCliLogger } from '../logger';
 import { GLOB_OPTIONS, GlobOptions, globCallback } from '../env/files';
-import { loadEnv } from '../env/loadEnv';
-import { isRunAsScript } from '../utils/utils';
+import { EnvVariables, loadEnv } from '../env/loadEnv';
+import { isIgnored, isRunAsScript } from '../utils/utils';
 
 const sortedJson = require('sorted-json');
 
@@ -89,8 +89,9 @@ const defaultCallback = (er: Error | null, files: string[]): void => {
   }
   files.forEach((fileName) => {
     try {
-      const file = readFileSync(fileName, 'utf-8');
+      if (isIgnored(EnvVariables.IGNORE_JSON_FILES, fileName)) return;
 
+      const file = readFileSync(fileName, 'utf-8');
       let json: any;
       try {
         json = JSON.parse(file);

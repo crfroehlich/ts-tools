@@ -85,6 +85,7 @@ export interface SdkStringTestSuite {
 export enum SdkTestAssertionType {
   IS_NULL = 'is_null',
   IS_NOT_NULL = 'is_not_null',
+  IS_NOT_UNDEFINED = 'is_not_undefined',
   IS_TRUE = 'is_true',
   IS_FALSE = 'is_false',
   TO_NOT_THROW = 'not_to_throw',

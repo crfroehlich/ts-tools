@@ -9,7 +9,7 @@
     'internal',
     'test-data'
   ],
-  fileExcludePatterns: ['*.test.ts', '*.test'],
+  fileExcludePatterns: ['*.test.ts', '*.test', '*.feature.ts'],
   fileFirst: false,
   includeCWD: true,
   quote: "'",

@@ -52,4 +52,16 @@ export const loadEnv = (config: EnvConfig = EnvConfigDefaults): any => {
   return envExtended.load(config);
 };
 
-/* eslint-enable @typescript-eslint/no-explicit-any */
+/**
+ * Definition of Environment Variables available in this project
+ * @public
+ */
+export enum EnvVariables {
+  DOCS_CREATE_README_INDEX = 'DOCS_CREATE_README_INDEX',
+  DOCS_CREATE_TOC = 'DOCS_CREATE_TOC',
+  IGNORE_JSON_FILES = 'IGNORE_JSON_FILES',
+  IGNORE_MARKDOWN_FILES = 'IGNORE_MARKDOWN_FILES',
+  IGNORE_PEER_DEPENDENCIES = 'IGNORE_PEER_DEPENDENCIES',
+  NODE_ENV = 'NODE_ENV',
+  SYNC_PEER_DEPENDENCIES = 'SYNC_PEER_DEPENDENCIES',
+}

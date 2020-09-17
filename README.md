@@ -37,7 +37,9 @@ To get started, take a look at the documentation listed below:
 - `yarn lint:docs`: Lints the code documentation.
 - `yarn lint:fix`: Lints the codebase and automatically fixes what it can.
 - `yarn test`: Runs tests and calculates test coverage.
+- `yarn test:bdd`: Runs the cucumber BDD test suite
 - `yarn test:fast`: Runs tests in parallel and calculates test coverage.
+- `yarn test:mutations`: Runs Stryker-Mutator across the unit test suite.
 - `yarn test:watch`: Re-runs tests as you develop.
 
 ## Environment Variables
@@ -46,6 +48,8 @@ To get started, take a look at the documentation listed below:
   - Default Value: "true"
 - `DOCS_CREATE_TOC`: If true, create a Table of Contents for each Markdown doc.
   - Default Value: "true"
+- `IGNORE_JSON_FILES`: A comma-delimited list of json files to exclude from processing
+  - Default Value: ".yarn,.vscode,.github,.tmp,temp,node_modules,.git"
 - `IGNORE_MARKDOWN_FILES`: A comma-delimited list of markdown files to exclude from processing
   - Default Value: "protect-api.md,pull_request_template.md,.github,temp,.tmp,node_modules"
 - `IGNORE_PEER_DEPENDENCIES`: Comma-delimited list of `dependencies` to exclude from `peerDependencies`.

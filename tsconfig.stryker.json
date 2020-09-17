@@ -16,6 +16,7 @@
     "noEmitOnError": true,
     "noImplicitAny": true,
     "noLib": false,
+    "outDir": ".tmp",
     "removeComments": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
@@ -29,11 +30,9 @@
   },
   "exclude": [
     "node_modules",
-    "*/**/*.test.ts",
-    "*/**/*.feature.ts",
-    "dist"
+    "src/**/*.readme.*"
   ],
   "include": [
-    "src/**/*", "api.ts"
+    "src/**/*"
   ]
 }

@@ -67,3 +67,11 @@ dist
 *.bak
 temp/
 api/
+.yarn/
+@rerun.txt
+usage.txt
+
+# stryker temp files
+.stryker-tmp
+.tmp/
+reports/

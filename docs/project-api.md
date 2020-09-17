@@ -170,6 +170,24 @@ export interface EnvDocs {
 }
 
 // @public
+export enum EnvVariables {
+    // (undocumented)
+    DOCS_CREATE_README_INDEX = "DOCS_CREATE_README_INDEX",
+    // (undocumented)
+    DOCS_CREATE_TOC = "DOCS_CREATE_TOC",
+    // (undocumented)
+    IGNORE_JSON_FILES = "IGNORE_JSON_FILES",
+    // (undocumented)
+    IGNORE_MARKDOWN_FILES = "IGNORE_MARKDOWN_FILES",
+    // (undocumented)
+    IGNORE_PEER_DEPENDENCIES = "IGNORE_PEER_DEPENDENCIES",
+    // (undocumented)
+    NODE_ENV = "NODE_ENV",
+    // (undocumented)
+    SYNC_PEER_DEPENDENCIES = "SYNC_PEER_DEPENDENCIES"
+}
+
+// @public
 export type errorMethod = (message: string, error: Error, ...args: any[]) => void;
 
 // @public
@@ -186,6 +204,11 @@ export const generateApiDocs: (params?: string | undefined) => Promise<void>;
 
 // @public
 export const getCliLogger: (name?: string | undefined) => LogInterface;
+
+// Warning: (ae-internal-missing-underscore) The name "getIgnoredFiles" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export const getIgnoredFiles: (envIgnoreFiles: EnvVariables, exclude?: string) => string[];
 
 // @public
 export const getLogger: (logOptions?: LogOptions | undefined, reset?: boolean) => LogInterface;
@@ -247,6 +270,9 @@ export type infoMethod = (message: string, ...args: any[]) => void;
 export { ISettingsParam }
 
 // @public
+export const isIgnored: (envIgnoreFiles: EnvVariables, fileName: string, exclude?: string) => boolean;
+
+// @public
 export const isRunAsScript: (fileName: string) => boolean;
 
 // @public
@@ -260,8 +286,6 @@ export class Log implements LogInterface {
     fatal: (message: string, error: Error, ...args: any[]) => void;
     info: (message: string, ...args: any[]) => void;
     log: (level: LogLevel, message: string, ...args: any[]) => void;
-    // (undocumented)
-    logger: Logger;
     warn: (message: string, ...args: any[]) => void;
 }
 
@@ -466,6 +490,8 @@ export enum SdkTestAssertionType {
     IS_FALSE = "is_false",
     // (undocumented)
     IS_NOT_NULL = "is_not_null",
+    // (undocumented)
+    IS_NOT_UNDEFINED = "is_not_undefined",
     // (undocumented)
     IS_NULL = "is_null",
     // (undocumented)
