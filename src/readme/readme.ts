@@ -10,11 +10,6 @@ import { Block, Query } from './types';
 import { prettyMarkdown } from '../lint/pretty';
 
 /**
- * @public
- */
-export type IndexedBlocks = Map<string, ReadmeBlock[]>;
-
-/**
  * The ReadmeBlock represents the header and the content of a Readme section.
  * It exists to provide a way for the user to use methods returning {@link ReadmeBlock}
  * with the {@link Readme} instance.
@@ -46,6 +41,11 @@ export class ReadmeBlock {
     return `${this.header}\n${this.content}\n`;
   }
 }
+
+/**
+ * @public
+ */
+export type IndexedBlocks = Map<string, ReadmeBlock[]>;
 
 /**
  * The Readme class represents a markdown README and provides an API for programmatic transformations of it.
@@ -128,14 +128,14 @@ export class Readme {
   };
 
   /**
-   * Generates a content block with an NS8 proprietary license.
+   * Generates a content block with an unlicense license.
    * @param heading - type of heading to use for the license block.
    * @returns a {@link ReadmeBlock}
    */
   public static getLicenseBlock(header = '##'): ReadmeBlock {
     return new ReadmeBlock({
       header: `${header} License`,
-      content: 'See [License](./LICENSE)\n\n© [ns8inc](https://ns8.com)\n',
+      content: 'See [License](./LICENSE)\n\n© [CRF](https://medium.com/@christopher.r.froehlich)\n',
     });
   }
 

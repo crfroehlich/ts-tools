@@ -17,13 +17,13 @@ Bundling is a mechanism to convert all of the individual source files representi
 
 ## Usage
 
-Webpack is the tool that powers the bundling. By using protect-tools-js, you no longer need to manually configure all of the complexity around configuring bundling and managing dependencies. This project allows you to simplify your webpack configuration.
+Webpack is the tool that powers the bundling. By using ts-tools, you no longer need to manually configure all of the complexity around configuring bundling and managing dependencies. This project allows you to simplify your webpack configuration.
 
-- First, import these projects: `yarn add dev @ns8/protect-tools-js webpack-cli`
+- First, import these projects: `yarn add dev ts-tools webpack-cli`
 - Second, create a `webpack.config.ts` file in the root of your project with the following example:
 
 ```ts
-import { BundleDevTool, BundleTarget, getWebpackConfig } from '@ns8/protect-tools-js';
+import { BundleDevTool, BundleTarget, getWebpackConfig } from 'ts-tools';
 export default getWebpackConfig({
   bundleTarget: BundleTarget.NODE,
   devtool: BundleDevTool.EVAL,

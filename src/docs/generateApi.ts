@@ -38,10 +38,10 @@ export const generateApi = (configPath?: string): void => {
 
   const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
   let indexDTs = readFileSync(extractorConfig.mainEntryPointFilePath, 'utf8');
-  const packageDocumentation = `// Copyright (c) NS8, Inc. All rights reserved. UNLICENSED. Proprietary.
+  const packageDocumentation = `// Public Domain.
 
   /**
-   * NS8 ${packageJson.name.replace('@ns8/', '')}
+   * ${packageJson.name}
    *
    * @remarks
    * ${packageJson.description}

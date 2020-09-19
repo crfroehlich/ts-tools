@@ -1,6 +1,7 @@
 /* eslint-disable
   @typescript-eslint/no-explicit-any,
   no-unused-expressions,
+  no-shadow,
 */
 import { ILogObject, ISettingsParam, Logger } from 'tslog';
 import { appendFile } from 'fs';
@@ -216,8 +217,7 @@ export class Log implements LogInterface {
       .forEach((t) => {
         const logToFile = (logObject: ILogObject) => {
           /* istanbul ignore next */
-          config.name = config.name || 'ns8';
-          const name = config.name.replace('/', '-');
+          const name = config.name?.replace('/', '-') || 'logger';
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           appendFile(`${name}_${t.logLevel}.log`, `${JSON.stringify(logObject)}\n`, () => {});
         };
@@ -312,7 +312,7 @@ export const getCliLogger = (name?: string): LogInterface => {
   return getLogger(
     {
       logLevel: LogLevel.INFO,
-      serviceName: name || 'ns8',
+      serviceName: name || 'logger',
       transports: [
         { logLevel: LogLevel.INFO, type: TransportType.CONSOLE },
         { logLevel: LogLevel.FATAL, type: TransportType.FILE },

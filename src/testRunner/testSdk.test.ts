@@ -2,6 +2,7 @@
 /* eslint-disable
     no-labels,
     no-restricted-syntax,
+    no-shadow,
     no-unused-expressions,
     no-unused-labels,
 */

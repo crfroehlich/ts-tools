@@ -19,7 +19,7 @@ The `readme` package is meant to facilitate automated creation and updates for r
 import { Readme } from './src/readme/readme';
 const content = `
 # Test Readme
-This is a demonstration readme for the ns8/protect-js-tools readme tool.
+This is a demonstration readme for the ts-tools readme tool.
 ## Contributing
 Please submit a pull request.
 `;
@@ -30,7 +30,7 @@ const prLink = '';
 if (!readme.getSection(/^ *#* Contributing/)) {
   readme.setSection(
     '## Contributing',
-    'Please submit a pull request <a href="https://github.com/ns8inc/protect-tools-js/pulls">here</a>.',
+    'Please submit a pull request <a href="https://github.com/crfroehlich/ts-tools/pulls">here</a>.',
   );
 }
 // Add a License block if it doesn't exist

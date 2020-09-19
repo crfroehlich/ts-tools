@@ -1,7 +1,7 @@
 # Table of Contents
 
 + Purpose
-+ Authors 
++ Authors
 + Contributing
 + License
 
@@ -19,4 +19,4 @@ Make a PR using our PR template.
 
 ## License
 
-This project is licensed with an NS8 1.0 proprietary license.
+This project is licensed with an unlicense license.

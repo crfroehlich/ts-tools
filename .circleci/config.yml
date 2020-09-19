@@ -1,7 +1,7 @@
 executors:
   nodeaws-executor:
     docker:
-      - image: ns8inc/nodeaws:node-erbium
+      - image: crfroehlich/nodeaws:node-erbium
 jobs:
   deploy:
     executor: nodeaws-executor
@@ -12,7 +12,7 @@ jobs:
       - checkout
       - run:
           command: |
-            git config user.email noreply@ns8.com
+            git config user.email noreply@luddites.me
             git config user.name 'CircleCI'
           name: Setup Git
       - run:
@@ -48,11 +48,11 @@ jobs:
       - checkout
       - run:
           command: |
-            git config user.email noreply@ns8.com
+            git config user.email noreply@luddites.me
             git config user.name 'CircleCI'
           name: Setup Git
       - run:
-          command: echo "//registry.npmjs.org/:_authToken=${NS8_GLOBAL_NPM_TOKEN}" > ~/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=${GLOBAL_NPM_TOKEN}" > ~/.npmrc
           name: Configure NPM
       - run:
           command: |
@@ -83,7 +83,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: echo "//registry.npmjs.org/:_authToken=${NS8_GLOBAL_NPM_TOKEN}" > ~/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=${GLOBAL_NPM_TOKEN}" > ~/.npmrc
           name: Configure NPM
       - run:
           command: |

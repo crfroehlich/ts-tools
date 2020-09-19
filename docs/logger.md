@@ -9,7 +9,7 @@
 
 ## Purpose of the Logging Client
 
-The logging client is intended to provide a simple class that can be instantiated and utilized to log information to multiple sources. The logging client relies on [tslog](https://tslog.js.org/#/) to provide a configurable, flexible interface in which NS8 can supply logging components. The Logging Client provides methods for:
+The logging client is intended to provide a simple class that can be instantiated and utilized to log information to multiple sources. The logging client relies on [tslog](https://tslog.js.org/#/) to provide a configurable, flexible interface in which can supply logging components. The Logging Client provides methods for:
 
 - Errors: Logs errors including a Throwable object for context
 - Debugging: Logs debugging info

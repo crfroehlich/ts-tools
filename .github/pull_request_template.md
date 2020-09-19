@@ -1,7 +1,5 @@
 # Story Reference
 
-[__REPLACE__](https://app.clubhouse.io/ns8/story/__REPLACE__)
-
 ## Summary
 
 __REPLACE__

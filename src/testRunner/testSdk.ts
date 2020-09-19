@@ -6,6 +6,7 @@
   default-case,
   func-names,
   no-unused-expressions,
+  no-shadow,
   sonarjs/cognitive-complexity,
 */
 
@@ -69,16 +70,6 @@ export interface SdkModelTestSuite {
 }
 
 /**
- * Complete set of properties required for an SDK string test suite
- * @public
- */
-export interface SdkStringTestSuite {
-  conversionFunction: Assertion;
-  strings: SdkStringTest[];
-  targetString: string;
-}
-
-/**
  * Currently supported primitive assertions
  * @public
  */
@@ -97,6 +88,16 @@ export enum SdkTestAssertionType {
  * @public
  */
 export type Assertion = (data?: any) => Promise<any>;
+
+/**
+ * Complete set of properties required for an SDK string test suite
+ * @public
+ */
+export interface SdkStringTestSuite {
+  conversionFunction: Assertion;
+  strings: SdkStringTest[];
+  targetString: string;
+}
 
 /**
  * Defines an individual assertion

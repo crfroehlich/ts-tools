@@ -26,7 +26,7 @@ const LITERALS = {
   INSERT_AFTER_CONTENT: '## Insert Before Content',
   LICENSE_QUERY: 'License',
   LICENSE_HEADER: '## License',
-  LICENSE_CONTENT: 'See [License](./LICENSE)\n\n© [ns8inc](https://ns8.com)\n',
+  LICENSE_CONTENT: 'See [License](./LICENSE)\n\n© [CRF](https://medium.com/@christopher.r.froehlich)\n',
   NON_EXISTENT_HEADER: 'Non-existent',
   APPENDED_HEADER: '## Appended Block',
   APPENDED_CONTENT: 'Appended Block Content',
@@ -557,7 +557,7 @@ describe('readme.toString method', () => {
  * Validates getLicenseBlock logic
  */
 describe('readme.getLicenseBlock', () => {
-  it('has a method that generates an NS8 license block', () => {
+  it('has a method that generates an license block', () => {
     const licenseBlock = Readme.getLicenseBlock();
     expect(licenseBlock.header).to.equal(LITERALS.LICENSE_HEADER);
     expect(licenseBlock.content).to.deep.equal(LITERALS.LICENSE_CONTENT);
@@ -571,7 +571,7 @@ describe('readme.setSectionAt', () => {
   it('should replace content for a section by index', () => {
     const readme = new Readme(TEST_FILES.STANDARD);
     const licenseBlockIndexPublic = 4;
-    const preUpdateLicense = 'This project is licensed with an NS8 1.0 proprietary license.\n';
+    const preUpdateLicense = 'This project is licensed with an unlicense license.\n';
     const postUpdateLicense = `${LITERALS.LICENSE_CONTENT}\n`;
 
     expect(readme.getSection(/^## License/))

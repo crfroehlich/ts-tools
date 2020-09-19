@@ -25,21 +25,21 @@ export class LoggerSteps {
       ```
         TypeError: Cannot redefine property: prepareStackTrace
           at Function.defineProperty (<anonymous>)
-          at Object.<anonymous> (K:\ns8\protect-tools-js\node_modules\tslog\src\CallSitesHelper.ts:39:8)
+          at Object.<anonymous> (..\ts-tools\node_modules\tslog\src\CallSitesHelper.ts:39:8)
           at Module._compile (internal/modules/cjs/loader.js:1156:30)
           at Object.Module._extensions..js (internal/modules/cjs/loader.js:1176:10)
           at Module.load (internal/modules/cjs/loader.js:1000:32)
           at Function.Module._load (internal/modules/cjs/loader.js:899:14)
           at Module.require (internal/modules/cjs/loader.js:1042:19)
           at require (internal/modules/cjs/helpers.js:77:18)
-          at Object.<anonymous> (K:\ns8\protect-tools-js\node_modules\tslog\src\LoggerHelper.ts:5:1)
+          at Object.<anonymous> (..\ts-tools\node_modules\tslog\src\LoggerHelper.ts:5:1)
           at Module._compile (internal/modules/cjs/loader.js:1156:30)
           at Object.Module._extensions..js (internal/modules/cjs/loader.js:1176:10)
           at Module.load (internal/modules/cjs/loader.js:1000:32)
           at Function.Module._load (internal/modules/cjs/loader.js:899:14)
           at Module.require (internal/modules/cjs/loader.js:1042:19)
           at require (internal/modules/cjs/helpers.js:77:18)
-          at Object.<anonymous> (K:\ns8\protect-tools-js\node_modules\tslog\src\index.ts:32:1)
+          at Object.<anonymous> (..\ts-tools\node_modules\tslog\src\index.ts:32:1)
       ```
 
       This is not a cucumber error--this is a TypeScript error that is triggered by instantiating the Log class;

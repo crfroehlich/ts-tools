@@ -1,7 +1,7 @@
 # Table of Contents
 
 + Purpose
-+ Authors 
++ Authors
 + Contributing
 + License
 
@@ -15,6 +15,6 @@ later
 
 ## License
 
-This project is licensed with an NS8 1.0 proprietary license.
+This project is licensed with an unlicense license.
 
 # Table Of Contents

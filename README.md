@@ -1,8 +1,8 @@
-# @ns8/protect-tools-js
+# ts-tools
 
 ## Table of Contents
 
-- [@ns8/protect-tools-js](#ns8protect-tools-js)
+- [ts-tools](#ts-tools)
   - [Getting Started](#getting-started)
   - [`package.json` scripts](#packagejson-scripts)
   - [Environment Variables](#environment-variables)
@@ -17,7 +17,7 @@ To get started, take a look at the documentation listed below:
   - [Documentation Tooling](docs/documentation.md)
   - [Environment Variables](docs/environment-variables.md)
   - [Logging Client](docs/logger.md)
-  - [API Report File for "@ns8/protect-tools-js"](docs/project-api.md)
+  - [API Report File for "ts-tools"](docs/project-api.md)
   - [Readme Tool](docs/readme.md)
 
 ## `package.json` scripts
@@ -31,7 +31,7 @@ To get started, take a look at the documentation listed below:
 - `yarn docs:all`: Runs all documentation commands.
 - `yarn docs:api`: Generates a single API doc based on the code in the project.
 - `yarn docs:publish`: Assembles the Markdown documentation for the entire project and publish it to GitHub pages using API Extractor.
-- `yarn docs:standardize`: Creates or updates a new readme with a standard set of readme sections, including a toc, yarn script documentation, links to repo documentation files and an NS8 license.
+- `yarn docs:standardize`: Creates or updates a new readme with a standard set of readme sections, including a toc, yarn script documentation, links to repo documentation files and "The Unlicense" license.
 - `yarn generate:exports`: Generates index.ts files for all exports recursively in the 'src' folder.
 - `yarn lint`: Lints the codebase.
 - `yarn lint:docs`: Lints the code documentation.
@@ -62,4 +62,4 @@ To get started, take a look at the documentation listed below:
 ## License
 
 See [License](./LICENSE)
-© [ns8inc](https://ns8.com)
+© [CRF](https://medium.com/@christopher.r.froehlich)

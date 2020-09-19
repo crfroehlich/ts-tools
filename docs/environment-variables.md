@@ -1,9 +1,9 @@
 # Environment Variables
 
-This project uses [dotenv-extended](https://github.com/keithmorris/node-dotenv-extended) to load environment variables. By using `protect-tools-js`, you do not need to include additional libraries to load env vars, as this can be done for you automatically:
+This project uses [dotenv-extended](https://github.com/keithmorris/node-dotenv-extended) to load environment variables. By using `ts-tools`, you do not need to include additional libraries to load env vars, as this can be done for you automatically:
 
 ```ts
-import { loadEnv } from `@ns8/protect-tools-js`;
+import { loadEnv } from `ts-tools`;
 const env = loadEnv();
 ```
 
@@ -47,7 +47,7 @@ This defaults file should be committed and tracked in VCS. If no `.env` file is 
 A few important things happen when loading your environment variables:
 
 ```ts
-import { loadEnv } from `@ns8/protect-tools-js`;
+import { loadEnv } from `ts-tools`;
 const env = loadEnv();
 ```
 

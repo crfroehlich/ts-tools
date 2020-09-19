@@ -1,8 +1,8 @@
 # Documentation Tooling
 
-This project provides a number of tools to streamline your project's documentation. To use these tools, add protect-tools-js to your project as a dev dependency.
+This project provides a number of tools to streamline your project's documentation. To use these tools, add ts-tools to your project as a dev dependency.
 
-- Install `yarn add dev @ns8/protect-tools-js`
+- Install `yarn add dev ts-tools`
 
 ## Table of Contents
 

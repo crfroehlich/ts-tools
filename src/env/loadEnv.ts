@@ -1,3 +1,6 @@
+/* eslint-disable
+  no-shadow,
+*/
 const envExtended = require('dotenv-extended');
 
 /**
