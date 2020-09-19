@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@istanbuljs/nyc-config-typescript": "1.0.1",
-    "@microsoft/api-documenter": "7.8.42",
+    "@microsoft/api-documenter": "7.8.53",
     "@microsoft/api-extractor": "7.9.13",
     "@types/chai": "4.2.12",
     "@types/chai-almost": "1.0.1",
@@ -98,7 +98,7 @@
   "name": "@ns8/protect-tools-js",
   "peerDependencies": {
     "@istanbuljs/nyc-config-typescript": "1.0.1",
-    "@microsoft/api-documenter": "7.8.42",
+    "@microsoft/api-documenter": "7.8.53",
     "@microsoft/api-extractor": "7.9.13",
     "@types/chai": "4.2.12",
     "@types/chai-almost": "1.0.1",
