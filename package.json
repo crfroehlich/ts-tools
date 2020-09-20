@@ -106,10 +106,10 @@
       "description": "If true, sets all project dependencies as peer dependencies"
     }
   },
-  "homepage": "https://github.com/crfroehlich/ts-tools#readme",
+  "homepage": "https://github.com/luddites-me/ts-tools#readme",
   "license": "The Unlicense",
   "main": "dist/index.js",
-  "name": "ts-tools",
+  "name": "@luddites-me/ts-tools",
   "peerDependencies": {
     "@istanbuljs/nyc-config-typescript": "1.0.1",
     "@microsoft/api-documenter": "7.8.53",
@@ -179,9 +179,10 @@
     "webpack-fail-plugin": "2.0.0",
     "webpack-notifier": "1.8.0"
   },
+  "private": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/crfroehlich/ts-tools.git"
+    "url": "git+https://github.com/luddites-me/ts-tools.git"
   },
   "scripts": {
     "beautify": "ts-node ./src/lint/sortJson.ts",

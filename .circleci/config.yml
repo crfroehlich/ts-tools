@@ -1,7 +1,7 @@
 executors:
   nodeaws-executor:
     docker:
-      - image: crfroehlich/nodeaws:node-erbium
+      - image: luddites-me/nodeaws:node-erbium
 jobs:
   deploy:
     executor: nodeaws-executor

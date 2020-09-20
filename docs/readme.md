@@ -30,7 +30,7 @@ const prLink = '';
 if (!readme.getSection(/^ *#* Contributing/)) {
   readme.setSection(
     '## Contributing',
-    'Please submit a pull request <a href="https://github.com/crfroehlich/ts-tools/pulls">here</a>.',
+    'Please submit a pull request <a href="https://github.com/luddites-me/ts-tools/pulls">here</a>.',
   );
 }
 // Add a License block if it doesn't exist
