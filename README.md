@@ -17,7 +17,7 @@ To get started, take a look at the documentation listed below:
   - [Documentation Tooling](docs/documentation.md)
   - [Environment Variables](docs/environment-variables.md)
   - [Logging Client](docs/logger.md)
-  - [API Report File for "ts-tools"](docs/project-api.md)
+  - [API Report File for "@luddites-me/ts-tools"](docs/project-api.md)
   - [Readme Tool](docs/readme.md)
 
 ## `package.json` scripts

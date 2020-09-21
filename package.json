@@ -7,6 +7,7 @@
     "standardizeReadme": "./dist/readme/standardizeReadme.js"
   },
   "dependencies": {
+    "@cucumber/cucumber": "7.0.0-rc.0",
     "@istanbuljs/nyc-config-typescript": "1.0.1",
     "@microsoft/api-documenter": "7.8.53",
     "@microsoft/api-extractor": "7.9.19",
@@ -35,7 +36,6 @@
     "cloc": "2.7.0",
     "concurrently": "5.3.0",
     "create-ts-index": "1.13.6",
-    "cucumber": "7.0.0-rc.0",
     "cucumber-pretty": "6.0.0",
     "cucumber-tsflow": "3.4.1",
     "dotenv-extended": "2.8.0",
@@ -111,6 +111,7 @@
   "main": "dist/index.js",
   "name": "@luddites-me/ts-tools",
   "peerDependencies": {
+    "@cucumber/cucumber": "7.0.0-rc.0",
     "@istanbuljs/nyc-config-typescript": "1.0.1",
     "@microsoft/api-documenter": "7.8.53",
     "@microsoft/api-extractor": "7.9.19",
@@ -139,7 +140,6 @@
     "cloc": "2.7.0",
     "concurrently": "5.3.0",
     "create-ts-index": "1.13.6",
-    "cucumber": "7.0.0-rc.0",
     "cucumber-pretty": "6.0.0",
     "cucumber-tsflow": "3.4.1",
     "dotenv-extended": "2.8.0",
@@ -179,7 +179,6 @@
     "webpack-fail-plugin": "2.0.0",
     "webpack-notifier": "1.8.0"
   },
-  "private": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/luddites-me/ts-tools.git"
@@ -284,5 +283,5 @@
     }
   },
   "types": "dist/index.d.ts",
-  "version": "1.1.0"
+  "version": "1.1.1"
 }
