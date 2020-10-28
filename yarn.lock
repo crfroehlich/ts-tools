@@ -7656,9 +7656,9 @@ ts-loader@8.0.5:
     micromatch "^4.0.0"
     semver "^6.0.0"
 
-ts-mocha@7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/ts-mocha/-/ts-mocha-7.0.0.tgz#f1549b48b46f53d7ae1dccbb26313c7879acb190"
+ts-mocha@8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/ts-mocha/-/ts-mocha-8.0.0.tgz#962d0fa12eeb6468aa1a6b594bb3bbc818da3ef0"
   dependencies:
     ts-node "7.0.1"
   optionalDependencies:
