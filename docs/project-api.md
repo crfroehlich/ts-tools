@@ -4,10 +4,10 @@
 
 ```ts
 
+import { Configuration } from 'webpack';
 import { ILogObject } from 'tslog';
 import { ISettingsParam } from 'tslog';
 import { Logger } from 'tslog';
-import * as webpack from 'webpack';
 
 // @public
 export type Assertion = (data?: any) => Promise<any>;
@@ -31,7 +31,7 @@ export interface BundleConfig {
     // (undocumented)
     bundleTarget: BundleTarget;
     // (undocumented)
-    devtool: webpack.Options.Devtool;
+    devtool: BundleDevTool;
     // (undocumented)
     distDirectory: string;
     // (undocumented)
@@ -214,7 +214,7 @@ export const getIgnoredFiles: (envIgnoreFiles: EnvVariables, exclude?: string) =
 export const getLogger: (logOptions?: LogOptions | undefined, reset?: boolean) => LogInterface;
 
 // @public
-export const getWebpackConfig: (config?: BundleConfig) => webpack.Configuration;
+export const getWebpackConfig: (config?: BundleConfig) => Configuration;
 
 // @public
 export const GLOB_OPTIONS: GlobOptions;

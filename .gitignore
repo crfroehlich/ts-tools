@@ -67,7 +67,11 @@ dist
 *.bak
 temp/
 api/
-.yarn/
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
 @rerun.txt
 usage.txt
 

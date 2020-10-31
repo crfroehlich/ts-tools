@@ -6,7 +6,7 @@
 */
 import path from 'path';
 import fs from 'fs';
-import * as webpack from 'webpack';
+import { BannerPlugin, Configuration, DefinePlugin, HotModuleReplacementPlugin, SourceMapDevToolPlugin } from 'webpack';
 import { LogLevel, getCliLogger } from '../logger/logger';
 
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
@@ -71,7 +71,7 @@ export enum BundleDevTool {
  */
 export interface BundleConfig {
   bundleTarget: BundleTarget;
-  devtool: webpack.Options.Devtool;
+  devtool: BundleDevTool;
   distDirectory: string;
   fileName?: string;
   globals?: BundleGlobals[];
@@ -104,7 +104,7 @@ export const BundleDefaults: BundleConfig = {
  * @public
  * @param config - bundle configuration
  */
-export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack.Configuration => {
+export const getWebpackConfig = (config: BundleConfig = BundleDefaults): Configuration => {
   if (!tsLoader) {
     throw new Error('Loaders missing');
   }
@@ -164,8 +164,8 @@ For more information, please refer to <https://unlicense.org>
     ${license}
   `;
 
-  const plugins: webpack.Plugin[] = [
-    new webpack.BannerPlugin({
+  const plugins: any[] = [
+    new BannerPlugin({
       banner,
     }),
   ];
@@ -173,7 +173,7 @@ For more information, please refer to <https://unlicense.org>
     globals.forEach((global) => {
       const globalObj: any = {};
       globalObj[`global.${global.name}`] = global.value;
-      plugins.push(new webpack.DefinePlugin(globalObj));
+      plugins.push(new DefinePlugin(globalObj));
     });
   }
   if (useTypeCheckingService) {
@@ -202,9 +202,9 @@ For more information, please refer to <https://unlicense.org>
       }),
     );
     if (watch && bundleTarget === BundleTarget.WEB) {
-      plugins.push(new webpack.HotModuleReplacementPlugin());
+      plugins.push(new HotModuleReplacementPlugin());
     }
-    plugins.push(new webpack.SourceMapDevToolPlugin());
+    plugins.push(new SourceMapDevToolPlugin());
   }
 
   let filename = fileName;
@@ -290,7 +290,6 @@ For more information, please refer to <https://unlicense.org>
     plugins,
     target: bundleTarget,
     node: {
-      fs: 'empty',
       __dirname: false,
       __filename: false,
     },
