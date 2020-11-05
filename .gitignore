@@ -67,7 +67,10 @@ dist
 *.bak
 temp/
 api/
-.yarn/
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+.pnp.*
 @rerun.txt
 usage.txt
 

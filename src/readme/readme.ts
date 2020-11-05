@@ -50,13 +50,11 @@ export class ReadmeBlock {
  */
 export type IndexedBlocks = Map<string, ReadmeBlock[]>;
 
-const loadFileContent = (file: string): string[] => {
-  const r = file.replaceAll('\n\n\n', 'ĦĦ').replaceAll('\n\n', 'Ħ');
-  return r.split('\n');
-}
+const loadFileContent = (file: string): string[] =>
+  file.split('\n').map(val => (val.trim().length > 0) ? val : 'Ħ');
 
 const unloadFileContent = (content: string): string => {
-  return content.replaceAll('ĦĦ', '\n\n\n').replaceAll('Ħ', '\n\n');
+  return content.replaceAll('Ħ', '');
 }
 
 /**
@@ -296,7 +294,13 @@ export class Readme {
       if (!Readme.isRootNode(block)) {
         output += `${block.header.trim()}\n\n`;
       }
-      output += `${block.content.trimRight()}\n\n`;
+      if(block.content === 'Ħ') {
+        output += '\n';
+      } else if(block.content.indexOf('Ħ') !== -1) {
+        output += `${block.content.split('Ħ').join('')}\n\n`;
+      } else {
+        output += `${block.content}\n\n`;
+      }
     }
 
     const justRootBlock = this.blocks.length === 1;

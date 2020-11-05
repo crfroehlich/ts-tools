@@ -12,7 +12,7 @@ import { isRunAsScript } from '../utils/utils';
 const ghpages = require('gh-pages');
 const prompts = require('prompts');
 
-const log = getCliLogger('js-tools/generate-api-docs');
+const log = getCliLogger('ts-tools/generate-api-docs');
 
 /**
  * Generates API docs for every documented class/method/interface/enum.

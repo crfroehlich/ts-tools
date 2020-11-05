@@ -108,7 +108,7 @@ export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack
   if (!tsLoader) {
     throw new Error('Loaders missing');
   }
-  const log = getCliLogger('js-tools/bundle');
+  const log = getCliLogger('ts-tools/bundle');
 
   const license = `
 This is free and unencumbered software released into the public domain.

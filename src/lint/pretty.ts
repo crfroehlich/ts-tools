@@ -24,7 +24,7 @@ export const prettyMarkdown = (input: string): string => {
   return format(input, prettierConfig);
 };
 
-const log = getCliLogger('js-tools/pretty');
+const log = getCliLogger('ts-tools/pretty');
 
 // Prettier all the source code
 const defaultPath = '**/*.ts';

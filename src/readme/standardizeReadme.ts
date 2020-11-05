@@ -7,6 +7,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 import glob from 'glob';
 import { isAbsolute, join, resolve } from 'path';
+import { startCase } from 'lodash';
 import { Readme, ReadmeBlock } from './readme';
 import { DocLinksParams, EnvDocs, ScriptDocs } from './types';
 import { GLOB_OPTIONS } from '../env/files';
@@ -93,17 +94,9 @@ export const formatEnvDocs = (docs: EnvDocs): ReadmeBlock => {
   });
 };
 
-const loadFileContent = (fileName: string): string[] => {
-  const r = readFileSync(fileName, 'utf-8').replaceAll('\n\n\n', 'ĦĦ\n').replaceAll('\n\n', 'Ħ\n');
-  //log.info(r)
-  return r.split('\n');
-}
+const loadFileContent = (fileName: string): string[] => readFileSync(fileName, 'utf-8').split('\n');
 
-const unloadFileContent = (content: string[]): string => {
-  const r = content.join('\n');
-  log.info(r)
-  return r.replaceAll('ĦĦ', '\n\n').replaceAll('Ħ', '\n');
-}
+const unloadFileContent = (content: string[]): string => content.join('\n');
 
 /**
  * Iterates over all the markdown files in the project to build a tree of links to each document
@@ -131,7 +124,11 @@ export function buildDocumentationLinksBlock({
     try {
       const lines = loadFileContent(fileName);
       const firstHeader = lines.find((line) => /^ *#/.test(line)) || '';
-      const titleParts = firstHeader.split(' ').slice(1);
+      let title = firstHeader.split(' ').slice(1).join(' ');
+      if (firstHeader.trim().length === 0) {
+        [title] = fileName.split('.md');
+        title = startCase(title);
+      }
       if (fileName.toLowerCase() !== 'readme.md') {
         const segments = fileName.split('/');
         const path = segments.slice(0, segments.length - 1).join('/');
@@ -139,7 +136,7 @@ export function buildDocumentationLinksBlock({
           lastPath = path;
           docLinksContent.push(`- ${lastPath}`);
         }
-        const link = `  - [${titleParts.join(' ')}](${fileName})`;
+        const link = `  - [${title}](${fileName})`;
         docLinksContent.push(link);
       }
     } catch (e) {

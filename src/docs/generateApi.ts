@@ -13,7 +13,7 @@ import { isRunAsScript } from '../utils/utils';
  * @public
  */
 export const generateApi = (configPath?: string): void => {
-  const log = getCliLogger('js-tools/generate-api');
+  const log = getCliLogger('ts-tools/generate-api');
 
   let apiExtractorJsonPath = '';
   // Get any command line arguments that might have been passed
