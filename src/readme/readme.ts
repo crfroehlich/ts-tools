@@ -8,6 +8,9 @@
 */
 import { Block, Query } from './types';
 import { prettyMarkdown } from '../lint/pretty';
+import { getCliLogger } from '../logger';
+
+const log = getCliLogger('ts-tools/readme');
 
 /**
  * The ReadmeBlock represents the header and the content of a Readme section.
@@ -46,6 +49,15 @@ export class ReadmeBlock {
  * @public
  */
 export type IndexedBlocks = Map<string, ReadmeBlock[]>;
+
+const loadFileContent = (file: string): string[] => {
+  const r = file.replaceAll('\n\n\n', 'ĦĦ').replaceAll('\n\n', 'Ħ');
+  return r.split('\n');
+}
+
+const unloadFileContent = (content: string): string => {
+  return content.replaceAll('ĦĦ', '\n\n\n').replaceAll('Ħ', '\n\n');
+}
 
 /**
  * The Readme class represents a markdown README and provides an API for programmatic transformations of it.
@@ -135,7 +147,7 @@ export class Readme {
   public static getLicenseBlock(header = '##'): ReadmeBlock {
     return new ReadmeBlock({
       header: `${header} License`,
-      content: 'See [License](./LICENSE)\n\n© [CRF](https://medium.com/@christopher.r.froehlich)\n',
+      content: 'See [License](./LICENSE)\n\n!© [CRF](https://blog.luddites.me)\n',
     });
   }
 
@@ -179,7 +191,7 @@ export class Readme {
    * @returns a {@link Readme} instance.
    */
   public static parse(content = ''): ReadmeBlock[] {
-    const lines = content.split('\n').filter(Boolean);
+    const lines = loadFileContent(content).filter(Boolean);
     const blocks: ReadmeBlock[] = [];
 
     const rootBlock = new ReadmeBlock({
@@ -289,7 +301,7 @@ export class Readme {
 
     const justRootBlock = this.blocks.length === 1;
     const ret = justRootBlock ? this.blocks[0].content : `${output.trim()}\n`;
-    return prettyMarkdown(ret);
+    return unloadFileContent(prettyMarkdown(ret));
   }
 
   /** Implements toString method so that the readme is coerced properly

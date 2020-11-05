@@ -15,7 +15,7 @@ import { EnvVariables, loadEnv } from '../env/loadEnv';
 import { isIgnored, isRunAsScript } from '../utils/utils';
 
 const env = loadEnv();
-const log = getCliLogger('js-tools/standardize-readme');
+const log = getCliLogger('ts-tools/standardize-readme');
 
 /**
  * Defines known headers that we will parse
@@ -93,6 +93,18 @@ export const formatEnvDocs = (docs: EnvDocs): ReadmeBlock => {
   });
 };
 
+const loadFileContent = (fileName: string): string[] => {
+  const r = readFileSync(fileName, 'utf-8').replaceAll('\n\n\n', 'ĦĦ\n').replaceAll('\n\n', 'Ħ\n');
+  //log.info(r)
+  return r.split('\n');
+}
+
+const unloadFileContent = (content: string[]): string => {
+  const r = content.join('\n');
+  log.info(r)
+  return r.replaceAll('ĦĦ', '\n\n').replaceAll('Ħ', '\n');
+}
+
 /**
  * Iterates over all the markdown files in the project to build a tree of links to each document
  * @param params - {@link DocLinksParams} a doc links section header, an introductory paragraph, and a path to the repository.
@@ -117,8 +129,7 @@ export function buildDocumentationLinksBlock({
 
     log.info(`Building ToC for ${fileName}`);
     try {
-      const docContent = readFileSync(fileName, 'utf-8');
-      const lines = docContent.split('\n');
+      const lines = loadFileContent(fileName);
       const firstHeader = lines.find((line) => /^ *#/.test(line)) || '';
       const titleParts = firstHeader.split(' ').slice(1);
       if (fileName.toLowerCase() !== 'readme.md') {
@@ -135,7 +146,7 @@ export function buildDocumentationLinksBlock({
       log.error(`Failed to parse ${fileName}`, e);
     }
   });
-  const content = `${introduction ? `${introduction}\n` : ''}${docLinksContent.join('\n')}`;
+  const content = `${introduction ? `${introduction}\n` : ''}${unloadFileContent(docLinksContent)}`;
   return new ReadmeBlock({ header, content });
 }
 

@@ -16,7 +16,7 @@ overrides:
       - 'testSdk.ts'
 parser: '@typescript-eslint/parser'
 parserOptions:
-  ecmaVersion: 2019
+  ecmaVersion: 11
   sourceType: module
 plugins:
   - eslint-plugin-tsdoc
