@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [ts-tools](#ts-tools)
+  - [Table of Contents](#table-of-contents)
   - [Getting Started](#getting-started)
   - [`package.json` scripts](#packagejson-scripts)
   - [Environment Variables](#environment-variables)
@@ -62,4 +63,4 @@ To get started, take a look at the documentation listed below:
 ## License
 
 See [License](./LICENSE)
-© [CRF](https://medium.com/@christopher.r.froehlich)
+!© [CRF](https://blog.luddites.me)

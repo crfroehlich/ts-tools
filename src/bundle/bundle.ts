@@ -6,7 +6,7 @@
 */
 import path from 'path';
 import fs from 'fs';
-import { BannerPlugin, Configuration, DefinePlugin, HotModuleReplacementPlugin, SourceMapDevToolPlugin } from 'webpack';
+import * as webpack from 'webpack';
 import { LogLevel, getCliLogger } from '../logger/logger';
 
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
@@ -71,7 +71,7 @@ export enum BundleDevTool {
  */
 export interface BundleConfig {
   bundleTarget: BundleTarget;
-  devtool: BundleDevTool;
+  devtool: webpack.Options.Devtool;
   distDirectory: string;
   fileName?: string;
   globals?: BundleGlobals[];
@@ -104,11 +104,11 @@ export const BundleDefaults: BundleConfig = {
  * @public
  * @param config - bundle configuration
  */
-export const getWebpackConfig = (config: BundleConfig = BundleDefaults): Configuration => {
+export const getWebpackConfig = (config: BundleConfig = BundleDefaults): webpack.Configuration => {
   if (!tsLoader) {
     throw new Error('Loaders missing');
   }
-  const log = getCliLogger('js-tools/bundle');
+  const log = getCliLogger('ts-tools/bundle');
 
   const license = `
 This is free and unencumbered software released into the public domain.
@@ -164,8 +164,8 @@ For more information, please refer to <https://unlicense.org>
     ${license}
   `;
 
-  const plugins: any[] = [
-    new BannerPlugin({
+  const plugins: webpack.Plugin[] = [
+    new webpack.BannerPlugin({
       banner,
     }),
   ];
@@ -173,7 +173,7 @@ For more information, please refer to <https://unlicense.org>
     globals.forEach((global) => {
       const globalObj: any = {};
       globalObj[`global.${global.name}`] = global.value;
-      plugins.push(new DefinePlugin(globalObj));
+      plugins.push(new webpack.DefinePlugin(globalObj));
     });
   }
   if (useTypeCheckingService) {
@@ -202,9 +202,9 @@ For more information, please refer to <https://unlicense.org>
       }),
     );
     if (watch && bundleTarget === BundleTarget.WEB) {
-      plugins.push(new HotModuleReplacementPlugin());
+      plugins.push(new webpack.HotModuleReplacementPlugin());
     }
-    plugins.push(new SourceMapDevToolPlugin());
+    plugins.push(new webpack.SourceMapDevToolPlugin());
   }
 
   let filename = fileName;
@@ -290,6 +290,7 @@ For more information, please refer to <https://unlicense.org>
     plugins,
     target: bundleTarget,
     node: {
+      fs: 'empty',
       __dirname: false,
       __filename: false,
     },

@@ -7,6 +7,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 import glob from 'glob';
 import { isAbsolute, join, resolve } from 'path';
+import { startCase } from 'lodash';
 import { Readme, ReadmeBlock } from './readme';
 import { DocLinksParams, EnvDocs, ScriptDocs } from './types';
 import { GLOB_OPTIONS } from '../env/files';
@@ -15,7 +16,7 @@ import { EnvVariables, loadEnv } from '../env/loadEnv';
 import { isIgnored, isRunAsScript } from '../utils/utils';
 
 const env = loadEnv();
-const log = getCliLogger('js-tools/standardize-readme');
+const log = getCliLogger('ts-tools/standardize-readme');
 
 /**
  * Defines known headers that we will parse
@@ -93,6 +94,10 @@ export const formatEnvDocs = (docs: EnvDocs): ReadmeBlock => {
   });
 };
 
+const loadFileContent = (fileName: string): string[] => readFileSync(fileName, 'utf-8').split('\n');
+
+const unloadFileContent = (content: string[]): string => content.join('\n');
+
 /**
  * Iterates over all the markdown files in the project to build a tree of links to each document
  * @param params - {@link DocLinksParams} a doc links section header, an introductory paragraph, and a path to the repository.
@@ -117,10 +122,13 @@ export function buildDocumentationLinksBlock({
 
     log.info(`Building ToC for ${fileName}`);
     try {
-      const docContent = readFileSync(fileName, 'utf-8');
-      const lines = docContent.split('\n');
+      const lines = loadFileContent(fileName);
       const firstHeader = lines.find((line) => /^ *#/.test(line)) || '';
-      const titleParts = firstHeader.split(' ').slice(1);
+      let title = firstHeader.split(' ').slice(1).join(' ');
+      if (firstHeader.trim().length === 0) {
+        [title] = fileName.split('.md');
+        title = startCase(title);
+      }
       if (fileName.toLowerCase() !== 'readme.md') {
         const segments = fileName.split('/');
         const path = segments.slice(0, segments.length - 1).join('/');
@@ -128,14 +136,14 @@ export function buildDocumentationLinksBlock({
           lastPath = path;
           docLinksContent.push(`- ${lastPath}`);
         }
-        const link = `  - [${titleParts.join(' ')}](${fileName})`;
+        const link = `  - [${title}](${fileName})`;
         docLinksContent.push(link);
       }
     } catch (e) {
       log.error(`Failed to parse ${fileName}`, e);
     }
   });
-  const content = `${introduction ? `${introduction}\n` : ''}${docLinksContent.join('\n')}`;
+  const content = `${introduction ? `${introduction}\n` : ''}${unloadFileContent(docLinksContent)}`;
   return new ReadmeBlock({ header, content });
 }
 

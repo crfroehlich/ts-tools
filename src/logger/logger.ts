@@ -98,7 +98,7 @@ export const DefaultLogOptions: ISettingsParam = {
   displayInstanceName: true,
   displayLoggerName: true,
   displayLogLevel: true,
-  name: 'js-tools',
+  name: 'ts-tools',
   overwriteConsole: true,
   printLogMessageInNewLine: true,
   setCallerAsLoggerName: true,

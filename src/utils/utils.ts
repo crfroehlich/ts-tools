@@ -1,9 +1,7 @@
 /* istanbul ignore file */
-import { getCliLogger } from '../logger';
 import { EnvVariables, loadEnv } from '../env/loadEnv';
 
 const env = loadEnv();
-const log = getCliLogger('js-tools');
 
 /**
  * Determines if the util is being run as a script

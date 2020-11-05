@@ -13,7 +13,7 @@ import { isIgnored, isRunAsScript } from '../utils/utils';
 
 const sortedJson = require('sorted-json');
 
-const log = getCliLogger('js-tools/sort-json');
+const log = getCliLogger('ts-tools/sort-json');
 
 const env = loadEnv();
 

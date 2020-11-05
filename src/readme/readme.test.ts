@@ -26,7 +26,7 @@ const LITERALS = {
   INSERT_AFTER_CONTENT: '## Insert Before Content',
   LICENSE_QUERY: 'License',
   LICENSE_HEADER: '## License',
-  LICENSE_CONTENT: 'See [License](./LICENSE)\n\n© [CRF](https://medium.com/@christopher.r.froehlich)\n',
+  LICENSE_CONTENT: 'See [License](./LICENSE)\n\n!© [CRF](https://blog.luddites.me)\n',
   NON_EXISTENT_HEADER: 'Non-existent',
   APPENDED_HEADER: '## Appended Block',
   APPENDED_CONTENT: 'Appended Block Content',
