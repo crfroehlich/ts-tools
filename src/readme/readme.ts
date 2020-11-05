@@ -50,12 +50,11 @@ export class ReadmeBlock {
  */
 export type IndexedBlocks = Map<string, ReadmeBlock[]>;
 
-const loadFileContent = (file: string): string[] =>
-  file.split('\n').map(val => (val.trim().length > 0) ? val : 'Ħ');
+const loadFileContent = (file: string): string[] => file.split('\n').map((val) => (val.trim().length > 0 ? val : 'Ħ'));
 
 const unloadFileContent = (content: string): string => {
   return content.replaceAll('Ħ', '');
-}
+};
 
 /**
  * The Readme class represents a markdown README and provides an API for programmatic transformations of it.
@@ -294,9 +293,9 @@ export class Readme {
       if (!Readme.isRootNode(block)) {
         output += `${block.header.trim()}\n\n`;
       }
-      if(block.content === 'Ħ') {
+      if (block.content === 'Ħ') {
         output += '\n';
-      } else if(block.content.indexOf('Ħ') !== -1) {
+      } else if (block.content.indexOf('Ħ') !== -1) {
         output += `${block.content.split('Ħ').join('')}\n\n`;
       } else {
         output += `${block.content}\n\n`;
