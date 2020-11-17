@@ -8,9 +8,6 @@
 */
 import { Block, Query } from './types';
 import { prettyMarkdown } from '../lint/pretty';
-import { getCliLogger } from '../logger';
-
-const log = getCliLogger('ts-tools/readme');
 
 /**
  * The ReadmeBlock represents the header and the content of a Readme section.
@@ -52,7 +49,7 @@ export type IndexedBlocks = Map<string, ReadmeBlock[]>;
 
 const loadFileContent = (file: string): string[] => file.split('\n').map((val) => (val.trim().length > 0 ? val : 'Ħ'));
 
-const unloadFileContent = (content: string): string => {
+const unloadFileContent = (content = ''): string => {
   return content.replaceAll('Ħ', '');
 };
 
