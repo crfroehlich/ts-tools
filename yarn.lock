@@ -1553,8 +1553,8 @@ cliui@^6.0.0:
     wrap-ansi "^6.2.0"
 
 cloc@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/cloc/-/cloc-2.7.0.tgz#203b1d77f92a490da277d42378d3cf0d7ce354cf"
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/cloc/-/cloc-2.10.0.tgz#1dbd3755a9ca8d426e9222b2e8a4feaecf855837"
 
 clone-response@^1.0.2:
   version "1.0.2"
