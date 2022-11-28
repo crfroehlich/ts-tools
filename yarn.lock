@@ -4405,7 +4405,11 @@ multimatch@^4.0.0:
     arrify "^2.0.1"
     minimatch "^3.0.4"
 
-mutation-testing-elements@^1.4.3, mutation-testing-elements@~1.4.3:
+mutation-testing-elements@^1.4.3:
+  version "1.7.12"
+  resolved "https://registry.yarnpkg.com/mutation-testing-elements/-/mutation-testing-elements-1.7.12.tgz#df131b4d91e1f778c4420a8a7c767e09d8dd9cfc"
+
+mutation-testing-elements@~1.4.3:
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/mutation-testing-elements/-/mutation-testing-elements-1.4.3.tgz#ea7bf46437a35f2a123f82325d8333d9a8c3067c"
 
