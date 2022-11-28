@@ -347,8 +347,8 @@
     resolve-from "^5.0.0"
 
 "@istanbuljs/nyc-config-typescript@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@istanbuljs/nyc-config-typescript/-/nyc-config-typescript-1.0.1.tgz#55172f5663b3635586add21b14d42ca94a163d58"
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@istanbuljs/nyc-config-typescript/-/nyc-config-typescript-1.0.2.tgz#1f5235b28540a07219ae0dd42014912a0b19cf89"
   dependencies:
     "@istanbuljs/schema" "^0.1.2"
 
