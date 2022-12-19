@@ -7,7 +7,7 @@
     "standardizeReadme": "./dist/readme/standardizeReadme.js"
   },
   "dependencies": {
-    "@cucumber/cucumber": "^7.0.0-rc.0",
+    "@cucumber/cucumber": "^8.9.1",
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@microsoft/api-documenter": "^7.9.33",
     "@microsoft/api-extractor": "^7.11.4",
@@ -114,7 +114,7 @@
   "main": "dist/index.js",
   "name": "@luddites-me/ts-tools",
   "peerDependencies": {
-    "@cucumber/cucumber": "^7.0.0-rc.0",
+    "@cucumber/cucumber": "^8.9.1",
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@microsoft/api-documenter": "^7.9.33",
     "@microsoft/api-extractor": "^7.11.4",
