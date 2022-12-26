@@ -75,7 +75,7 @@
     "ts-loader": "^8.0.11",
     "ts-mocha": "^8.0.0",
     "ts-node": "^9.0.0",
-    "tslog": "^3.0.1",
+    "tslog": "^4.7.0",
     "typescript": "^4.0.5"
   },
   "description": "TypeScript project that provides build tooling for other TypeScript projects",
@@ -182,7 +182,7 @@
     "ts-loader": "^8.0.11",
     "ts-mocha": "^8.0.0",
     "ts-node": "^9.0.0",
-    "tslog": "^3.0.1",
+    "tslog": "^4.7.0",
     "typescript": "^4.0.5"
   },
   "repository": {
